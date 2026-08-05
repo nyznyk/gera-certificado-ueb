@@ -1,0 +1,16 @@
+<label for="modelo">Selecione o Modelo de Certificado:</label>
+        <select id="modelo" onchange="atualizarFormulario()">
+            <!-- Certificados de Progressão por Ramo -->
+            <optgroup label="Progressão Pessoal">
+                <option value="progressao_l">Progressão - Lobinho</option>
+                <option value="progressao_e">Progressão - Escoteiro</option>
+                <option value="progressao_s">Progressão - Sênior</option>
+                <option value="progressao_p">Progressão - Pioneiro</option>
+            </optgroup>
+            
+            <!-- Certificados de Especialidade -->
+            <optgroup label="Especialidades">
+                <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
+                <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
+            </optgroup>
+        </select>
