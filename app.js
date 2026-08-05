@@ -26,13 +26,12 @@ function atualizarFormulario() {
 
 function gerarCertificado() {
     const modelo = document.getElementById('modelo').value;
-    const nome = document.getElementById('nome').value || "NOME DO JOVEM";
+    const nome = document.getElementById('nome').value || "Nome do Jovem Escoteiro";
     const dia = document.getElementById('dia').value || "15";
     const mes = document.getElementById('mes').value || "Agosto";
     const ano = document.getElementById('ano').value || "2026";
 
     const img = new Image();
-    // Força a busca da imagem na mesma pasta
     img.src = `./modelo_${modelo}.png`;
 
     img.onload = function () {
@@ -41,54 +40,66 @@ function gerarCertificado() {
 
         ctx.drawImage(img, 0, 0);
 
-        ctx.fillStyle = '#000000';
+        ctx.fillStyle = '#0a0a0a';
         ctx.textAlign = 'center';
 
-        if (modelo.startsWith('progressao_')) {
-            const etapa = document.getElementById('etapa').value || "ETAPA DE PROGRESSÃO";
-            
-            ctx.font = 'bold 40pt Georgia';
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.38);
-            
-            ctx.font = '32pt Georgia';
-            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.48);
+        // Define a fonte cursiva para o Nome (Great Vibes)
+        const fonteNome = '65pt "Great Vibes", "Brush Script MT", cursive';
+        const fonteTexto = '28pt Georgia, serif';
+        const fonteData = '22pt Georgia, serif';
 
-            ctx.font = '24pt Georgia';
+        // 1. CERTIFICADOS DE PROGRESSÃO PESSOAL
+        if (modelo.startsWith('progressao_')) {
+            const etapa = document.getElementById('etapa').value || "Nome da Etapa";
+            
+            // Posição do Nome ajustada para ficar acima (0.29 da altura)
+            ctx.font = fonteNome;
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29); 
+            
+            ctx.font = fonteTexto;
+            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.40); 
+
+            // Posições da Data
+            ctx.font = fonteData;
             ctx.fillText(dia, canvas.width * 0.40, canvas.height * 0.65);
             ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.65);
             ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.65);
         }
+
+        // 2. CERTIFICADO DE ESPECIALIDADE (LOBINHO / ESCOTEIRO)
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "NOME DA ESPECIALIDADE";
+            const esp = document.getElementById('especialidade').value || "Nome da Especialidade";
             const nivel = document.getElementById('nivel').value || "1";
             const itens = document.getElementById('itens').value || "1, 2 e 3";
-            const avaliador = document.getElementById('avaliador').value || "EXAMINADOR";
+            const avaliador = document.getElementById('avaliador').value || "Nome do Examinador";
 
-            ctx.font = 'bold 38pt Georgia';
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.36);
+            ctx.font = fonteNome;
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29);
             
-            ctx.font = '30pt Georgia';
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.44);
-            ctx.fillText(nivel, canvas.width * 0.48, canvas.height * 0.49);
-            ctx.fillText(itens, canvas.width / 2, canvas.height * 0.54);
+            ctx.font = fonteTexto;
+            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.40);
+            ctx.fillText(nivel, canvas.width * 0.48, canvas.height * 0.46);
+            ctx.fillText(itens, canvas.width / 2, canvas.height * 0.52);
             
-            ctx.font = '22pt Georgia';
+            ctx.font = fonteData;
             ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
             ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
             ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.64);
             ctx.fillText(ano, canvas.width * 0.77, canvas.height * 0.64);
         }
-        else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "NOME DA ESPECIALIDADE";
-            const avaliador = document.getElementById('avaliador').value || "ORIENTADOR";
 
-            ctx.font = 'bold 38pt Georgia';
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.36);
+        // 3. CERTIFICADO DE ESPECIALIDADE (SÊNIOR / PIONEIRO)
+        else if (modelo === 'especialidade_sp') {
+            const esp = document.getElementById('especialidade').value || "Nome da Especialidade";
+            const avaliador = document.getElementById('avaliador').value || "Nome do Orientador";
+
+            ctx.font = fonteNome;
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29);
             
-            ctx.font = '30pt Georgia';
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.44);
+            ctx.font = fonteTexto;
+            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.40);
             
-            ctx.font = '22pt Georgia';
+            ctx.font = fonteData;
             ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
             ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
             ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.64);
@@ -97,13 +108,13 @@ function gerarCertificado() {
     };
     
     img.onerror = function() {
-        console.error("ERRO: Não foi possível carregar o arquivo ./modelo_" + modelo + ".png. Verifique se o arquivo existe com este nome exato no GitHub.");
+        console.error("Não foi possível carregar o arquivo ./modelo_" + modelo + ".png.");
     };
 }
 
 function baixarPDF() {
     if (!window.jspdf) {
-        alert("A biblioteca de PDF ainda está carregando ou foi bloqueada. Aguarde alguns segundos.");
+        alert("A biblioteca de PDF ainda está carregando.");
         return;
     }
     const { jsPDF } = window.jspdf;
@@ -119,5 +130,7 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Execução inicial
-atualizarFormulario();
+// Aguarda o carregamento das fontes antes de desenhar na tela
+document.fonts.ready.then(() => {
+    atualizarFormulario();
+});
