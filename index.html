@@ -8,13 +8,13 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             
-            /* --- CONFIGURAÇÕES DA IMAGEM DE FUNDO --- */
+            
             background-image: url('fundo.jpg');
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed; 
             background-color: #121212; 
-            /* ---------------------------------------- */
+            
             
             color: #e0e0e0; 
             padding: 15px; 
@@ -28,7 +28,7 @@
             gap: 20px; 
         }
         .box { 
-            /* Transparência e efeito de desfoque estilo vidro (Glassmorphism) */
+            
             background: rgba(30, 30, 30, 0.85); 
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
@@ -63,7 +63,7 @@
 </head>
 <body>
 
-    <!-- CAIXA 1: GERADOR DE CERTIFICADOS -->
+    
     <div class="box">
         <h2>⚜️ Gerador de Certificados</h2>
 
@@ -90,13 +90,13 @@
         <label for="nome">Nome do jovem:</label>
         <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
 
-        <!-- GRUPO: PROGRESSÃO -->
+       
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
             <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
         </div>
 
-        <!-- GRUPO: ESPECIALIDADE -->
+        
         <div id="grupo-especialidade" class="campo-dinamico">
             <label for="especialidade">Nome da especialidade:</label>
             <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
@@ -112,7 +112,7 @@
                 <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
             </div>
 
-            <!-- NOVOS CAMPOS: EXCLUSIVOS SÊNIOR/PIONEIRO -->
+           
             <div id="campo-sp-extra" class="campo-dinamico">
                 <label for="eixo">Eixo de Progressão Pessoal:</label>
                 <input type="text" id="eixo" placeholder="Ex: Habilidades para a Vida" oninput="gerarCertificado()">
@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <!-- DATAS E LOCAL -->
+        
         <label for="cidade">Local (Cidade):</label>
         <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
 
@@ -155,13 +155,13 @@
         <button onclick="baixarPDF()">Baixar PDF</button>
     </div>
 
-    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
+    
     <div class="box">
         <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">Como baixar o app</h3>
         <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema funciona como um aplicativo no seu celular. Veja como instalar:
          (também funciona offline!)</p>
         
-        <!-- Instruções Android -->
+       
         <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444;">
             <strong style="color: #4CAF50;">Android (via Google Chrome)</strong>
             <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
@@ -171,7 +171,7 @@
             </ul>
         </div>
 
-        <!-- Instruções iOS -->
+       
         <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; border: 1px solid #444;">
             <strong style="color: #007AFF;">iPhone (via Safari)</strong>
             <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
@@ -182,15 +182,15 @@
         </div>
     </div>
 
-    <!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
+  
     <footer style="text-align: center; font-size: 0.75rem; color: #777; opacity: 0.6; margin-top: -5px; padding-bottom: 10px;">
         Desenvolvido por <strong style="color: #aaa;">Beatriz Nyznyk GENSM 49/PR</strong>
     </footer>
 
-    <!-- SCRIPT PRINCIPAL DO APP -->
-    <script src="app.js?v=5"></script>
+  
+    <script src="app.js?v=2"></script>
 
-    <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
+    
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then((reg) => {
