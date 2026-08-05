@@ -4,19 +4,21 @@ const ctx = canvas.getContext('2d');
 function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
     
-    // Esconde todos os grupos primeiro
-    document.getElementById('grupo-progressao').style.display = 'none';
-    document.getElementById('grupo-especialidade').style.display = 'none';
-    document.getElementById('campo-nivel').style.display = 'none';
+    const grupoProg = document.getElementById('grupo-progressao');
+    const grupoEsp = document.getElementById('grupo-especialidade');
+    const campoNivel = document.getElementById('campo-nivel');
 
-    // Mostra apenas os campos necessários
+    if (grupoProg) grupoProg.style.display = 'none';
+    if (grupoEsp) grupoEsp.style.display = 'none';
+    if (campoNivel) campoNivel.style.display = 'none';
+
     if (modelo.startsWith('progressao_')) {
-        document.getElementById('grupo-progressao').style.display = 'block';
+        if (grupoProg) grupoProg.style.display = 'block';
     } else if (modelo === 'especialidade_le') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
-        document.getElementById('campo-nivel').style.display = 'block';
+        if (grupoEsp) grupoEsp.style.display = 'block';
+        if (campoNivel) campoNivel.style.display = 'block';
     } else if (modelo === 'especialidade_sp') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
+        if (grupoEsp) grupoEsp.style.display = 'block';
     }
     
     gerarCertificado();
@@ -25,48 +27,41 @@ function atualizarFormulario() {
 function gerarCertificado() {
     const modelo = document.getElementById('modelo').value;
     const nome = document.getElementById('nome').value || "NOME DO JOVEM";
-    const dia = document.getElementById('dia').value || "DD";
-    const mes = document.getElementById('mes').value || "MÊS";
-    const ano = document.getElementById('ano').value || "AAAA";
+    const dia = document.getElementById('dia').value || "15";
+    const mes = document.getElementById('mes').value || "Agosto";
+    const ano = document.getElementById('ano').value || "2026";
 
     const img = new Image();
-    // Puxa a imagem com o nome exato
-    img.src = `modelo_${modelo}.png`;
+    // Força a busca da imagem na mesma pasta
+    img.src = `./modelo_${modelo}.png`;
 
     img.onload = function () {
-        // Redimensiona o canvas para o tamanho real da imagem
         canvas.width = img.width;
         canvas.height = img.height;
 
-        // Desenha o certificado de fundo
         ctx.drawImage(img, 0, 0);
 
-        // Configuração visual do texto
         ctx.fillStyle = '#000000';
         ctx.textAlign = 'center';
 
-        // DESENHO: PROGRESSÃO PESSOAL (Lobinho, Escoteiro, Sênior, Pioneiro)
         if (modelo.startsWith('progressao_')) {
-            const etapa = document.getElementById('etapa').value || "NOME DA ETAPA";
+            const etapa = document.getElementById('etapa').value || "ETAPA DE PROGRESSÃO";
             
             ctx.font = 'bold 40pt Georgia';
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.38); // Nome
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.38);
             
             ctx.font = '32pt Georgia';
-            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.48); // Etapa
+            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.48);
 
-            // Data
             ctx.font = '24pt Georgia';
             ctx.fillText(dia, canvas.width * 0.40, canvas.height * 0.65);
             ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.65);
             ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.65);
         }
-
-        // DESENHO: ESPECIALIDADE (LOBINHO / ESCOTEIRO)
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "ESPECIALIDADE";
+            const esp = document.getElementById('especialidade').value || "NOME DA ESPECIALIDADE";
             const nivel = document.getElementById('nivel').value || "1";
-            const itens = document.getElementById('itens').value || "1, 2, 3";
+            const itens = document.getElementById('itens').value || "1, 2 e 3";
             const avaliador = document.getElementById('avaliador').value || "EXAMINADOR";
 
             ctx.font = 'bold 38pt Georgia';
@@ -83,10 +78,8 @@ function gerarCertificado() {
             ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.64);
             ctx.fillText(ano, canvas.width * 0.77, canvas.height * 0.64);
         }
-
-        // DESENHO: ESPECIALIDADE (SÊNIOR / PIONEIRO)
         else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "ESPECIALIDADE";
+            const esp = document.getElementById('especialidade').value || "NOME DA ESPECIALIDADE";
             const avaliador = document.getElementById('avaliador').value || "ORIENTADOR";
 
             ctx.font = 'bold 38pt Georgia';
@@ -103,14 +96,16 @@ function gerarCertificado() {
         }
     };
     
-    // Tratamento de erro se a imagem não for encontrada
     img.onerror = function() {
-        console.error("Erro ao carregar a imagem: " + img.src);
+        console.error("ERRO: Não foi possível carregar o arquivo ./modelo_" + modelo + ".png. Verifique se o arquivo existe com este nome exato no GitHub.");
     };
 }
 
-// Função para fazer download do PDF
 function baixarPDF() {
+    if (!window.jspdf) {
+        alert("A biblioteca de PDF ainda está carregando ou foi bloqueada. Aguarde alguns segundos.");
+        return;
+    }
     const { jsPDF } = window.jspdf;
     const imgData = canvas.toDataURL('image/png', 1.0);
     const pdf = new jsPDF({
@@ -124,5 +119,5 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Executa assim que a página carrega
-window.onload = atualizarFormulario;
+// Execução inicial
+atualizarFormulario();
