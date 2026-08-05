@@ -240,7 +240,7 @@ function gerarCertificado() {
             if (modelo === 'especialidade_sp') {
                 // Canto inferior direito
                 xPos = canvas.width * 0.88;
-                yPos = canvas.height * 0.42;
+                yPos = canvas.height * 0.4;
             } 
             else if (modelo === 'progressao_s' || modelo === 'progressao_p' || modelo === `progressao_e`) {
                 // Ao lado esquerdo da logo da UEB (ajustável)
@@ -249,13 +249,13 @@ function gerarCertificado() {
             } 
                 else if (modelo === 'progressao_l' ) {
                 // Ao lado esquerdo da logo da UEB (ajustável)
-                xPos = canvas.width * 0.6;
+                xPos = canvas.width * 0.75;
                 yPos = canvas.height * 0.02;
             } 
             else {
                 // Canto superior esquerdo (especialidade_le)
                 xPos = canvas.width * 0.06;
-                yPos = canvas.height * 0.03;
+                yPos = canvas.height * 0.02;
             }
 
             ctx.drawImage(logoGroup, xPos, yPos, logoLargura, logoAltura);
