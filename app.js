@@ -99,4 +99,6 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.77, canvas.height * 0.66);
         }
     };
+    // Força o carregamento do certificado assim que a página abre
+window.onload = atualizarFormulario;
 }
