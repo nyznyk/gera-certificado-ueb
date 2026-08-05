@@ -144,30 +144,31 @@ function gerarCertificado() {
             const compartilhar = document.getElementById('compartilhar').value || "";
 
             // --- PARTE SUPERIOR (Certificado) ---
-            ctx.textAlign = 'center'; // Alinhamento central para encaixar nos sublinhados
+            ctx.textAlign = 'center'; 
             
-            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.194);
-            ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.237);
+            // Subi o eixo Y levemente (-0.006) para o texto não encostar na linha
+            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.188);
+            ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.231);
             
-            // Posições da data reajustadas (X) para não invadirem os "de"
-            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.297);
-            ctx.fillText(dia, canvas.width * 0.30, canvas.height * 0.297);
-            ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.297);
-            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.297);
+            // Dia ajustado para a esquerda e linhas levemente mais altas
+            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.292);
+            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.292);
+            ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.292);
+            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.292);
 
             // --- PARTE INFERIOR (Relatório / Ficha) ---
             ctx.textAlign = 'left'; // Alinhamento ESQUERDO estrito
             ctx.font = '14pt Arial, sans-serif'; 
 
-            // Posição Y (Altura) e Posição X exata após os "dois pontos (:)" de cada linha
-            ctx.fillText(esp, canvas.width * 0.255, canvas.height * 0.650);
-            ctx.fillText(eixo, canvas.width * 0.430, canvas.height * 0.672);
-            ctx.fillText(carga, canvas.width * 0.238, canvas.height * 0.693);
+            // Subi levemente o Y de todos, e joguei o eixo X bem mais para a direita 
+            // para respeitar o longo texto entre parênteses do certificado
+            ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
+            ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
+            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.688);
             
-            // As três etapas começam bem depois do que estava antes!
-            ctx.fillText(conhecer, canvas.width * 0.380, canvas.height * 0.751);
-            ctx.fillText(fazer, canvas.width * 0.540, canvas.height * 0.804);
-            ctx.fillText(compartilhar, canvas.width * 0.585, canvas.height * 0.859);
+            ctx.fillText(conhecer, canvas.width * 0.485, canvas.height * 0.745);
+            ctx.fillText(fazer, canvas.width * 0.585, canvas.height * 0.798);
+            ctx.fillText(compartilhar, canvas.width * 0.615, canvas.height * 0.852);
         }
     };
     
