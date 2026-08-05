@@ -4,21 +4,23 @@ const ctx = canvas.getContext('2d');
 function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
     
-    const grupoProg = document.getElementById('grupo-progressao');
-    const grupoEsp = document.getElementById('grupo-especialidade');
-    const campoNivel = document.getElementById('campo-nivel');
+    // Esconder tudo primeiro
+    document.getElementById('grupo-progressao').style.display = 'none';
+    document.getElementById('grupo-especialidade').style.display = 'none';
+    document.getElementById('campo-nivel').style.display = 'none';
+    document.getElementById('campo-sp-extra').style.display = 'none';
 
-    if (grupoProg) grupoProg.style.display = 'none';
-    if (grupoEsp) grupoEsp.style.display = 'none';
-    if (campoNivel) campoNivel.style.display = 'none';
-
+    // Mostrar os campos corretos baseados no modelo
     if (modelo.startsWith('progressao_')) {
-        if (grupoProg) grupoProg.style.display = 'block';
-    } else if (modelo === 'especialidade_le') {
-        if (grupoEsp) grupoEsp.style.display = 'block';
-        if (campoNivel) campoNivel.style.display = 'block';
-    } else if (modelo === 'especialidade_sp') {
-        if (grupoEsp) grupoEsp.style.display = 'block';
+        document.getElementById('grupo-progressao').style.display = 'block';
+    } 
+    else if (modelo === 'especialidade_le') {
+        document.getElementById('grupo-especialidade').style.display = 'block';
+        document.getElementById('campo-nivel').style.display = 'block';
+    } 
+    else if (modelo === 'especialidade_sp') {
+        document.getElementById('grupo-especialidade').style.display = 'block';
+        document.getElementById('campo-sp-extra').style.display = 'block';
     }
     
     gerarCertificado();
@@ -38,90 +40,140 @@ function gerarCertificado() {
     img.onload = function () {
         canvas.width = img.width;
         canvas.height = img.height;
-
         ctx.drawImage(img, 0, 0);
-
         ctx.fillStyle = '#111111';
-        ctx.textAlign = 'center';
-
-        // Fontes sem negrito, com tamanho alinhado ao texto impresso
-        const fontePrincipal = '26pt Arial, sans-serif';
-        const fonteSecundaria = '20pt Arial, sans-serif';
+        
+        // Fontes sem negrito, igualadas ao tamanho impresso
+        const fontePrincipal = '20pt Arial, sans-serif';
+        const fontePequena = '16pt Arial, sans-serif';
+        
+        ctx.font = fontePrincipal;
 
         // ==========================================
-        // 1. PROGRESSÃO PESSOAL (TODOS OS RAMOS)
+        // 1. PROGRESSÃO - LOBINHO
         // ==========================================
-        if (modelo.startsWith('progressao_')) {
+        if (modelo === 'progressao_l') {
             const etapa = document.getElementById('etapa').value || "";
+            ctx.textAlign = 'center';
             
-            // Nome
-            ctx.font = fontePrincipal;
-            ctx.fillText(nome, canvas.width * 0.485, canvas.height * 0.33); 
+            ctx.fillText(nome, canvas.width * 0.48, canvas.height * 0.315); 
+            ctx.fillText(etapa, canvas.width * 0.53, canvas.height * 0.375); 
             
-            // Etapa
-            ctx.font = fonteSecundaria;
-            ctx.fillText(etapa, canvas.width * 0.555, canvas.height * 0.40); 
-
-            // Linha de Data
-            ctx.fillText(cidade, canvas.width * 0.33, canvas.height * 0.52);
-            ctx.fillText(dia, canvas.width * 0.46, canvas.height * 0.52);
-            ctx.fillText(mes, canvas.width * 0.585, canvas.height * 0.52);
-            ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.52);
+            ctx.fillText(cidade, canvas.width * 0.32, canvas.height * 0.525);
+            ctx.fillText(dia, canvas.width * 0.45, canvas.height * 0.525);
+            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.525);
+            ctx.fillText(ano, canvas.width * 0.69, canvas.height * 0.525);
+        }
+        
+        // ==========================================
+        // 2. PROGRESSÃO - ESCOTEIRO
+        // ==========================================
+        else if (modelo === 'progressao_e') {
+            const etapa = document.getElementById('etapa').value || "";
+            ctx.textAlign = 'center';
+            
+            ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.33); 
+            ctx.fillText(etapa, canvas.width * 0.55, canvas.height * 0.405); 
+            
+            ctx.fillText(cidade, canvas.width * 0.34, canvas.height * 0.56);
+            ctx.fillText(dia, canvas.width * 0.47, canvas.height * 0.56);
+            ctx.fillText(mes, canvas.width * 0.59, canvas.height * 0.56);
+            ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.56);
         }
 
         // ==========================================
-        // 2. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
+        // 3. PROGRESSÃO - SÊNIOR
+        // ==========================================
+        else if (modelo === 'progressao_s') {
+            const etapa = document.getElementById('etapa').value || "";
+            ctx.textAlign = 'center';
+            
+            ctx.fillText(nome, canvas.width * 0.59, canvas.height * 0.33); 
+            ctx.fillText(etapa, canvas.width * 0.65, canvas.height * 0.385); 
+            
+            ctx.fillText(cidade, canvas.width * 0.45, canvas.height * 0.545);
+            ctx.fillText(dia, canvas.width * 0.58, canvas.height * 0.545);
+            ctx.fillText(mes, canvas.width * 0.70, canvas.height * 0.545);
+            ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
+        }
+
+        // ==========================================
+        // 4. PROGRESSÃO - PIONEIRO
+        // ==========================================
+        else if (modelo === 'progressao_p') {
+            const etapa = document.getElementById('etapa').value || "";
+            ctx.textAlign = 'center';
+            
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
+            ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
+            
+            ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
+            ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
+            ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
+            ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+        }
+
+        // ==========================================
+        // 5. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
         // ==========================================
         else if (modelo === 'especialidade_le') {
             const esp = document.getElementById('especialidade').value || "";
             const nivel = document.getElementById('nivel').value || "";
             const itens = document.getElementById('itens').value || "";
+            ctx.textAlign = 'center';
 
-            // Nome
+            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.36);
+            ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.442);
+            ctx.fillText(nivel, canvas.width * 0.592, canvas.height * 0.505);
+            
+            ctx.font = fontePequena;
+            ctx.fillText(itens, canvas.width * 0.62, canvas.height * 0.585);
+            
             ctx.font = fontePrincipal;
-            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.355);
-            
-            // Especialidade
-            ctx.font = fonteSecundaria;
-            ctx.fillText(esp, canvas.width * 0.75, canvas.height * 0.44);
-            
-            // Nível
-            ctx.fillText(nivel, canvas.width * 0.592, canvas.height * 0.495);
-            
-            // Itens Completados
-            ctx.fillText(itens, canvas.width * 0.625, canvas.height * 0.585);
-            
-            // Linha de Data
-            ctx.fillText(cidade, canvas.width * 0.485, canvas.height * 0.685);
-            ctx.fillText(dia, canvas.width * 0.575, canvas.height * 0.685);
-            ctx.fillText(mes, canvas.width * 0.675, canvas.height * 0.685);
+            ctx.fillText(cidade, canvas.width * 0.48, canvas.height * 0.685);
+            ctx.fillText(dia, canvas.width * 0.57, canvas.height * 0.685);
+            ctx.fillText(mes, canvas.width * 0.67, canvas.height * 0.685);
             ctx.fillText(ano, canvas.width * 0.78, canvas.height * 0.685);
         }
 
         // ==========================================
-        // 3. ESPECIALIDADE (SÊNIOR / PIONEIRO)
+        // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO)
         // ==========================================
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade').value || "";
+            const eixo = document.getElementById('eixo').value || "";
+            const carga = document.getElementById('carga').value || "";
+            const conhecer = document.getElementById('conhecer').value || "";
+            const fazer = document.getElementById('fazer').value || "";
+            const compartilhar = document.getElementById('compartilhar').value || "";
 
-            // Nome
-            ctx.font = fontePrincipal;
-            ctx.fillText(nome, canvas.width * 0.315, canvas.height * 0.37);
+            // PARTE SUPERIOR (Centralizado nas linhas)
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.305, canvas.height * 0.19);
+            ctx.fillText(esp, canvas.width * 0.395, canvas.height * 0.237);
             
-            // Especialidade
-            ctx.font = fonteSecundaria;
-            ctx.fillText(esp, canvas.width * 0.405, canvas.height * 0.465);
+            ctx.fillText(cidade, canvas.width * 0.18, canvas.height * 0.298);
+            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.298);
+            ctx.fillText(mes, canvas.width * 0.38, canvas.height * 0.298);
+            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.298);
+
+            // PARTE INFERIOR - "Sobre a Especialidade" (Alinhado à esquerda)
+            ctx.textAlign = 'left';
+            ctx.font = '14pt Arial, sans-serif'; // Fonte menor para preencher os relatórios
+
+            // Os valores de altura (Y) aqui são estimados para a metade de baixo do documento
+            ctx.fillText(esp, canvas.width * 0.21, canvas.height * 0.652);
+            ctx.fillText(eixo, canvas.width * 0.43, canvas.height * 0.671);
+            ctx.fillText(carga, canvas.width * 0.22, canvas.height * 0.69);
             
-            // Linha de Data
-            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.585);
-            ctx.fillText(dia, canvas.width * 0.285, canvas.height * 0.585);
-            ctx.fillText(mes, canvas.width * 0.39, canvas.height * 0.585);
-            ctx.fillText(ano, canvas.width * 0.51, canvas.height * 0.585);
+            ctx.fillText(conhecer, canvas.width * 0.35, canvas.height * 0.749);
+            ctx.fillText(fazer, canvas.width * 0.45, canvas.height * 0.803);
+            ctx.fillText(compartilhar, canvas.width * 0.52, canvas.height * 0.857);
         }
     };
     
     img.onerror = function() {
-        console.error("Erro: Não foi possível carregar a imagem.");
+        console.error("Erro ao carregar a imagem.");
     };
 }
 
@@ -131,9 +183,13 @@ function baixarPDF() {
         return;
     }
     const { jsPDF } = window.jspdf;
+    
+    // O certificado Especialidade Sênior/Pioneiro é alto (Retrato/Portrait), os outros são Paisagem
+    const orientacao = document.getElementById('modelo').value === 'especialidade_sp' ? 'portrait' : 'landscape';
+    
     const imgData = canvas.toDataURL('image/png', 1.0);
     const pdf = new jsPDF({
-        orientation: 'landscape',
+        orientation: orientacao,
         unit: 'px',
         format: [canvas.width, canvas.height]
     });
