@@ -80,6 +80,12 @@
                 <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
             </optgroup>
         </select>
+        
+        <div class="grupo-campo">
+    <label for="logoInput">Adicionar logo da UEL:</label>
+    <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
+    <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
+</div>
 
         <label for="nome">Nome do jovem:</label>
         <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
