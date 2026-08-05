@@ -43,23 +43,24 @@ function gerarCertificado() {
         ctx.fillStyle = '#0a0a0a';
         ctx.textAlign = 'center';
 
-        // Define a fonte cursiva para o Nome (Great Vibes)
-        const fonteNome = '65pt "Great Vibes", "Brush Script MT", cursive';
-        const fonteTexto = '28pt Georgia, serif';
-        const fonteData = '22pt Georgia, serif';
+        // Definição das fontes Arial
+        const fonteNome = 'bold 42pt Arial, sans-serif';
+        const fonteTexto = 'bold 30pt Arial, sans-serif';
+        const fonteData = 'bold 22pt Arial, sans-serif';
 
-        // 1. CERTIFICADOS DE PROGRESSÃO PESSOAL
+        // 1. CERTIFICADOS DE PROGRESSÃO PESSOAL (Lobinho, Escoteiro, Sênior, Pioneiro)
         if (modelo.startsWith('progressao_')) {
             const etapa = document.getElementById('etapa').value || "Nome da Etapa";
             
-            // Posição do Nome ajustada para ficar acima (0.29 da altura)
+            // Posição do Nome (desceu para 0.33 para encaixar na linha)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29); 
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33); 
             
+            // Posição da Etapa (subiu levemente para 0.44 para ajustar na linha)
             ctx.font = fonteTexto;
-            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.40); 
+            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.44); 
 
-            // Posições da Data
+            // Datas
             ctx.font = fonteData;
             ctx.fillText(dia, canvas.width * 0.40, canvas.height * 0.65);
             ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.65);
@@ -73,14 +74,21 @@ function gerarCertificado() {
             const itens = document.getElementById('itens').value || "1, 2 e 3";
             const avaliador = document.getElementById('avaliador').value || "Nome do Examinador";
 
+            // Nome do Jovem (corrigido para 0.33)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29);
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33);
             
+            // Nome da Especialidade (posicionado em 0.42)
             ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.40);
-            ctx.fillText(nivel, canvas.width * 0.48, canvas.height * 0.46);
-            ctx.fillText(itens, canvas.width / 2, canvas.height * 0.52);
+            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.42);
             
+            // Nível (posicionado em 0.48)
+            ctx.fillText(nivel, canvas.width * 0.48, canvas.height * 0.48);
+            
+            // Itens Completados (posicionado em 0.54)
+            ctx.fillText(itens, canvas.width / 2, canvas.height * 0.54);
+            
+            // Avaliador e Data
             ctx.font = fonteData;
             ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
             ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
@@ -93,12 +101,15 @@ function gerarCertificado() {
             const esp = document.getElementById('especialidade').value || "Nome da Especialidade";
             const avaliador = document.getElementById('avaliador').value || "Nome do Orientador";
 
+            // Nome do Jovem (corrigido para 0.33)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.29);
+            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33);
             
+            // Nome da Especialidade (posicionado em 0.42)
             ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.40);
+            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.42);
             
+            // Avaliador e Data
             ctx.font = fonteData;
             ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
             ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
@@ -130,7 +141,5 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Aguarda o carregamento das fontes antes de desenhar na tela
-document.fonts.ready.then(() => {
-    atualizarFormulario();
-});
+// Executa a montagem inicial
+atualizarFormulario();
