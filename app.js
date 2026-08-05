@@ -26,7 +26,7 @@ function atualizarFormulario() {
 
 function gerarCertificado() {
     const modelo = document.getElementById('modelo').value;
-    const nome = document.getElementById('nome').value || "Nome do Jovem Escoteiro";
+    const nome = document.getElementById('nome').value || "Nome do Jovem";
     const dia = document.getElementById('dia').value || "15";
     const mes = document.getElementById('mes').value || "Agosto";
     const ano = document.getElementById('ano').value || "2026";
@@ -43,78 +43,92 @@ function gerarCertificado() {
         ctx.fillStyle = '#0a0a0a';
         ctx.textAlign = 'center';
 
-        // Definição das fontes Arial
-        const fonteNome = 'bold 42pt Arial, sans-serif';
-        const fonteTexto = 'bold 30pt Arial, sans-serif';
-        const fonteData = 'bold 22pt Arial, sans-serif';
+        // Fontes em Arial (Tamanhos ajustados para caber nas linhas)
+        const fonteNome = 'bold 36pt Arial, sans-serif';
+        const fonteTexto = 'bold 24pt Arial, sans-serif';
+        const fontePequena = 'bold 20pt Arial, sans-serif';
 
-        // 1. CERTIFICADOS DE PROGRESSÃO PESSOAL (Lobinho, Escoteiro, Sênior, Pioneiro)
+        // ---------------------------------------------------------
+        // 1. PROGRESSÃO PESSOAL (LOBINHO, ESCOTEIRO, SÊNIOR, PIONEIRO)
+        // ---------------------------------------------------------
         if (modelo.startsWith('progressao_')) {
-            const etapa = document.getElementById('etapa').value || "Nome da Etapa";
+            const etapa = document.getElementById('etapa').value || "Etapa";
             
-            // Posição do Nome (desceu para 0.33 para encaixar na linha)
+            // Nome (Desceu para 0.355 para encostar na linha)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33); 
+            ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.355); 
             
-            // Posição da Etapa (subiu levemente para 0.44 para ajustar na linha)
+            // Etapa (Subiu para 0.415 para encostar na linha)
             ctx.font = fonteTexto;
-            ctx.fillText(etapa, canvas.width / 2, canvas.height * 0.44); 
+            ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.415); 
 
-            // Datas
-            ctx.font = fonteData;
-            ctx.fillText(dia, canvas.width * 0.40, canvas.height * 0.65);
-            ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.65);
-            ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.65);
+            // Datas (Centralizadas nos espaços menores)
+            ctx.font = fonteTexto;
+            ctx.fillText(dia, canvas.width * 0.46, canvas.height * 0.56);
+            ctx.fillText(mes, canvas.width * 0.58, canvas.height * 0.56);
+            ctx.fillText(ano, canvas.width * 0.70, canvas.height * 0.56);
         }
 
-        // 2. CERTIFICADO DE ESPECIALIDADE (LOBINHO / ESCOTEIRO)
+        // ---------------------------------------------------------
+        // 2. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
+        // ---------------------------------------------------------
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "Nome da Especialidade";
+            const esp = document.getElementById('especialidade').value || "Especialidade";
             const nivel = document.getElementById('nivel').value || "1";
             const itens = document.getElementById('itens').value || "1, 2 e 3";
-            const avaliador = document.getElementById('avaliador').value || "Nome do Examinador";
+            const avaliador = document.getElementById('avaliador').value || "Examinador";
 
-            // Nome do Jovem (corrigido para 0.33)
+            // Nome (Mais abaixo, posicionado à direita da logo)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33);
+            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.365);
             
-            // Nome da Especialidade (posicionado em 0.42)
+            // Especialidade
             ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.42);
+            ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.445);
             
-            // Nível (posicionado em 0.48)
-            ctx.fillText(nivel, canvas.width * 0.48, canvas.height * 0.48);
+            // Nível (Espaço bem pequeno)
+            ctx.font = fonteTexto;
+            ctx.fillText(nivel, canvas.width * 0.59, canvas.height * 0.505);
             
-            // Itens Completados (posicionado em 0.54)
-            ctx.fillText(itens, canvas.width / 2, canvas.height * 0.54);
+            // Itens Completados (Linha de baixo)
+            ctx.font = fontePequena;
+            ctx.fillText(itens, canvas.width * 0.62, canvas.height * 0.585);
             
-            // Avaliador e Data
-            ctx.font = fonteData;
-            ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
-            ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
-            ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.64);
-            ctx.fillText(ano, canvas.width * 0.77, canvas.height * 0.64);
+            // Data
+            ctx.font = fonteTexto;
+            ctx.fillText(dia, canvas.width * 0.57, canvas.height * 0.685);
+            ctx.fillText(mes, canvas.width * 0.68, canvas.height * 0.685);
+            ctx.fillText(ano, canvas.width * 0.79, canvas.height * 0.685);
+
+            // Avaliador (Assinatura inferior)
+            ctx.font = fontePequena;
+            ctx.fillText(avaliador, canvas.width * 0.53, canvas.height * 0.89);
         }
 
-        // 3. CERTIFICADO DE ESPECIALIDADE (SÊNIOR / PIONEIRO)
+        // ---------------------------------------------------------
+        // 3. ESPECIALIDADE (SÊNIOR / PIONEIRO)
+        // ---------------------------------------------------------
         else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "Nome da Especialidade";
-            const avaliador = document.getElementById('avaliador').value || "Nome do Orientador";
+            const esp = document.getElementById('especialidade').value || "Especialidade";
+            const avaliador = document.getElementById('avaliador').value || "Orientador";
 
-            // Nome do Jovem (corrigido para 0.33)
+            // Nome (Alinhado mais à esquerda neste modelo)
             ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width / 2, canvas.height * 0.33);
+            ctx.fillText(nome, canvas.width * 0.30, canvas.height * 0.365);
             
-            // Nome da Especialidade (posicionado em 0.42)
+            // Especialidade
             ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width / 2, canvas.height * 0.42);
+            ctx.fillText(esp, canvas.width * 0.39, canvas.height * 0.465);
             
-            // Avaliador e Data
-            ctx.font = fonteData;
-            ctx.fillText(avaliador, canvas.width * 0.28, canvas.height * 0.64);
-            ctx.fillText(dia, canvas.width * 0.52, canvas.height * 0.64);
-            ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.64);
-            ctx.fillText(ano, canvas.width * 0.77, canvas.height * 0.64);
+            // Data
+            ctx.font = fonteTexto;
+            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.595);
+            ctx.fillText(mes, canvas.width * 0.39, canvas.height * 0.595);
+            ctx.fillText(ano, canvas.width * 0.52, canvas.height * 0.595);
+
+            // Avaliador (Assinatura inferior)
+            ctx.font = fontePequena;
+            ctx.fillText(avaliador, canvas.width * 0.17, canvas.height * 0.86);
         }
     };
     
