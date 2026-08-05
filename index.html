@@ -11,11 +11,13 @@
             color: #e0e0e0; 
             padding: 15px; 
             display: flex; 
+            flex-direction: column; /* Faz os itens ficarem um embaixo do outro */
             justify-content: center; 
             align-items: center; 
             min-height: 100vh;
             margin: 0;
             box-sizing: border-box;
+            gap: 20px; /* Espaço entre as caixas */
         }
         .box { 
             background: #1e1e1e; 
@@ -49,6 +51,7 @@
 </head>
 <body>
 
+    <!-- CAIXA 1: GERADOR DE CERTIFICADOS -->
     <div class="box">
         <h2>⚜️ Gerador de Certificados</h2>
 
@@ -132,6 +135,32 @@
         <canvas id="canvasCertificado"></canvas>
 
         <button onclick="baixarPDF()">Baixar PDF</button>
+    </div>
+
+    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
+    <div class="box">
+        <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">📱 Como baixar este app</h3>
+        <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema funciona como um aplicativo no seu celular. Veja como instalar para acessar offline:</p>
+        
+        <!-- Instruções Android -->
+        <div style="background: #2d2d2d; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444;">
+            <strong style="color: #4CAF50;">🤖 Android (Google Chrome)</strong>
+            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px;">
+                <li>Toque nos <strong>três pontinhos</strong> no canto superior direito.</li>
+                <li>Selecione <strong>"Adicionar à tela inicial"</strong> (ou "Instalar aplicativo").</li>
+                <li>Toque em <strong>Adicionar</strong>.</li>
+            </ul>
+        </div>
+
+        <!-- Instruções iOS -->
+        <div style="background: #2d2d2d; padding: 12px; border-radius: 8px; border: 1px solid #444;">
+            <strong style="color: #007AFF;">🍎 iPhone (Safari)</strong>
+            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px;">
+                <li>Toque no ícone de <strong>Compartilhar</strong> (o quadrado com uma seta para cima, na barra inferior).</li>
+                <li>Role a tela para baixo e selecione <strong>"Adicionar à Tela de Início"</strong>.</li>
+                <li>Toque em <strong>Adicionar</strong> no canto superior direito.</li>
+            </ul>
+        </div>
     </div>
 
     <script src="app.js?v=4"></script>
