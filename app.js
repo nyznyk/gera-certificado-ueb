@@ -5,22 +5,27 @@ function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
     
     // Esconder tudo primeiro
-    document.getElementById('grupo-progressao').style.display = 'none';
-    document.getElementById('grupo-especialidade').style.display = 'none';
-    document.getElementById('campo-nivel').style.display = 'none';
-    document.getElementById('campo-sp-extra').style.display = 'none';
+    const grupoProg = document.getElementById('grupo-progressao');
+    const grupoEsp = document.getElementById('grupo-especialidade');
+    const campoNivel = document.getElementById('campo-nivel');
+    const campoSpExtra = document.getElementById('campo-sp-extra');
+
+    if (grupoProg) grupoProg.style.display = 'none';
+    if (grupoEsp) grupoEsp.style.display = 'none';
+    if (campoNivel) campoNivel.style.display = 'none';
+    if (campoSpExtra) campoSpExtra.style.display = 'none';
 
     // Mostrar os campos corretos baseados no modelo
     if (modelo.startsWith('progressao_')) {
-        document.getElementById('grupo-progressao').style.display = 'block';
+        if (grupoProg) grupoProg.style.display = 'block';
     } 
     else if (modelo === 'especialidade_le') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
-        document.getElementById('campo-nivel').style.display = 'block';
+        if (grupoEsp) grupoEsp.style.display = 'block';
+        if (campoNivel) campoNivel.style.display = 'block';
     } 
     else if (modelo === 'especialidade_sp') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
-        document.getElementById('campo-sp-extra').style.display = 'block';
+        if (grupoEsp) grupoEsp.style.display = 'block';
+        if (campoSpExtra) campoSpExtra.style.display = 'block';
     }
     
     gerarCertificado();
@@ -35,6 +40,7 @@ function gerarCertificado() {
     const ano = document.getElementById('ano').value || "";
 
     const img = new Image();
+    // Usa o nome do arquivo exatamente como referenciado nas imagens
     img.src = `./modelo_${modelo}.png`;
 
     img.onload = function () {
@@ -147,33 +153,38 @@ function gerarCertificado() {
             const fazer = document.getElementById('fazer').value || "";
             const compartilhar = document.getElementById('compartilhar').value || "";
 
-            // PARTE SUPERIOR (Centralizado nas linhas)
+            // --- PARTE SUPERIOR (Certificado) ---
             ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.305, canvas.height * 0.19);
-            ctx.fillText(esp, canvas.width * 0.395, canvas.height * 0.237);
             
-            ctx.fillText(cidade, canvas.width * 0.18, canvas.height * 0.298);
-            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.298);
-            ctx.fillText(mes, canvas.width * 0.38, canvas.height * 0.298);
-            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.298);
+            // O nome fica no centro da linha superior, que é ligeiramente deslocada para a esquerda
+            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.185);
+            
+            // Especialidade
+            ctx.fillText(esp, canvas.width * 0.46, canvas.height * 0.233);
+            
+            // Linha de Data e Local
+            ctx.fillText(cidade, canvas.width * 0.20, canvas.height * 0.297);
+            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.297);
+            ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.297);
+            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.297);
 
-            // PARTE INFERIOR - "Sobre a Especialidade" (Alinhado à esquerda)
+            // --- PARTE INFERIOR (Relatório / Ficha) ---
+            // Aqui mudamos o alinhamento para ESQUERDA, para o texto começar exatamente no início da linha
             ctx.textAlign = 'left';
-            ctx.font = '14pt Arial, sans-serif'; // Fonte menor para preencher os relatórios
+            ctx.font = '14pt Arial, sans-serif'; 
 
-            // Os valores de altura (Y) aqui são estimados para a metade de baixo do documento
-            ctx.fillText(esp, canvas.width * 0.21, canvas.height * 0.652);
-            ctx.fillText(eixo, canvas.width * 0.43, canvas.height * 0.671);
-            ctx.fillText(carga, canvas.width * 0.22, canvas.height * 0.69);
+            ctx.fillText(esp, canvas.width * 0.252, canvas.height * 0.648);
+            ctx.fillText(eixo, canvas.width * 0.415, canvas.height * 0.669);
+            ctx.fillText(carga, canvas.width * 0.232, canvas.height * 0.690);
             
-            ctx.fillText(conhecer, canvas.width * 0.35, canvas.height * 0.749);
-            ctx.fillText(fazer, canvas.width * 0.45, canvas.height * 0.803);
-            ctx.fillText(compartilhar, canvas.width * 0.52, canvas.height * 0.857);
+            ctx.fillText(conhecer, canvas.width * 0.485, canvas.height * 0.746);
+            ctx.fillText(fazer, canvas.width * 0.575, canvas.height * 0.801);
+            ctx.fillText(compartilhar, canvas.width * 0.595, canvas.height * 0.855);
         }
     };
     
     img.onerror = function() {
-        console.error("Erro ao carregar a imagem.");
+        console.error("Erro ao carregar a imagem. Verifique se o nome do arquivo está correto.");
     };
 }
 
