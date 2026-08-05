@@ -190,7 +190,7 @@ function gerarCertificado() {
             
             // AJUSTES DAS ETAPAS (CONHECER, FAZER, COMPARTILHAR)
             const lineHeight = 30; 
-            const xInicioGeral = canvas.width * 0.19; 
+            const xInicioGeral = canvas.width * 0.12; 
             const limiteDireito = 0.91; 
             const maxWidthGeral = canvas.width * (limiteDireito - 0.19);
 
