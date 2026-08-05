@@ -40,7 +40,6 @@ function gerarCertificado() {
     const ano = document.getElementById('ano').value || "";
 
     const img = new Image();
-    // Usa o nome do arquivo exatamente como referenciado nas imagens
     img.src = `./modelo_${modelo}.png`;
 
     img.onload = function () {
@@ -49,7 +48,7 @@ function gerarCertificado() {
         ctx.drawImage(img, 0, 0);
         ctx.fillStyle = '#111111';
         
-        // Fontes sem negrito, igualadas ao tamanho impresso
+        // Fontes padronizadas para se mesclar ao impresso
         const fontePrincipal = '20pt Arial, sans-serif';
         const fontePequena = '16pt Arial, sans-serif';
         
@@ -61,10 +60,8 @@ function gerarCertificado() {
         if (modelo === 'progressao_l') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
-            
             ctx.fillText(nome, canvas.width * 0.48, canvas.height * 0.315); 
             ctx.fillText(etapa, canvas.width * 0.53, canvas.height * 0.375); 
-            
             ctx.fillText(cidade, canvas.width * 0.32, canvas.height * 0.525);
             ctx.fillText(dia, canvas.width * 0.45, canvas.height * 0.525);
             ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.525);
@@ -77,10 +74,8 @@ function gerarCertificado() {
         else if (modelo === 'progressao_e') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
-            
             ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.55, canvas.height * 0.405); 
-            
             ctx.fillText(cidade, canvas.width * 0.34, canvas.height * 0.56);
             ctx.fillText(dia, canvas.width * 0.47, canvas.height * 0.56);
             ctx.fillText(mes, canvas.width * 0.59, canvas.height * 0.56);
@@ -93,10 +88,8 @@ function gerarCertificado() {
         else if (modelo === 'progressao_s') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
-            
             ctx.fillText(nome, canvas.width * 0.59, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.65, canvas.height * 0.385); 
-            
             ctx.fillText(cidade, canvas.width * 0.45, canvas.height * 0.545);
             ctx.fillText(dia, canvas.width * 0.58, canvas.height * 0.545);
             ctx.fillText(mes, canvas.width * 0.70, canvas.height * 0.545);
@@ -109,10 +102,8 @@ function gerarCertificado() {
         else if (modelo === 'progressao_p') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
-            
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
-            
             ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
             ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
             ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
@@ -127,7 +118,6 @@ function gerarCertificado() {
             const nivel = document.getElementById('nivel').value || "";
             const itens = document.getElementById('itens').value || "";
             ctx.textAlign = 'center';
-
             ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.36);
             ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.442);
             ctx.fillText(nivel, canvas.width * 0.592, canvas.height * 0.505);
@@ -143,7 +133,7 @@ function gerarCertificado() {
         }
 
         // ==========================================
-        // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO)
+        // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO) -> CORRIGIDO
         // ==========================================
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade').value || "";
@@ -154,32 +144,30 @@ function gerarCertificado() {
             const compartilhar = document.getElementById('compartilhar').value || "";
 
             // --- PARTE SUPERIOR (Certificado) ---
-            ctx.textAlign = 'center';
+            ctx.textAlign = 'center'; // Alinhamento central para encaixar nos sublinhados
             
-            // O nome fica no centro da linha superior, que é ligeiramente deslocada para a esquerda
-            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.185);
+            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.194);
+            ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.237);
             
-            // Especialidade
-            ctx.fillText(esp, canvas.width * 0.46, canvas.height * 0.233);
-            
-            // Linha de Data e Local
-            ctx.fillText(cidade, canvas.width * 0.20, canvas.height * 0.297);
-            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.297);
+            // Posições da data reajustadas (X) para não invadirem os "de"
+            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.297);
+            ctx.fillText(dia, canvas.width * 0.30, canvas.height * 0.297);
             ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.297);
             ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.297);
 
             // --- PARTE INFERIOR (Relatório / Ficha) ---
-            // Aqui mudamos o alinhamento para ESQUERDA, para o texto começar exatamente no início da linha
-            ctx.textAlign = 'left';
+            ctx.textAlign = 'left'; // Alinhamento ESQUERDO estrito
             ctx.font = '14pt Arial, sans-serif'; 
 
-            ctx.fillText(esp, canvas.width * 0.252, canvas.height * 0.648);
-            ctx.fillText(eixo, canvas.width * 0.415, canvas.height * 0.669);
-            ctx.fillText(carga, canvas.width * 0.232, canvas.height * 0.690);
+            // Posição Y (Altura) e Posição X exata após os "dois pontos (:)" de cada linha
+            ctx.fillText(esp, canvas.width * 0.255, canvas.height * 0.650);
+            ctx.fillText(eixo, canvas.width * 0.430, canvas.height * 0.672);
+            ctx.fillText(carga, canvas.width * 0.238, canvas.height * 0.693);
             
-            ctx.fillText(conhecer, canvas.width * 0.485, canvas.height * 0.746);
-            ctx.fillText(fazer, canvas.width * 0.575, canvas.height * 0.801);
-            ctx.fillText(compartilhar, canvas.width * 0.595, canvas.height * 0.855);
+            // As três etapas começam bem depois do que estava antes!
+            ctx.fillText(conhecer, canvas.width * 0.380, canvas.height * 0.751);
+            ctx.fillText(fazer, canvas.width * 0.540, canvas.height * 0.804);
+            ctx.fillText(compartilhar, canvas.width * 0.585, canvas.height * 0.859);
         }
     };
     
@@ -195,7 +183,6 @@ function baixarPDF() {
     }
     const { jsPDF } = window.jspdf;
     
-    // O certificado Especialidade Sênior/Pioneiro é alto (Retrato/Portrait), os outros são Paisagem
     const orientacao = document.getElementById('modelo').value === 'especialidade_sp' ? 'portrait' : 'landscape';
     
     const imgData = canvas.toDataURL('image/png', 1.0);
