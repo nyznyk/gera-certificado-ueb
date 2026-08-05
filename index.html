@@ -3,13 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Certificados Escoteiros</title>
-    
-    <!-- Importação da fonte cursiva para o Nome -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
+    <title>Emissor de Certificados Escoteiros</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -50,14 +44,13 @@
         canvas { width: 100%; height: auto; margin-top: 15px; border-radius: 6px; border: 1px solid #444; background-color: #000; }
         .campo-dinamico { display: none; }
     </style>
-    <!-- Biblioteca para gerar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
     <div class="box">
-        <h2>⚜️ Gerador de Certificados Escoteiros</h2>
+        <h2>⚜️ Emissor Escoteiro</h2>
 
         <label for="modelo">Selecione o Modelo de Certificado:</label>
         <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
@@ -67,24 +60,20 @@
                 <option value="progressao_s">Progressão - Sênior</option>
                 <option value="progressao_p">Progressão - Pioneiro</option>
             </optgroup>
-            
             <optgroup label="Especialidades">
                 <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
                 <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
             </optgroup>
         </select>
 
-        <!-- Campo Comum -->
         <label for="nome">Nome do Jovem:</label>
         <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
 
-        <!-- Campos para Progressão Pessoal -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de Progressão:</label>
             <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
         </div>
 
-        <!-- Campos para Especialidades -->
         <div id="grupo-especialidade" class="campo-dinamico">
             <label for="especialidade">Nome da Especialidade:</label>
             <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
@@ -99,12 +88,12 @@
                 <label for="itens">Itens Completados:</label>
                 <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
             </div>
-
-            <label for="avaliador">Nome do Examinador / Orientador:</label>
-            <input type="text" id="avaliador" placeholder="Ex: Chefe Silva" oninput="gerarCertificado()">
         </div>
 
-        <!-- Campos de Data -->
+        <!-- Campos de Data Corrigidos -->
+        <label for="cidade">Local (Cidade):</label>
+        <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
+
         <div style="display: flex; gap: 10px;">
             <div style="flex:1;">
                 <label for="dia">Dia:</label>
@@ -120,31 +109,19 @@
             </div>
         </div>
 
-        <!-- Área de Pré-visualização -->
         <canvas id="canvasCertificado"></canvas>
 
         <button onclick="baixarPDF()">Baixar PDF Pronto para Impressão</button>
     </div>
 
-    <!-- Força a atualização do app.js adicionando parâmetro de versão v=2 -->
-    <script src="app.js?v=2"></script>
+    <!-- Força a atualização do app.js -->
+    <script src="app.js?v=3"></script>
     <script>
-        // Dispara a montagem da tela e renderização do certificado
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof atualizarFormulario === 'function') {
                 atualizarFormulario();
             }
         });
-
-        // Remove Service Workers antigos se houver e registra o novo
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                for (let registration of registrations) {
-                    registration.unregister();
-                }
-            });
-            navigator.serviceWorker.register('sw.js?v=2');
-        }
     </script>
 </body>
 </html>
