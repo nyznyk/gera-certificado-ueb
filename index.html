@@ -1,13 +1,15 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- Importação da fonte cursiva para o certificado -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Certificados Escoteiros</title>
+    
+    <!-- Importação da fonte cursiva para o Nome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -55,9 +57,9 @@
 <body>
 
     <div class="box">
-        <h2>⚜️ Gerador de certificados escoteiros</h2>
+        <h2>⚜️ Gerador de Certificados Escoteiros</h2>
 
-        <label for="modelo">Selecione o modelo de certificado:</label>
+        <label for="modelo">Selecione o Modelo de Certificado:</label>
         <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
             <optgroup label="Progressão Pessoal">
                 <option value="progressao_l">Progressão - Lobinho</option>
@@ -124,18 +126,24 @@
         <button onclick="baixarPDF()">Baixar PDF Pronto para Impressão</button>
     </div>
 
-    <script src="app.js"></script>
+    <!-- Força a atualização do app.js adicionando parâmetro de versão v=2 -->
+    <script src="app.js?v=2"></script>
     <script>
-        // Dispara o carregamento do certificado assim que a estrutura do HTML estiver pronta
+        // Dispara a montagem da tela e renderização do certificado
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof atualizarFormulario === 'function') {
                 atualizarFormulario();
             }
         });
 
-        // Registro do Service Worker para suporte PWA/Offline
+        // Remove Service Workers antigos se houver e registra o novo
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                for (let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+            navigator.serviceWorker.register('sw.js?v=2');
         }
     </script>
 </body>
