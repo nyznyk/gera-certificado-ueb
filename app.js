@@ -240,7 +240,7 @@ function gerarCertificado() {
             if (modelo === 'especialidade_sp') {
                 // Canto inferior direito
                 xPos = canvas.width * 0.88;
-                yPos = canvas.height * 0.41;
+                yPos = canvas.height * 0.415;
             } 
             else if (modelo === 'progressao_s' || modelo === 'progressao_p' || modelo === `progressao_e`) {
                 // Ao lado esquerdo da logo da UEB (ajustável)
