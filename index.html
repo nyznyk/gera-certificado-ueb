@@ -47,7 +47,7 @@
             margin-top: 4px; 
             border-radius: 6px; 
             border: 1px solid #333; 
-            background: rgba(45, 45, 45, 0.9); /* Caixas de texto levemente translúcidas também */
+            background: rgba(45, 45, 45, 0.9);
             color: white; 
             box-sizing: border-box; 
             font-size: 0.95rem; 
@@ -82,10 +82,10 @@
         </select>
         
         <div class="grupo-campo">
-    <label for="logoInput">Adicionar logo da UEL:</label>
-    <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
-    <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
-</div>
+            <label for="logoInput">Adicionar logo da UEL:</label>
+            <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
+            <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
+        </div>
 
         <label for="nome">Nome do jovem:</label>
         <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
@@ -156,7 +156,6 @@
     </div>
 
     <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
-    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
     <div class="box">
         <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">Como baixar o app</h3>
         <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema funciona como um aplicativo no seu celular. Veja como instalar:
@@ -182,14 +181,31 @@
             </ul>
         </div>
     </div>
-<!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
+
+    <!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
     <footer style="text-align: center; font-size: 0.75rem; color: #777; opacity: 0.6; margin-top: -5px; padding-bottom: 10px;">
         Desenvolvido por <strong style="color: #aaa;">Beatriz Nyznyk GENSM 49/PR</strong>
     </footer>
 
-    <script src="app.js?v=4"></script>
-    <script src="app.js?v=4"></script>
+    <!-- SCRIPT PRINCIPAL DO APP -->
+    <script src="app.js?v=5"></script>
+
+    <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then((reg) => {
+                reg.update();
+            });
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof atualizarFormulario === 'function') {
                 atualizarFormulario();
