@@ -26,10 +26,11 @@ function atualizarFormulario() {
 
 function gerarCertificado() {
     const modelo = document.getElementById('modelo').value;
-    const nome = document.getElementById('nome').value || "Nome do Jovem";
-    const dia = document.getElementById('dia').value || "15";
-    const mes = document.getElementById('mes').value || "Agosto";
-    const ano = document.getElementById('ano').value || "2026";
+    const nome = document.getElementById('nome').value || "";
+    const cidade = document.getElementById('cidade').value || "";
+    const dia = document.getElementById('dia').value || "";
+    const mes = document.getElementById('mes').value || "";
+    const ano = document.getElementById('ano').value || "";
 
     const img = new Image();
     img.src = `./modelo_${modelo}.png`;
@@ -40,100 +41,87 @@ function gerarCertificado() {
 
         ctx.drawImage(img, 0, 0);
 
-        ctx.fillStyle = '#0a0a0a';
+        ctx.fillStyle = '#111111';
         ctx.textAlign = 'center';
 
-        // Fontes em Arial (Tamanhos ajustados para caber nas linhas)
-        const fonteNome = 'bold 36pt Arial, sans-serif';
-        const fonteTexto = 'bold 24pt Arial, sans-serif';
-        const fontePequena = 'bold 20pt Arial, sans-serif';
+        // Fontes sem negrito, com tamanho alinhado ao texto impresso
+        const fontePrincipal = '26pt Arial, sans-serif';
+        const fonteSecundaria = '20pt Arial, sans-serif';
 
-        // ---------------------------------------------------------
-        // 1. PROGRESSÃO PESSOAL (LOBINHO, ESCOTEIRO, SÊNIOR, PIONEIRO)
-        // ---------------------------------------------------------
+        // ==========================================
+        // 1. PROGRESSÃO PESSOAL (TODOS OS RAMOS)
+        // ==========================================
         if (modelo.startsWith('progressao_')) {
-            const etapa = document.getElementById('etapa').value || "Etapa";
+            const etapa = document.getElementById('etapa').value || "";
             
-            // Nome (Desceu para 0.355 para encostar na linha)
-            ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.355); 
+            // Nome
+            ctx.font = fontePrincipal;
+            ctx.fillText(nome, canvas.width * 0.485, canvas.height * 0.33); 
             
-            // Etapa (Subiu para 0.415 para encostar na linha)
-            ctx.font = fonteTexto;
-            ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.415); 
+            // Etapa
+            ctx.font = fonteSecundaria;
+            ctx.fillText(etapa, canvas.width * 0.555, canvas.height * 0.40); 
 
-            // Datas (Centralizadas nos espaços menores)
-            ctx.font = fonteTexto;
-            ctx.fillText(dia, canvas.width * 0.46, canvas.height * 0.56);
-            ctx.fillText(mes, canvas.width * 0.58, canvas.height * 0.56);
-            ctx.fillText(ano, canvas.width * 0.70, canvas.height * 0.56);
+            // Linha de Data
+            ctx.fillText(cidade, canvas.width * 0.33, canvas.height * 0.52);
+            ctx.fillText(dia, canvas.width * 0.46, canvas.height * 0.52);
+            ctx.fillText(mes, canvas.width * 0.585, canvas.height * 0.52);
+            ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.52);
         }
 
-        // ---------------------------------------------------------
+        // ==========================================
         // 2. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
-        // ---------------------------------------------------------
+        // ==========================================
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "Especialidade";
-            const nivel = document.getElementById('nivel').value || "1";
-            const itens = document.getElementById('itens').value || "1, 2 e 3";
-            const avaliador = document.getElementById('avaliador').value || "Examinador";
+            const esp = document.getElementById('especialidade').value || "";
+            const nivel = document.getElementById('nivel').value || "";
+            const itens = document.getElementById('itens').value || "";
 
-            // Nome (Mais abaixo, posicionado à direita da logo)
-            ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.365);
+            // Nome
+            ctx.font = fontePrincipal;
+            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.355);
             
             // Especialidade
-            ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.445);
+            ctx.font = fonteSecundaria;
+            ctx.fillText(esp, canvas.width * 0.75, canvas.height * 0.44);
             
-            // Nível (Espaço bem pequeno)
-            ctx.font = fonteTexto;
-            ctx.fillText(nivel, canvas.width * 0.59, canvas.height * 0.505);
+            // Nível
+            ctx.fillText(nivel, canvas.width * 0.592, canvas.height * 0.495);
             
-            // Itens Completados (Linha de baixo)
-            ctx.font = fontePequena;
-            ctx.fillText(itens, canvas.width * 0.62, canvas.height * 0.585);
+            // Itens Completados
+            ctx.fillText(itens, canvas.width * 0.625, canvas.height * 0.585);
             
-            // Data
-            ctx.font = fonteTexto;
-            ctx.fillText(dia, canvas.width * 0.57, canvas.height * 0.685);
-            ctx.fillText(mes, canvas.width * 0.68, canvas.height * 0.685);
-            ctx.fillText(ano, canvas.width * 0.79, canvas.height * 0.685);
-
-            // Avaliador (Assinatura inferior)
-            ctx.font = fontePequena;
-            ctx.fillText(avaliador, canvas.width * 0.53, canvas.height * 0.89);
+            // Linha de Data
+            ctx.fillText(cidade, canvas.width * 0.485, canvas.height * 0.685);
+            ctx.fillText(dia, canvas.width * 0.575, canvas.height * 0.685);
+            ctx.fillText(mes, canvas.width * 0.675, canvas.height * 0.685);
+            ctx.fillText(ano, canvas.width * 0.78, canvas.height * 0.685);
         }
 
-        // ---------------------------------------------------------
+        // ==========================================
         // 3. ESPECIALIDADE (SÊNIOR / PIONEIRO)
-        // ---------------------------------------------------------
+        // ==========================================
         else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "Especialidade";
-            const avaliador = document.getElementById('avaliador').value || "Orientador";
+            const esp = document.getElementById('especialidade').value || "";
 
-            // Nome (Alinhado mais à esquerda neste modelo)
-            ctx.font = fonteNome;
-            ctx.fillText(nome, canvas.width * 0.30, canvas.height * 0.365);
+            // Nome
+            ctx.font = fontePrincipal;
+            ctx.fillText(nome, canvas.width * 0.315, canvas.height * 0.37);
             
             // Especialidade
-            ctx.font = fonteTexto;
-            ctx.fillText(esp, canvas.width * 0.39, canvas.height * 0.465);
+            ctx.font = fonteSecundaria;
+            ctx.fillText(esp, canvas.width * 0.405, canvas.height * 0.465);
             
-            // Data
-            ctx.font = fonteTexto;
-            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.595);
-            ctx.fillText(mes, canvas.width * 0.39, canvas.height * 0.595);
-            ctx.fillText(ano, canvas.width * 0.52, canvas.height * 0.595);
-
-            // Avaliador (Assinatura inferior)
-            ctx.font = fontePequena;
-            ctx.fillText(avaliador, canvas.width * 0.17, canvas.height * 0.86);
+            // Linha de Data
+            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.585);
+            ctx.fillText(dia, canvas.width * 0.285, canvas.height * 0.585);
+            ctx.fillText(mes, canvas.width * 0.39, canvas.height * 0.585);
+            ctx.fillText(ano, canvas.width * 0.51, canvas.height * 0.585);
         }
     };
     
     img.onerror = function() {
-        console.error("Não foi possível carregar o arquivo ./modelo_" + modelo + ".png.");
+        console.error("Erro: Não foi possível carregar a imagem.");
     };
 }
 
@@ -155,5 +143,5 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Executa a montagem inicial
+// Inicializa a tela
 atualizarFormulario();
