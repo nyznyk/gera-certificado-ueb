@@ -1,6 +1,60 @@
-<label for="modelo">Selecione o Modelo de Certificado:</label>
-        <select id="modelo" onchange="atualizarFormulario()">
-            <!-- Certificados de Progressão por Ramo -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emissor de Certificados Escoteiros</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #121212; 
+            color: #e0e0e0; 
+            padding: 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .box { 
+            background: #1e1e1e; 
+            padding: 20px; 
+            border-radius: 12px; 
+            max-width: 500px; 
+            width: 100%; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+        }
+        h2 { text-align: center; color: #3792ff; margin-top: 0; font-size: 1.4rem; }
+        label { display: block; margin-top: 12px; font-weight: bold; font-size: 0.85rem; color: #bbb; }
+        input, select, button { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 4px; 
+            border-radius: 6px; 
+            border: 1px solid #333; 
+            background: #2d2d2d; 
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+        }
+        input:focus, select:focus { border-color: #3792ff; outline: none; }
+        button { background: #3792ff; font-weight: bold; border: none; margin-top: 20px; cursor: pointer; padding: 12px; transition: background 0.2s; }
+        button:hover { background: #0066cc; }
+        canvas { width: 100%; height: auto; margin-top: 15px; border-radius: 6px; border: 1px solid #444; background-color: #000; }
+        .campo-dinamico { display: none; }
+    </style>
+    <!-- Biblioteca para gerar PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+    <div class="box">
+        <h2>⚜️ Emissor Escoteiro</h2>
+
+        <label for="modelo">Selecione o Modelo de Certificado:</label>
+        <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
             <optgroup label="Progressão Pessoal">
                 <option value="progressao_l">Progressão - Lobinho</option>
                 <option value="progressao_e">Progressão - Escoteiro</option>
@@ -8,9 +62,77 @@
                 <option value="progressao_p">Progressão - Pioneiro</option>
             </optgroup>
             
-            <!-- Certificados de Especialidade -->
             <optgroup label="Especialidades">
                 <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
                 <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
             </optgroup>
-        <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
+        </select>
+
+        <!-- Campo Comum -->
+        <label for="nome">Nome do Jovem:</label>
+        <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
+
+        <!-- Campos para Progressão Pessoal -->
+        <div id="grupo-progressao" class="campo-dinamico">
+            <label for="etapa">Etapa de Progressão:</label>
+            <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
+        </div>
+
+        <!-- Campos para Especialidades -->
+        <div id="grupo-especialidade" class="campo-dinamico">
+            <label for="especialidade">Nome da Especialidade:</label>
+            <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
+            
+            <div id="campo-nivel" class="campo-dinamico">
+                <label for="nivel">Nível Conquistado:</label>
+                <select id="nivel" onchange="gerarCertificado()">
+                    <option value="1">Nível 1</option>
+                    <option value="2">Nível 2</option>
+                    <option value="3">Nível 3</option>
+                </select>
+                <label for="itens">Itens Completados:</label>
+                <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
+            </div>
+
+            <label for="avaliador">Nome do Examinador / Orientador:</label>
+            <input type="text" id="avaliador" placeholder="Ex: Chefe Silva" oninput="gerarCertificado()">
+        </div>
+
+        <!-- Campos de Data -->
+        <div style="display: flex; gap: 10px;">
+            <div style="flex:1;">
+                <label for="dia">Dia:</label>
+                <input type="text" id="dia" placeholder="15" oninput="gerarCertificado()">
+            </div>
+            <div style="flex:2;">
+                <label for="mes">Mês:</label>
+                <input type="text" id="mes" placeholder="Agosto" oninput="gerarCertificado()">
+            </div>
+            <div style="flex:1;">
+                <label for="ano">Ano:</label>
+                <input type="text" id="ano" placeholder="2026" oninput="gerarCertificado()">
+            </div>
+        </div>
+
+        <!-- Área de Pré-visualização -->
+        <canvas id="canvasCertificado"></canvas>
+
+        <button onclick="baixarPDF()">Baixar PDF Pronto para Impressão</button>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Dispara o carregamento do certificado assim que a estrutura do HTML estiver pronta
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof atualizarFormulario === 'function') {
+                atualizarFormulario();
+            }
+        });
+
+        // Registro do Service Worker para suporte PWA/Offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
