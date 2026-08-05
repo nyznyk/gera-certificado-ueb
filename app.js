@@ -1,7 +1,24 @@
+let logoGroup = null; // Guarda a imagem da logo em memória
+
+// Função chamada quando o usuário escolhe a foto no campo <input type="file">
+function carregarLogo(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            logoGroup = new Image();
+            logoGroup.onload = function() {
+                gerarCertificado(); // Redesenha o certificado com a logo
+            };
+            logoGroup.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
 const canvas = document.getElementById('canvasCertificado');
 const ctx = canvas.getContext('2d');
 
-// Função auxiliar para quebrar texto longo em várias linhas
 function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
     if (!text) return;
     const words = text.split(' ');
@@ -80,9 +97,7 @@ function gerarCertificado() {
         
         ctx.font = fontePrincipal;
 
-        // ==========================================
         // 1. PROGRESSÃO - LOBINHO
-        // ==========================================
         if (modelo === 'progressao_l') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
@@ -94,9 +109,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.69, canvas.height * 0.525);
         }
         
-        // ==========================================
         // 2. PROGRESSÃO - ESCOTEIRO
-        // ==========================================
         else if (modelo === 'progressao_e') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
@@ -108,9 +121,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.56);
         }
 
-        // ==========================================
         // 3. PROGRESSÃO - SÊNIOR
-        // ==========================================
         else if (modelo === 'progressao_s') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
@@ -122,9 +133,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
         }
 
-        // ==========================================
         // 4. PROGRESSÃO - PIONEIRO
-        // ==========================================
         else if (modelo === 'progressao_p') {
             const etapa = document.getElementById('etapa').value || "";
             ctx.textAlign = 'center';
@@ -136,9 +145,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // ==========================================
         // 5. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
-        // ==========================================
         else if (modelo === 'especialidade_le') {
             const esp = document.getElementById('especialidade').value || "";
             const nivel = document.getElementById('nivel').value || "";
@@ -158,9 +165,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.78, canvas.height * 0.685);
         }
 
-        // ==========================================
         // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO)
-        // ==========================================
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade').value || "";
             const eixo = document.getElementById('eixo').value || "";
@@ -169,7 +174,6 @@ function gerarCertificado() {
             const fazer = document.getElementById('fazer').value || "";
             const compartilhar = document.getElementById('compartilhar').value || "";
 
-            // --- PARTE SUPERIOR (Certificado) ---
             ctx.textAlign = 'center'; 
             
             ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.188);
@@ -180,7 +184,6 @@ function gerarCertificado() {
             ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.292);
             ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.292);
 
-            // --- PARTE INFERIOR (Relatório / Ficha) ---
             ctx.textAlign = 'left'; 
             ctx.font = '14pt Arial, sans-serif'; 
 
@@ -188,13 +191,11 @@ function gerarCertificado() {
             ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
             ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.684);
             
-            // AJUSTES DAS ETAPAS (CONHECER, FAZER, COMPARTILHAR)
             const lineHeight = 30; 
             const xInicioGeral = canvas.width * 0.07; 
             const limiteDireito = 0.91; 
             const maxWidthGeral = canvas.width * (limiteDireito - 0.19);
 
-            // Conhecer
             wrapText(
                 ctx, conhecer,
                 canvas.width * 0.485, canvas.height * 0.745, canvas.width * (limiteDireito - 0.485),
@@ -202,7 +203,6 @@ function gerarCertificado() {
                 lineHeight
             );
 
-            // Fazer
             wrapText(
                 ctx, fazer,
                 canvas.width * 0.585, canvas.height * 0.798, canvas.width * (limiteDireito - 0.585),
@@ -210,7 +210,6 @@ function gerarCertificado() {
                 lineHeight
             );
 
-            // Compartilhar
             wrapText(
                 ctx, compartilhar,
                 canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615),
@@ -218,10 +217,39 @@ function gerarCertificado() {
                 lineHeight
             );
         }
+
+        // ==========================================
+        // DESENHAR LOGO DO GRUPO (UEL)
+        // ==========================================
+        if (logoGroup) {
+            const logoLargura = canvas.width * 0.10; // Redimensiona para 10% da largura
+            const proporcao = logoGroup.height / logoGroup.width;
+            const logoAltura = logoLargura * proporcao;
+
+            let xPos, yPos;
+
+            if (modelo === 'especialidade_sp') {
+                // Canto inferior direito
+                xPos = canvas.width * 0.84;
+                yPos = canvas.height * 0.84;
+            } 
+            else if (modelo === 'progressao_l' || modelo === 'progressao_s' || modelo === 'progressao_p') {
+                // Ao lado esquerdo da logo da UEB (ajustável)
+                xPos = canvas.width * 0.08;
+                yPos = canvas.height * 0.06;
+            } 
+            else {
+                // Canto superior esquerdo (demais certificados, ex: progressao_e, especialidade_le)
+                xPos = canvas.width * 0.05;
+                yPos = canvas.height * 0.05;
+            }
+
+            ctx.drawImage(logoGroup, xPos, yPos, logoLargura, logoAltura);
+        }
     };
     
     img.onerror = function() {
-        console.error("Erro ao carregar a imagem. Verifique se o nome do arquivo está correto.");
+        console.error("Erro ao carregar a imagem do modelo.");
     };
 }
 
