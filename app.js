@@ -2,27 +2,34 @@ const canvas = document.getElementById('canvasCertificado');
 const ctx = canvas.getContext('2d');
 
 // Função auxiliar para quebrar texto longo em várias linhas
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
+// x1 / maxWidth1: Posição e largura da 1ª linha (após o rótulo)
+// xNext / maxWidthNext: Posição e largura das linhas seguintes (começo da margem esquerda)
+function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
     if (!text) return;
     const words = text.split(' ');
     let line = '';
+    let currentX = x1;
+    let currentMaxWidth = maxWidth1;
+    let isFirstLine = true;
     
     for (let n = 0; n < words.length; n++) {
         const testLine = line + words[n] + ' ';
         const metrics = context.measureText(testLine);
-        const testWidth = metrics.width;
         
-        // Se a linha ficou maior que o limite e já tem alguma palavra nela
-        if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y); // Desenha a linha atual
-            line = words[n] + ' '; // Começa a próxima linha com a palavra atual
-            y += lineHeight; // Desce a altura de uma linha
+        if (metrics.width > currentMaxWidth && n > 0) {
+            context.fillText(line, currentX, y);
+            line = words[n] + ' ';
+            y += lineHeight;
+            if (isFirstLine) {
+                currentX = xNext;
+                currentMaxWidth = maxWidthNext;
+                isFirstLine = false;
+            }
         } else {
             line = testLine;
         }
     }
-    // Desenha o que sobrou (a última linha)
-    context.fillText(line, x, y);
+    context.fillText(line, currentX, y);
 }
 
 function atualizarFormulario() {
@@ -185,16 +192,37 @@ function gerarCertificado() {
             ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
             ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
             
-            // CORREÇÃO 1: Subi a carga horária de 0.688 para 0.680 para sair da linha
-            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.680);
+            // CORREÇÃO 1: Carga horária ajustada para 0.684
+            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.684);
             
-            // CORREÇÃO 2: Quebra de linha para os campos que podem ser longos
-            const lineHeight = 28; // Espaço vertical entre as linhas
-            
-            // Calculamos o limite máximo (maxWidth) baseado na largura total (0.95 menos a margem de início)
-            wrapText(ctx, conhecer, canvas.width * 0.485, canvas.height * 0.745, canvas.width * (0.95 - 0.485), lineHeight);
-            wrapText(ctx, fazer, canvas.width * 0.585, canvas.height * 0.798, canvas.width * (0.95 - 0.585), lineHeight);
-            wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (0.95 - 0.615), lineHeight);
+            // CORREÇÃO 2: Quebra de linha inteligente
+            const lineHeight = 26;
+            const xInicioGeral = canvas.width * 0.295; // Margem esquerda da ficha
+            const maxWidthGeral = canvas.width * (0.95 - 0.295); // Largura total até a borda direita
+
+            // Conhecer
+            wrapText(
+                ctx, conhecer,
+                canvas.width * 0.485, canvas.height * 0.745, canvas.width * (0.95 - 0.485),
+                xInicioGeral, maxWidthGeral,
+                lineHeight
+            );
+
+            // Fazer
+            wrapText(
+                ctx, fazer,
+                canvas.width * 0.585, canvas.height * 0.798, canvas.width * (0.95 - 0.585),
+                xInicioGeral, maxWidthGeral,
+                lineHeight
+            );
+
+            // Compartilhar
+            wrapText(
+                ctx, compartilhar,
+                canvas.width * 0.615, canvas.height * 0.852, canvas.width * (0.95 - 0.615),
+                xInicioGeral, maxWidthGeral,
+                lineHeight
+            );
         }
     };
     
