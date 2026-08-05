@@ -2,8 +2,6 @@ const canvas = document.getElementById('canvasCertificado');
 const ctx = canvas.getContext('2d');
 
 // Função auxiliar para quebrar texto longo em várias linhas
-// x1 / maxWidth1: Posição e largura da 1ª linha (após o rótulo)
-// xNext / maxWidthNext: Posição e largura das linhas seguintes (começo da margem esquerda)
 function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
     if (!text) return;
     const words = text.split(' ');
@@ -35,7 +33,6 @@ function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeig
 function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
     
-    // Esconder tudo primeiro
     const grupoProg = document.getElementById('grupo-progressao');
     const grupoEsp = document.getElementById('grupo-especialidade');
     const campoNivel = document.getElementById('campo-nivel');
@@ -46,7 +43,6 @@ function atualizarFormulario() {
     if (campoNivel) campoNivel.style.display = 'none';
     if (campoSpExtra) campoSpExtra.style.display = 'none';
 
-    // Mostrar os campos corretos baseados no modelo
     if (modelo.startsWith('progressao_')) {
         if (grupoProg) grupoProg.style.display = 'block';
     } 
@@ -79,7 +75,6 @@ function gerarCertificado() {
         ctx.drawImage(img, 0, 0);
         ctx.fillStyle = '#111111';
         
-        // Fontes padronizadas para se mesclar ao impresso
         const fontePrincipal = '20pt Arial, sans-serif';
         const fontePequena = '16pt Arial, sans-serif';
         
@@ -164,7 +159,7 @@ function gerarCertificado() {
         }
 
         // ==========================================
-        // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO) -> CORRIGIDO
+        // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO)
         // ==========================================
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade').value || "";
@@ -186,24 +181,23 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.292);
 
             // --- PARTE INFERIOR (Relatório / Ficha) ---
-            ctx.textAlign = 'left'; // Alinhamento ESQUERDO estrito
+            ctx.textAlign = 'left'; 
             ctx.font = '14pt Arial, sans-serif'; 
 
             ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
             ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
-            
-            // CORREÇÃO 1: Carga horária ajustada para 0.684
             ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.684);
             
-            // CORREÇÃO 2: Quebra de linha inteligente
-            const lineHeight = 26;
-            const xInicioGeral = canvas.width * 0.295; // Margem esquerda da ficha
-            const maxWidthGeral = canvas.width * (0.95 - 0.295); // Largura total até a borda direita
+            // AJUSTES DAS ETAPAS (CONHECER, FAZER, COMPARTILHAR)
+            const lineHeight = 30; 
+            const xInicioGeral = canvas.width * 0.19; 
+            const limiteDireito = 0.91; 
+            const maxWidthGeral = canvas.width * (limiteDireito - 0.19);
 
             // Conhecer
             wrapText(
                 ctx, conhecer,
-                canvas.width * 0.485, canvas.height * 0.745, canvas.width * (0.95 - 0.485),
+                canvas.width * 0.485, canvas.height * 0.745, canvas.width * (limiteDireito - 0.485),
                 xInicioGeral, maxWidthGeral,
                 lineHeight
             );
@@ -211,7 +205,7 @@ function gerarCertificado() {
             // Fazer
             wrapText(
                 ctx, fazer,
-                canvas.width * 0.585, canvas.height * 0.798, canvas.width * (0.95 - 0.585),
+                canvas.width * 0.585, canvas.height * 0.798, canvas.width * (limiteDireito - 0.585),
                 xInicioGeral, maxWidthGeral,
                 lineHeight
             );
@@ -219,7 +213,7 @@ function gerarCertificado() {
             // Compartilhar
             wrapText(
                 ctx, compartilhar,
-                canvas.width * 0.615, canvas.height * 0.852, canvas.width * (0.95 - 0.615),
+                canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615),
                 xInicioGeral, maxWidthGeral,
                 lineHeight
             );
@@ -252,5 +246,4 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Inicializa a tela
 atualizarFormulario();
