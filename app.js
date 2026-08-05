@@ -1,18 +1,27 @@
 let logoGroup = null; // Guarda a imagem da logo em memória
 
-// Função chamada quando o usuário escolhe a foto no campo <input type="file">
 function carregarLogo(event) {
     const file = event.target.files[0];
+    const statusTxt = document.getElementById('statusLogo');
+
     if (file) {
+        // Atualiza o texto com o nome do arquivo selecionado
+        if (statusTxt) statusTxt.innerText = `Logo selecionada: ${file.name}`;
+
         const reader = new FileReader();
         reader.onload = function(e) {
             logoGroup = new Image();
             logoGroup.onload = function() {
-                gerarCertificado(); // Redesenha o certificado com a logo
+                gerarCertificado();
             };
             logoGroup.src = e.target.result;
         };
         reader.readAsDataURL(file);
+    } else {
+        // Caso o usuário cancele a seleção da imagem
+        logoGroup = null;
+        if (statusTxt) statusTxt.innerText = "Nenhuma logo selecionada";
+        gerarCertificado();
     }
 }
 
