@@ -1,6 +1,30 @@
 const canvas = document.getElementById('canvasCertificado');
 const ctx = canvas.getContext('2d');
 
+// Função auxiliar para quebrar texto longo em várias linhas
+function wrapText(context, text, x, y, maxWidth, lineHeight) {
+    if (!text) return;
+    const words = text.split(' ');
+    let line = '';
+    
+    for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = context.measureText(testLine);
+        const testWidth = metrics.width;
+        
+        // Se a linha ficou maior que o limite e já tem alguma palavra nela
+        if (testWidth > maxWidth && n > 0) {
+            context.fillText(line, x, y); // Desenha a linha atual
+            line = words[n] + ' '; // Começa a próxima linha com a palavra atual
+            y += lineHeight; // Desce a altura de uma linha
+        } else {
+            line = testLine;
+        }
+    }
+    // Desenha o que sobrou (a última linha)
+    context.fillText(line, x, y);
+}
+
 function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
     
@@ -146,11 +170,9 @@ function gerarCertificado() {
             // --- PARTE SUPERIOR (Certificado) ---
             ctx.textAlign = 'center'; 
             
-            // Subi o eixo Y levemente (-0.006) para o texto não encostar na linha
             ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.188);
             ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.231);
             
-            // Dia ajustado para a esquerda e linhas levemente mais altas
             ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.292);
             ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.292);
             ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.292);
@@ -160,15 +182,19 @@ function gerarCertificado() {
             ctx.textAlign = 'left'; // Alinhamento ESQUERDO estrito
             ctx.font = '14pt Arial, sans-serif'; 
 
-            // Subi levemente o Y de todos, e joguei o eixo X bem mais para a direita 
-            // para respeitar o longo texto entre parênteses do certificado
             ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
             ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
-            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.688);
             
-            ctx.fillText(conhecer, canvas.width * 0.485, canvas.height * 0.745);
-            ctx.fillText(fazer, canvas.width * 0.585, canvas.height * 0.798);
-            ctx.fillText(compartilhar, canvas.width * 0.615, canvas.height * 0.852);
+            // CORREÇÃO 1: Subi a carga horária de 0.688 para 0.680 para sair da linha
+            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.680);
+            
+            // CORREÇÃO 2: Quebra de linha para os campos que podem ser longos
+            const lineHeight = 28; // Espaço vertical entre as linhas
+            
+            // Calculamos o limite máximo (maxWidth) baseado na largura total (0.95 menos a margem de início)
+            wrapText(ctx, conhecer, canvas.width * 0.485, canvas.height * 0.745, canvas.width * (0.95 - 0.485), lineHeight);
+            wrapText(ctx, fazer, canvas.width * 0.585, canvas.height * 0.798, canvas.width * (0.95 - 0.585), lineHeight);
+            wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (0.95 - 0.615), lineHeight);
         }
     };
     
