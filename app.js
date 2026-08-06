@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// Mapeamento de Configurações e Coordenadas dos Certificados
+
 const CERT_CONFIGS = {
   // --- ACOLHIDA E PROGRESSÃO ---
   cert_acolhida: {
