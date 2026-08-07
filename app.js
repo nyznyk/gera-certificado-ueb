@@ -1,6 +1,6 @@
 let logoGroup = null; // Guarda a imagem da logo UEL em memória
 
-// Função para carregar a logo do grupo
+// Função chamada quando o usuário escolhe a foto no campo <input type="file">
 function carregarLogo(event) {
     const file = event.target.files[0];
     const statusTxt = document.getElementById('statusLogo');
@@ -12,7 +12,7 @@ function carregarLogo(event) {
         reader.onload = function(e) {
             logoGroup = new Image();
             logoGroup.onload = function() {
-                gerarCertificado(); // Redesenha o canvas em tempo real assim que carrega a foto
+                gerarCertificado();
             };
             logoGroup.src = e.target.result;
         };
@@ -25,10 +25,10 @@ function carregarLogo(event) {
 }
 
 const canvas = document.getElementById('canvasCertificado');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
-    if (!text) return;
+    if (!text || !context) return;
     const words = text.split(' ');
     let line = '';
     let currentX = x1;
@@ -55,13 +55,62 @@ function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeig
     context.fillText(line, currentX, y);
 }
 
-// Obter valor dos campos de texto com segurança
+// Helper seguro para obter valores dos campos sem causar erro de null
 function getVal(id) {
     const el = document.getElementById(id);
     return el ? el.value : "";
 }
 
-// Exibe/oculta campos de acordo com o modelo de certificado selecionado
+// Função para filtrar as opções de modelos do certificado
+function filtrarModelos() {
+    const filtroEl = document.getElementById('filtro') || 
+                     document.getElementById('categoria') || 
+                     document.getElementById('busca') || 
+                     document.getElementById('filtro-ramo');
+                     
+    const modeloSelect = document.getElementById('modelo');
+    if (!modeloSelect) return;
+
+    const termo = filtroEl ? filtroEl.value.toLowerCase().trim() : '';
+    const options = modeloSelect.querySelectorAll('option');
+
+    let selecionadoAindaVisivel = false;
+
+    options.forEach(opt => {
+        const txt = opt.textContent.toLowerCase();
+        const val = opt.value.toLowerCase();
+        const cat = (opt.getAttribute('data-categoria') || (opt.parentElement && opt.parentElement.label) || '').toLowerCase();
+
+        // Regra de filtragem (procura por termo no texto, valor ou categoria)
+        let visivel = true;
+        if (termo && termo !== 'todos' && termo !== 'todas') {
+            visivel = txt.includes(termo) || val.includes(termo) || cat.includes(termo);
+        }
+
+        if (visivel) {
+            opt.style.display = '';
+            opt.disabled = false;
+            opt.hidden = false;
+            if (opt.selected) selecionadoAindaVisivel = true;
+        } else {
+            opt.style.display = 'none';
+            opt.disabled = true;
+            opt.hidden = true;
+        }
+    });
+
+    // Se o item que estava selecionado foi ocultado pelo filtro, seleciona o primeiro visível
+    if (!selecionadoAindaVisivel) {
+        const primeiroVisivel = Array.from(options).find(opt => !opt.hidden && opt.style.display !== 'none');
+        if (primeiroVisivel) {
+            modeloSelect.value = primeiroVisivel.value;
+        }
+    }
+
+    atualizarFormulario();
+}
+
+// Atualiza quais campos aparecem de acordo com o certificado escolhido
 function atualizarFormulario() {
     const modeloSelect = document.getElementById('modelo');
     if (!modeloSelect) return;
@@ -73,14 +122,16 @@ function atualizarFormulario() {
         'campo-etapa', 'grupo-especialidade', 'campo-nivel', 'campo-sp-extra'
     ];
 
+    // Oculta todos os campos dinâmicos
     idsDinamicos.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
 
+    // Função auxiliar para exibir o campo sem quebrar o layout CSS original (flex/grid)
     const mostrar = (id) => {
         const el = document.getElementById(id);
-        if (el) el.style.display = 'block';
+        if (el) el.style.display = ''; // Usar '' restaura a exibição padrão do CSS
     };
 
     if (modelo === 'cert_acolhida') {
@@ -114,8 +165,9 @@ function atualizarFormulario() {
     gerarCertificado();
 }
 
-// Desenha no Canvas em tempo real
 function gerarCertificado() {
+    if (!canvas || !ctx) return;
+
     const modeloSelect = document.getElementById('modelo');
     if (!modeloSelect) return;
     const modelo = modeloSelect.value;
@@ -139,7 +191,7 @@ function gerarCertificado() {
         const fontePequena = '16pt Arial, sans-serif';
         ctx.font = fontePrincipal;
 
-        // 1. PROGRESSÃO
+        // 1. PROGRESSÃO TRADICIONAL
         if (modelo === 'progressao_l') {
             const etapa = getVal('etapa');
             ctx.textAlign = 'center';
@@ -251,7 +303,7 @@ function gerarCertificado() {
             wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
         }
 
-        // 5. OUTROS MODELOS
+        // 5. MODELOS GENÉRICOS DE LIDERANÇA, INSÍGNIAS, ETC.
         else {
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.48);
@@ -261,7 +313,9 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.72);
         }
 
-        // Desenho da Logo UEL se estiver carregada
+        // ==========================================
+        // DESENHAR LOGO DO GRUPO (UEL)
+        // ==========================================
         if (logoGroup) {
             const logoLargura = canvas.width * 0.10; 
             const proporcao = logoGroup.height / logoGroup.width;
@@ -289,9 +343,10 @@ function gerarCertificado() {
     img.onerror = function() {
         tentativa++;
         if (tentativa === 1) {
+            // Segunda tentativa: tenta adicionando o prefixo "modelo_" na frente (para os antigos)
             img.src = `./modelo_${modelo}.png`;
         } else {
-            console.error(`Erro ao carregar imagem: ${modelo}`);
+            console.error(`Erro ao carregar imagem para o modelo: ${modelo}`);
             canvas.width = 800;
             canvas.height = 450;
             ctx.fillStyle = '#1e1e1e';
@@ -300,9 +355,13 @@ function gerarCertificado() {
             ctx.font = 'bold 16pt Arial, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText(`Imagem não encontrada: ${modelo}.png ou modelo_${modelo}.png`, canvas.width / 2, canvas.height / 2 - 10);
+            ctx.fillStyle = '#aaa';
+            ctx.font = '12pt Arial, sans-serif';
+            ctx.fillText(`Verifique se o arquivo existe na pasta do projeto.`, canvas.width / 2, canvas.height / 2 + 25);
         }
     };
 
+    // Primeira tentativa: tenta sem o prefixo (para os novos)
     img.src = `./${modelo}.png`;
 }
 
@@ -331,119 +390,23 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// ==========================================
-// SISTEMA DE BOTÕES DE CATEGORIA E MODELO
-// ==========================================
-
-const listaModelos = [
-    // Progressão & Acolhida
-    { id: 'progressao_l', nome: 'Progressão Lobinho', cat: 'progressao' },
-    { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
-    { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
-    { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
-    { id: 'progressao_f', nome: 'Progressão Formação', cat: 'progressao' },
-    { id: 'cert_acolhida', nome: 'Acolhida', cat: 'progressao' },
-    { id: 'estrelas_atv', nome: 'Estrelas de Atividade', cat: 'progressao' },
-
-    // Liderança
-    { id: 'cert_primo', nome: 'Primo', cat: 'lideranca' },
-    { id: 'cert_segundo', nome: 'Segundo de Matilha', cat: 'lideranca' },
-    { id: 'cert_monitor_e', nome: 'Monitor (Escoteiro)', cat: 'lideranca' },
-    { id: 'cert_sub_e', nome: 'Submonitor (Escoteiro)', cat: 'lideranca' },
-    { id: 'cert_monitor_s', nome: 'Monitor (Sênior)', cat: 'lideranca' },
-    { id: 'cert_sub_s_2', nome: 'Submonitor (Sênior)', cat: 'lideranca' },
-
-    // Promessa & Expansão
-    { id: 'cert_promessa', nome: 'Promessa Escoteira', cat: 'promessa' },
-    { id: 'cert_promessa_l', nome: 'Promessa Lobinho', cat: 'promessa' },
-    { id: 'cert_recrutador', nome: 'Insígnia Recrutador', cat: 'promessa' },
-    { id: 'ins_semeador', nome: 'Insígnia Semeador', cat: 'promessa' },
-
-    // Especialidades
-    { id: 'especialidade_le', nome: 'Especialidade (Lob/Esc)', cat: 'especialidades' },
-    { id: 'especialidade_sp', nome: 'Especialidade (Sên/Pio)', cat: 'especialidades' },
-
-    // Insígnias & Ramos
-    { id: 'ins_acao_comunitaria', nome: 'Ação Comunitária', cat: 'insignias' },
-    { id: 'ins_aeronauta', nome: 'Aeronauta', cat: 'insignias' },
-    { id: 'ins_aviador', nome: 'Aviador', cat: 'insignias' },
-    { id: 'ins_boa_acao', nome: 'Boa Ação', cat: 'insignias' },
-    { id: 'ins_campeoes_natureza', nome: 'Campeões da Natureza', cat: 'insignias' },
-    { id: 'ins_conesul', nome: 'Cone Sul', cat: 'insignias' },
-    { id: 'ins_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignias' },
-    { id: 'ins_energia_solar', nome: 'Energia Solar', cat: 'insignias' },
-    { id: 'ins_grumete', nome: 'Grumete', cat: 'insignias' },
-    { id: 'ins_lusofonia', nome: 'Lusofonia', cat: 'insignias' },
-    { id: 'ins_naval', nome: 'Naval', cat: 'insignias' },
-    { id: 'ins_rrr', nome: 'Reduzir, Reutilizar, Reciclar', cat: 'insignias' }
-];
-
-let categoriaAtual = 'todas';
-let modeloSelecionado = listaModelos[0].id;
-
-function inicializarMenuModelos() {
-    const select = document.getElementById('modelo');
-    if (!select) return;
-
-    select.innerHTML = '';
-    listaModelos.forEach(m => {
-        const opt = document.createElement('option');
-        opt.value = m.id;
-        opt.textContent = m.nome;
-        select.appendChild(opt);
-    });
-
-    select.value = modeloSelecionado;
-    renderizarBotoesCertificados();
-}
-
-function filtrarCategoria(categoria) {
-    categoriaAtual = categoria;
-
-    document.querySelectorAll('.btn-cat').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    if (window.event && window.event.target) {
-        window.event.target.classList.add('active');
-    }
-
-    renderizarBotoesCertificados();
-}
-
-function renderizarBotoesCertificados() {
-    const container = document.getElementById('container-certificados');
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    const modelosFiltrados = categoriaAtual === 'todas' 
-        ? listaModelos 
-        : listaModelos.filter(m => m.cat === categoriaAtual);
-
-    modelosFiltrados.forEach(item => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = `btn-modelo ${item.id === modeloSelecionado ? 'selected' : ''}`;
-        btn.textContent = item.nome;
-        btn.onclick = () => selecionarModelo(item.id);
-        container.appendChild(btn);
-    });
-}
-
-function selecionarModelo(idModelo) {
-    modeloSelecionado = idModelo;
-
-    const select = document.getElementById('modelo');
-    if (select) {
-        select.value = idModelo;
-    }
-
-    renderizarBotoesCertificados();
-    atualizarFormulario(); // Atualiza o formulário e gera a pré-visualização em tempo real
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-    inicializarMenuModelos();
+    // Adiciona escuta nos elementos de filtro caso existam no HTML
+    const filtroEl = document.getElementById('filtro') || 
+                     document.getElementById('categoria') || 
+                     document.getElementById('busca') || 
+                     document.getElementById('filtro-ramo');
+
+    if (filtroEl) {
+        filtroEl.addEventListener('change', filtrarModelos);
+        filtroEl.addEventListener('input', filtrarModelos);
+    }
+
+    const modeloSelect = document.getElementById('modelo');
+    if (modeloSelect) {
+        modeloSelect.addEventListener('change', atualizarFormulario);
+    }
+
+    filtrarModelos();
     atualizarFormulario();
 });
