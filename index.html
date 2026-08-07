@@ -113,7 +113,8 @@
             <button class="btn-cat" onclick="filtrarCategoria('progressao')" type="button">Progressão</button>
             <button class="btn-cat" onclick="filtrarCategoria('especialidade')" type="button">Especialidades</button>
             <button class="btn-cat" onclick="filtrarCategoria('promessa')" type="button">Promessas</button>
-            <button class="btn-cat" onclick="filtrarCategoria('insignia')" type="button">Insígnias</button>
+            <button class="btn-cat" onclick="filtrarCategoria('insignia_modalidade')" type="button">Insígnias de Modalidade</button>
+            <button class="btn-cat" onclick="filtrarCategoria('insignia_especial')" type="button">Interesse Especial</button>
             <button class="btn-cat" onclick="filtrarCategoria('lideranca')" type="button">Monitoria</button>
             <button class="btn-cat" onclick="filtrarCategoria('atividade')" type="button">Atividade</button>
             <button class="btn-cat" onclick="filtrarCategoria('expansao')" type="button">Expansão</button>
@@ -155,18 +156,18 @@
         <!-- FIM DAS CAIXAS DE FILTRO -->
 
         <div class="grupo-campo">
-            <label for="logoInput">Adicionar logo da UEL:</label>
+            <label for="logoInput">Adicionar logo da UEL (opcional):</label>
             <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
             <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
         </div>
 
         <label for="nome">Nome do jovem:</label>
-        <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
+        <input type="text" id="nome" placeholder="" oninput="gerarCertificado()">
 
         <!-- GRUPO: PROGRESSÃO -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
-            <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
+            <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
         </div>
 
         <!-- GRUPO: ESPECIALIDADE -->
@@ -208,11 +209,11 @@
         <div id="grupo-outros" class="campo-dinamico">
             <div id="campo-patrulha" class="campo-dinamico">
                 <label for="patrulha">Matilha / Patrulha:</label>
-                <input type="text" id="patrulha" placeholder="Ex: Patrulha Lobo" oninput="gerarCertificado()">
+                <input type="text" id="patrulha" placeholder="Ex: Xavante" oninput="gerarCertificado()">
             </div>
             <div id="campo-insignia" class="campo-dinamico">
                 <label for="nome_insignia">Nome da Insígnia:</label>
-                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia de B.P." oninput="gerarCertificado()">
+                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia do Aprender." oninput="gerarCertificado()">
             </div>
         </div>
 
@@ -223,7 +224,7 @@
         <div style="display: flex; gap: 10px;">
             <div style="flex:1;">
                 <label for="dia">Dia:</label>
-                <input type="text" id="dia" placeholder="15" oninput="gerarCertificado()">
+                <input type="text" id="dia" placeholder="25" oninput="gerarCertificado()">
             </div>
             <div style="flex:2;">
                 <label for="mes">Mês:</label>
@@ -273,7 +274,7 @@
     </footer>
 
     <!-- SCRIPT PRINCIPAL DO APP -->
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
 
     <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
     <script>
