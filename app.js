@@ -8,7 +8,7 @@ const listaCertificados = [
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
-   
+
     // ESPECIALIDADES
     { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
     { id: 'especialidade_sp', nome: 'Especialidade (Sênior / Pioneiro)', cat: 'especialidade' },
@@ -184,18 +184,17 @@ function atualizarFormulario() {
     gerarCertificado();
 }
 
-function obterImagemFallback(modelo) {
-    const itemObj = obterItemCertificado(modelo);
-    const cat = itemObj ? itemObj.cat : '';
-
-    if (cat === 'progressao') return './modelo_progressao_e.png';
-    if (cat === 'especialidade') return './modelo_especialidade_le.png';
-    if (cat === 'promessa') return './cert_promessa.png';
-    if (cat === 'lideranca') return './cert_moni_e.png';
-    if (cat === 'atividade') return './estrelas_atv.png';
-    if (cat === 'expansao') return './cert_recrutador.png';
-    if (cat.startsWith('insignia')) return './ins_aviador.png';
-    return './ins_aviador.png';
+function obterCaminhoImagem(modelo) {
+    // Modelos cujos arquivos contêm o prefixo "modelo_" no nome do arquivo físico
+    const modelosComPrefixo = [
+        'progressao_l', 'progressao_e', 'progressao_s', 'progressao_p',
+        'especialidade_le', 'especialidade_sp'
+    ];
+    
+    if (modelosComPrefixo.includes(modelo)) {
+        return `./modelo_${modelo}.png`;
+    }
+    return `./${modelo}.png`;
 }
 
 function exibirErroCanvas(modelo) {
@@ -417,22 +416,15 @@ function gerarCertificado() {
     img.onerror = function() {
         if (etapaTentativa === 0) {
             etapaTentativa = 1;
-            img.src = `./${modelo}.png`;
-        } else if (etapaTentativa === 1) {
-            etapaTentativa = 2;
-            const fallbackSrc = obterImagemFallback(modelo);
-            if (fallbackSrc !== `./${modelo}.png` && fallbackSrc !== `./modelo_${modelo}.png`) {
-                img.src = fallbackSrc;
-            } else {
-                exibirErroCanvas(modelo);
-            }
+            // Tenta o caminho alternativo caso o primário falhe
+            img.src = img.src.includes('modelo_') ? `./${modelo}.png` : `./modelo_${modelo}.png`;
         } else {
             exibirErroCanvas(modelo);
         }
     };
 
-    // Tenta primeiro carregar com prefixo 'modelo_', caso contrário o onerror tentará carregar sem o prefixo
-    img.src = `./modelo_${modelo}.png`;
+    // Carrega o caminho mapeado correto
+    img.src = obterCaminhoImagem(modelo);
 }
 
 function baixarPDF() {
