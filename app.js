@@ -1,412 +1,273 @@
-let logoGroup = null; // Guarda a imagem da logo UEL em memória
+// Variable Global para guardar a logo carregada
+let logoImagem = null;
 
-// Função chamada quando o usuário escolhe a foto no campo <input type="file">
+// Lista de Modelos de Certificados
+const listaCertificados = [
+    { id: 'promessa_lobinho', nome: 'Promessa Lobinho', cat: 'promessa', campos: ['responsaveis', 'matilha'] },
+    { id: 'promessa_escoteiro', nome: 'Promessa Escoteira', cat: 'promessa', campos: ['forma_promessa', 'patrulha'] },
+    { id: 'progressao_etapa', nome: 'Conclusão de Etapa', cat: 'progressao', campos: ['etapa', 'ramo'] },
+    { id: 'acolhida', nome: 'Certificado de Acolhida', cat: 'progressao', campos: ['grupo', 'quantidade'] },
+    { id: 'lideranca_monitor', nome: 'Nomeação de Monitor/Sub', cat: 'lideranca', campos: ['patrulha', 'anos'] },
+    { id: 'especialidade_geral', nome: 'Especialidade', cat: 'especialidades', campos: ['especialidade', 'nivel', 'itens'] },
+    { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignias', campos: ['ramo', 'etapa'] },
+    { id: 'desafio_senior_pioneiro', nome: 'Atividade Sênior / Pioneiro', cat: 'insignias', campos: ['sp-extra'] }
+];
+
+// Inicialização ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    popularSelectModelos();
+    filtrarCategoria('todas');
+    configurarCanvas();
+});
+
+// 1. Carregamento da Logo
 function carregarLogo(event) {
     const file = event.target.files[0];
-    const statusTxt = document.getElementById('statusLogo');
+    const statusText = document.getElementById('statusLogo');
 
     if (file) {
-        if (statusTxt) statusTxt.innerText = `Logo selecionada: ${file.name}`;
-
         const reader = new FileReader();
         reader.onload = function(e) {
-            logoGroup = new Image();
-            logoGroup.onload = function() {
+            const img = new Image();
+            img.onload = function() {
+                logoImagem = img;
+                statusText.innerText = "Logo carregada com sucesso!";
+                statusText.style.color = "#38a169";
                 gerarCertificado();
             };
-            logoGroup.src = e.target.result;
+            img.src = e.target.result;
         };
         reader.readAsDataURL(file);
     } else {
-        logoGroup = null;
-        if (statusTxt) statusTxt.innerText = "Nenhuma logo selecionada";
+        logoImagem = null;
+        statusText.innerText = "Nenhuma logo personalizada selecionada";
+        statusText.style.color = "#718096";
         gerarCertificado();
     }
 }
 
-const canvas = document.getElementById('canvasCertificado');
-const ctx = canvas ? canvas.getContext('2d') : null;
+// 2. Preenchimento e Filtro de Modelos
+function popularSelectModelos() {
+    const select = document.getElementById('modelo');
+    select.innerHTML = '';
+    listaCertificados.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.id;
+        opt.textContent = item.nome;
+        select.appendChild(opt);
+    });
+}
 
-function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
-    if (!text || !context) return;
-    const words = text.split(' ');
-    let line = '';
-    let currentX = x1;
-    let currentMaxWidth = maxWidth1;
-    let isFirstLine = true;
+function filtrarCategoria(categoria) {
+    // Atualizar botões ativos da categoria
+    const botoes = document.querySelectorAll('.btn-cat');
+    botoes.forEach(btn => btn.classList.remove('active'));
     
-    for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        const metrics = context.measureText(testLine);
-        
-        if (metrics.width > currentMaxWidth && n > 0) {
-            context.fillText(line, currentX, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-            if (isFirstLine) {
-                currentX = xNext;
-                currentMaxWidth = maxWidthNext;
-                isFirstLine = false;
-            }
-        } else {
-            line = testLine;
-        }
-    }
-    context.fillText(line, currentX, y);
-}
+    const btnClicado = Array.from(botoes).find(b => b.getAttribute('onclick')?.includes(`'${categoria}'`));
+    if (btnClicado) btnClicado.classList.add('active');
 
-// Helper seguro para obter valores dos campos sem causar erro de null
-function getVal(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : "";
-}
+    // Filtrar a grade de botões
+    const container = document.getElementById('container-certificados');
+    container.innerHTML = '';
 
-// Função para filtrar as opções de modelos do certificado
-function filtrarModelos() {
-    const filtroEl = document.getElementById('filtro') || 
-                     document.getElementById('categoria') || 
-                     document.getElementById('busca') || 
-                     document.getElementById('filtro-ramo');
-                     
-    const modeloSelect = document.getElementById('modelo');
-    if (!modeloSelect) return;
+    const filtrados = categoria === 'todas' 
+        ? listaCertificados 
+        : listaCertificados.filter(item => item.cat === categoria);
 
-    const termo = filtroEl ? filtroEl.value.toLowerCase().trim() : '';
-    const options = modeloSelect.querySelectorAll('option');
+    filtrados.forEach((item, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-modelo';
+        btn.textContent = item.nome;
+        btn.onclick = () => selecionarModelo(item.id, btn);
+        container.appendChild(btn);
 
-    let selecionadoAindaVisivel = false;
-
-    options.forEach(opt => {
-        const txt = opt.textContent.toLowerCase();
-        const val = opt.value.toLowerCase();
-        const cat = (opt.getAttribute('data-categoria') || (opt.parentElement && opt.parentElement.label) || '').toLowerCase();
-
-        // Regra de filtragem (procura por termo no texto, valor ou categoria)
-        let visivel = true;
-        if (termo && termo !== 'todos' && termo !== 'todas') {
-            visivel = txt.includes(termo) || val.includes(termo) || cat.includes(termo);
-        }
-
-        if (visivel) {
-            opt.style.display = '';
-            opt.disabled = false;
-            opt.hidden = false;
-            if (opt.selected) selecionadoAindaVisivel = true;
-        } else {
-            opt.style.display = 'none';
-            opt.disabled = true;
-            opt.hidden = true;
+        if (index === 0) {
+            btn.click(); // Seleciona automaticamente o primeiro da lista
         }
     });
+}
 
-    // Se o item que estava selecionado foi ocultado pelo filtro, seleciona o primeiro visível
-    if (!selecionadoAindaVisivel) {
-        const primeiroVisivel = Array.from(options).find(opt => !opt.hidden && opt.style.display !== 'none');
-        if (primeiroVisivel) {
-            modeloSelect.value = primeiroVisivel.value;
-        }
-    }
+function selecionarModelo(idModelo, btnElemento) {
+    document.querySelectorAll('.btn-modelo').forEach(b => b.classList.remove('selected'));
+    if (btnElemento) btnElemento.classList.add('selected');
 
+    const select = document.getElementById('modelo');
+    select.value = idModelo;
+    
     atualizarFormulario();
 }
 
-// Atualiza quais campos aparecem de acordo com o certificado escolhido
+// 3. Atualização Dinâmica dos Campos do Formulário
 function atualizarFormulario() {
-    const modeloSelect = document.getElementById('modelo');
-    if (!modeloSelect) return;
-    const modelo = modeloSelect.value;
+    const modeloId = document.getElementById('modelo').value;
+    const modeloAtual = listaCertificados.find(m => m.id === modeloId);
 
-    const idsDinamicos = [
-        'campo-responsaveis', 'campo-grupo', 'campo-matilha', 'campo-patrulha',
-        'campo-forma_promessa', 'campo-quantidade', 'campo-anos', 'campo-ramo',
-        'campo-etapa', 'grupo-especialidade', 'campo-nivel', 'campo-sp-extra'
+    // Lista de todas as seções dinâmicas
+    const IDsCampos = [
+        'campo-etapa', 'campo-responsaveis', 'campo-grupo', 'campo-matilha',
+        'campo-patrulha', 'campo-forma_promessa', 'campo-quantidade', 
+        'campo-anos', 'campo-ramo', 'grupo-especialidade', 'campo-nivel', 'campo-sp-extra'
     ];
 
-    // Oculta todos os campos dinâmicos
-    idsDinamicos.forEach(id => {
+    // Ocultar todos mantendo o layout intacto
+    IDsCampos.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
     });
 
-    // Função auxiliar para exibir o campo sem quebrar o layout CSS original (flex/grid)
-    const mostrar = (id) => {
-        const el = document.getElementById(id);
-        if (el) el.style.display = ''; // Usar '' restaura a exibição padrão do CSS
-    };
-
-    if (modelo === 'cert_acolhida') {
-        mostrar('campo-responsaveis');
-        mostrar('campo-grupo');
-    } else if (modelo === 'progressao_f' || modelo.startsWith('progressao_')) {
-        mostrar('campo-etapa');
-    } else if (modelo === 'estrelas_atv') {
-        mostrar('campo-anos');
-    } else if (modelo === 'cert_primo' || modelo === 'cert_segundo') {
-        mostrar('campo-matilha');
-    } else if (modelo.startsWith('cert_monitor_') || modelo.startsWith('cert_sub_')) {
-        mostrar('campo-patrulha');
-    } else if (modelo === 'cert_promessa') {
-        mostrar('campo-forma_promessa');
-        mostrar('campo-grupo');
-    } else if (modelo === 'cert_promessa_l') {
-        mostrar('campo-grupo');
-    } else if (modelo === 'cert_recrutador' || modelo === 'ins_semeador') {
-        mostrar('campo-quantidade');
-    } else if (modelo === 'especialidade_le') {
-        mostrar('grupo-especialidade');
-        mostrar('campo-nivel');
-    } else if (modelo === 'especialidade_sp') {
-        mostrar('grupo-especialidade');
-        mostrar('campo-sp-extra');
-    } else if (['ins_energia_solar', 'ins_campeoes_natureza', 'ins_rrr', 'ins_conesul', 'ins_lusofonia'].includes(modelo)) {
-        mostrar('campo-ramo');
+    if (modeloAtual && modeloAtual.campos) {
+        modeloAtual.campos.forEach(campo => {
+            if (campo === 'especialidade') {
+                document.getElementById('grupo-especialidade').style.display = '';
+                document.getElementById('campo-nivel').style.display = '';
+            } else if (campo === 'sp-extra') {
+                document.getElementById('campo-sp-extra').style.display = '';
+            } else {
+                const el = document.getElementById(`campo-${campo}`);
+                if (el) el.style.display = '';
+            }
+        });
     }
 
     gerarCertificado();
 }
 
-function gerarCertificado() {
-    if (!canvas || !ctx) return;
-
-    const modeloSelect = document.getElementById('modelo');
-    if (!modeloSelect) return;
-    const modelo = modeloSelect.value;
-
-    const nome = getVal('nome');
-    const cidade = getVal('cidade');
-    const dia = getVal('dia');
-    const mes = getVal('mes');
-    const ano = getVal('ano');
-
-    const img = new Image();
-    let tentativa = 0;
-
-    img.onload = function () {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        ctx.fillStyle = '#111111';
-        
-        const fontePrincipal = '20pt Arial, sans-serif';
-        const fontePequena = '16pt Arial, sans-serif';
-        ctx.font = fontePrincipal;
-
-        // 1. PROGRESSÃO TRADICIONAL
-        if (modelo === 'progressao_l') {
-            const etapa = getVal('etapa');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.48, canvas.height * 0.315); 
-            ctx.fillText(etapa, canvas.width * 0.53, canvas.height * 0.375); 
-            ctx.fillText(cidade, canvas.width * 0.32, canvas.height * 0.525);
-            ctx.fillText(dia, canvas.width * 0.45, canvas.height * 0.525);
-            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.525);
-            ctx.fillText(ano, canvas.width * 0.69, canvas.height * 0.525);
-        }
-        else if (modelo === 'progressao_e') {
-            const etapa = getVal('etapa');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.33); 
-            ctx.fillText(etapa, canvas.width * 0.55, canvas.height * 0.405); 
-            ctx.fillText(cidade, canvas.width * 0.34, canvas.height * 0.56);
-            ctx.fillText(dia, canvas.width * 0.47, canvas.height * 0.56);
-            ctx.fillText(mes, canvas.width * 0.59, canvas.height * 0.56);
-            ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.56);
-        }
-        else if (modelo === 'progressao_s') {
-            const etapa = getVal('etapa');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.59, canvas.height * 0.33); 
-            ctx.fillText(etapa, canvas.width * 0.65, canvas.height * 0.385); 
-            ctx.fillText(cidade, canvas.width * 0.45, canvas.height * 0.545);
-            ctx.fillText(dia, canvas.width * 0.58, canvas.height * 0.545);
-            ctx.fillText(mes, canvas.width * 0.70, canvas.height * 0.545);
-            ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
-        }
-        else if (modelo === 'progressao_p') {
-            const etapa = getVal('etapa');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
-            ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
-            ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
-        }
-
-        // 2. ACOLHIDA
-        else if (modelo === 'cert_acolhida') {
-            const resp = getVal('responsaveis');
-            const grupo = getVal('grupo');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.34);
-            ctx.fillText(resp, canvas.width * 0.50, canvas.height * 0.41);
-            ctx.fillText(grupo, canvas.width * 0.50, canvas.height * 0.475);
-            ctx.fillText(cidade, canvas.width * 0.32, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.49, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.59, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.55);
-        }
-
-        // 3. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
-        else if (modelo === 'especialidade_le') {
-            const esp = getVal('especialidade');
-            const nivel = getVal('nivel');
-            const itens = getVal('itens');
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.36);
-            ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.442);
-            ctx.fillText(nivel, canvas.width * 0.592, canvas.height * 0.505);
-            
-            ctx.font = fontePequena;
-            ctx.fillText(itens, canvas.width * 0.62, canvas.height * 0.585);
-            
-            ctx.font = fontePrincipal;
-            ctx.fillText(cidade, canvas.width * 0.48, canvas.height * 0.685);
-            ctx.fillText(dia, canvas.width * 0.57, canvas.height * 0.685);
-            ctx.fillText(mes, canvas.width * 0.67, canvas.height * 0.685);
-            ctx.fillText(ano, canvas.width * 0.78, canvas.height * 0.685);
-        }
-
-        // 4. ESPECIALIDADE (SÊNIOR / PIONEIRO)
-        else if (modelo === 'especialidade_sp') {
-            const esp = getVal('especialidade');
-            const eixo = getVal('eixo');
-            const carga = getVal('carga');
-            const conhecer = getVal('conhecer');
-            const fazer = getVal('fazer');
-            const compartilhar = getVal('compartilhar');
-
-            ctx.textAlign = 'center'; 
-            
-            ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.188);
-            ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.231);
-            
-            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.292);
-            ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.292);
-            ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.292);
-            ctx.fillText(ano, canvas.width * 0.50, canvas.height * 0.292);
-
-            ctx.textAlign = 'left'; 
-            ctx.font = '14pt Arial, sans-serif'; 
-
-            ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
-            ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
-            ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.684);
-            
-            const lineHeight = 30; 
-            const xInicioGeral = canvas.width * 0.07; 
-            const limiteDireito = 0.91; 
-            const maxWidthGeral = canvas.width * (limiteDireito - 0.07);
-
-            wrapText(ctx, conhecer, canvas.width * 0.485, canvas.height * 0.745, canvas.width * (limiteDireito - 0.485), xInicioGeral, maxWidthGeral, lineHeight);
-            wrapText(ctx, fazer, canvas.width * 0.585, canvas.height * 0.798, canvas.width * (limiteDireito - 0.585), xInicioGeral, maxWidthGeral, lineHeight);
-            wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
-        }
-
-        // 5. MODELOS GENÉRICOS DE LIDERANÇA, INSÍGNIAS, ETC.
-        else {
-            ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.48);
-            ctx.fillText(cidade, canvas.width * 0.35, canvas.height * 0.72);
-            ctx.fillText(dia, canvas.width * 0.48, canvas.height * 0.72);
-            ctx.fillText(mes, canvas.width * 0.60, canvas.height * 0.72);
-            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.72);
-        }
-
-        // ==========================================
-        // DESENHAR LOGO DO GRUPO (UEL)
-        // ==========================================
-        if (logoGroup) {
-            const logoLargura = canvas.width * 0.10; 
-            const proporcao = logoGroup.height / logoGroup.width;
-            const logoAltura = logoLargura * proporcao;
-
-            let xPos, yPos;
-
-            if (modelo === 'especialidade_sp') {
-                xPos = canvas.width * 0.84;
-                yPos = canvas.height * 0.84;
-            } 
-            else if (modelo === 'progressao_l' || modelo === 'progressao_s' || modelo === 'progressao_p') {
-                xPos = canvas.width * 0.08;
-                yPos = canvas.height * 0.06;
-            } 
-            else {
-                xPos = canvas.width * 0.05;
-                yPos = canvas.height * 0.05;
-            }
-
-            ctx.drawImage(logoGroup, xPos, yPos, logoLargura, logoAltura);
-        }
-    };
-    
-    img.onerror = function() {
-        tentativa++;
-        if (tentativa === 1) {
-            // Segunda tentativa: tenta adicionando o prefixo "modelo_" na frente (para os antigos)
-            img.src = `./modelo_${modelo}.png`;
-        } else {
-            console.error(`Erro ao carregar imagem para o modelo: ${modelo}`);
-            canvas.width = 800;
-            canvas.height = 450;
-            ctx.fillStyle = '#1e1e1e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ff4d4d';
-            ctx.font = 'bold 16pt Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Imagem não encontrada: ${modelo}.png ou modelo_${modelo}.png`, canvas.width / 2, canvas.height / 2 - 10);
-            ctx.fillStyle = '#aaa';
-            ctx.font = '12pt Arial, sans-serif';
-            ctx.fillText(`Verifique se o arquivo existe na pasta do projeto.`, canvas.width / 2, canvas.height / 2 + 25);
-        }
-    };
-
-    // Primeira tentativa: tenta sem o prefixo (para os novos)
-    img.src = `./${modelo}.png`;
+// 4. Renderização do Certificado no Canvas
+function configurarCanvas() {
+    const canvas = document.getElementById('canvasCertificado');
+    canvas.width = 1200;
+    canvas.height = 850;
+    gerarCertificado();
 }
 
-function baixarPDF() {
-    if (!window.jspdf) {
-        alert("A biblioteca de PDF ainda está carregando.");
-        return;
-    }
-    const { jsPDF } = window.jspdf;
-    
-    const modeloSelect = document.getElementById('modelo');
-    if (!modeloSelect) return;
-    const modelo = modeloSelect.value;
+function gerarCertificado() {
+    const canvas = document.getElementById('canvasCertificado');
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
 
-    const orientacao = (modelo === 'especialidade_sp' || modelo.startsWith('cert_primo') || modelo.startsWith('cert_segundo') || modelo.startsWith('cert_monitor_') || modelo.startsWith('cert_sub_') || modelo.startsWith('cert_promessa') || modelo.startsWith('cert_recrutador') || modelo.startsWith('ins_semeador') || ['ins_conesul', 'ins_lusofonia', 'ins_acao_comunitaria', 'ins_aeronauta', 'ins_aviador', 'ins_boa_acao', 'ins_desafio_comunitario', 'ins_grumete', 'ins_naval'].includes(modelo)) ? 'portrait' : 'landscape';
-    
-    const imgData = canvas.toDataURL('image/png', 1.0);
+    // Fundo do Certificado
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+
+    // Moldura decorativa
+    ctx.lineWidth = 12;
+    ctx.strokeStyle = '#1a365d';
+    ctx.strokeRect(30, 30, width - 60, height - 60);
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#2b6cb0';
+    ctx.strokeRect(45, 45, width - 90, height - 90);
+
+    // Desenhar Logo (se houver)
+    if (logoImagem) {
+        ctx.drawImage(logoImagem, 80, 80, 100, 100);
+    }
+
+    // Título Central
+    ctx.fillStyle = '#1a365d';
+    ctx.font = 'bold 42px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('CERTIFICADO ESCOTEIRO', width / 2, 120);
+
+    // Dados do formulário
+    const nome = document.getElementById('nome').value || '[Nome do Agraciado]';
+    const cidade = document.getElementById('cidade').value || 'Curitiba';
+    const dia = document.getElementById('dia').value || '01';
+    const mes = document.getElementById('mes').value || 'Janeiro';
+    const ano = document.getElementById('ano').value || '2026';
+
+    const modeloId = document.getElementById('modelo').value;
+    const modeloAtual = listaCertificados.find(m => m.id === modeloId);
+    const tituloModelo = modeloAtual ? modeloAtual.nome.toUpperCase() : 'CERTIFICADO';
+
+    // Subtítulo do Modelo
+    ctx.fillStyle = '#2b6cb0';
+    ctx.font = 'bold 26px Arial';
+    ctx.fillText(tituloModelo, width / 2, 175);
+
+    // Texto Principal
+    ctx.fillStyle = '#2d3748';
+    ctx.font = '22px Arial';
+    ctx.fillText('Certificamos que', width / 2, 250);
+
+    // Nome
+    ctx.fillStyle = '#1a365d';
+    ctx.font = 'bold 36px Arial';
+    ctx.fillText(nome, width / 2, 310);
+
+    // Linha decorativa sob o nome
+    ctx.beginPath();
+    ctx.moveTo(width / 2 - 250, 325);
+    ctx.lineTo(width / 2 + 250, 325);
+    ctx.strokeStyle = '#cbd5e0';
+    ctx.stroke();
+
+    // Detalhes adicionais baseados no modelo selecionado
+    ctx.fillStyle = '#4a5568';
+    ctx.font = '20px Arial';
+    let yPos = 380;
+
+    if (modeloAtual) {
+        if (modeloAtual.campos.includes('etapa')) {
+            const etapa = document.getElementById('etapa').value || 'Pista';
+            ctx.fillText(`Cumpriu os requisitos da Etapa / Nível: ${etapa}`, width / 2, yPos);
+            yPos += 35;
+        }
+        if (modeloAtual.campos.includes('especialidade')) {
+            const esp = document.getElementById('especialidade').value || 'Especialidade';
+            const niv = document.getElementById('nivel').value || 'Nível 1';
+            ctx.fillText(`Conquistou a Especialidade de ${esp} - ${niv}`, width / 2, yPos);
+            yPos += 35;
+        }
+        if (modeloAtual.campos.includes('patrulha')) {
+            const patrulha = document.getElementById('patrulha').value;
+            if (patrulha) {
+                ctx.fillText(`Integrante da Patrulha: ${patrulha}`, width / 2, yPos);
+                yPos += 35;
+            }
+        }
+    }
+
+    // Data e Local
+    ctx.fillStyle = '#2d3748';
+    ctx.font = 'italic 20px Arial';
+    ctx.fillText(`${cidade}, ${dia} de ${mes} de ${ano}.`, width / 2, 620);
+
+    // Linhas de Assinatura
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#718096';
+
+    // Assinatura 1
+    ctx.beginPath();
+    ctx.moveTo(width / 2 - 320, 720);
+    ctx.lineTo(width / 2 - 80, 720);
+    ctx.stroke();
+    ctx.font = '16px Arial';
+    ctx.fillStyle = '#718096';
+    ctx.fillText('Chefe da Tropa / Alcateia', width / 2 - 200, 745);
+
+    // Assinatura 2
+    ctx.beginPath();
+    ctx.moveTo(width / 2 + 80, 720);
+    ctx.lineTo(width / 2 + 320, 720);
+    ctx.stroke();
+    ctx.fillText('Diretoria do Grupo Escoteiro', width / 2 + 200, 745);
+}
+
+// 5. Baixar o Certificado em PDF
+function baixarPDF() {
+    const canvas = document.getElementById('canvasCertificado');
+    const { jsPDF } = window.jspdf;
+
     const pdf = new jsPDF({
-        orientation: orientacao,
+        orientation: 'landscape',
         unit: 'px',
         format: [canvas.width, canvas.height]
     });
+
+    const imgData = canvas.toDataURL('image/png');
     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
-    
-    const nome = getVal('nome') || "Certificado";
-    pdf.save(`Certificado_${nome}.pdf`);
+    pdf.save('Certificado_Escoteiro.pdf');
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    // Adiciona escuta nos elementos de filtro caso existam no HTML
-    const filtroEl = document.getElementById('filtro') || 
-                     document.getElementById('categoria') || 
-                     document.getElementById('busca') || 
-                     document.getElementById('filtro-ramo');
-
-    if (filtroEl) {
-        filtroEl.addEventListener('change', filtrarModelos);
-        filtroEl.addEventListener('input', filtrarModelos);
-    }
-
-    const modeloSelect = document.getElementById('modelo');
-    if (modeloSelect) {
-        modeloSelect.addEventListener('change', atualizarFormulario);
-    }
-
-    filtrarModelos();
-    atualizarFormulario();
-});
