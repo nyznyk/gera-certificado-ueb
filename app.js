@@ -6,28 +6,33 @@ const listaCertificados = [
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
-    { id: 'especialidade_le', nome: 'Especialidade (L / E)', cat: 'especialidade' },
-    { id: 'especialidade_sp', nome: 'Especialidade (S / P)', cat: 'especialidade' },
-    { id: 'promessa_lobinho', nome: 'Promessa Lobinho', cat: 'promessa' },
-    { id: 'promessa_escoteiro', nome: 'Promessa Escoteira', cat: 'promessa' },
-    { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignia' },
+    { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
+    { id: 'especialidade_sp', nome: 'Especialidade (Sênior / Pioneiro)', cat: 'especialidade' },
+    { id: 'promessa_lobinho', nome: 'Promessa (Lobinho)', cat: 'promessa' },
+    { id: 'promessa_escoteiro', nome: 'Promessa (Escoteiro)', cat: 'promessa' },
+    
+    // INSÍGNIAS DE MODALIDADE
+    { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignia_modalidade' },
+    { id: 'insignia_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
+    { id: 'insignia_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia_modalidade' },
+    { id: 'insignia_grumete', nome: 'Insígnia do Grumete', cat: 'insignia_modalidade' },
+    { id: 'insignia_naval', nome: 'Insígnia Naval', cat: 'insignia_modalidade' },
+
+    // INSÍGNIAS DE INTERESSE ESPECIAL
+    { id: 'insignia_comunitaria', nome: 'Ação Comunitária', cat: 'insignia_especial' },
+    { id: 'insignia_boa_acao', nome: 'Boa Ação', cat: 'insignia_especial' },
+    { id: 'insignia_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia_especial' },
+    { id: 'insignia_cone_sul', nome: 'Insígnia Cone Sul', cat: 'insignia_especial' },
+    { id: 'insignia_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia_especial' },
+    { id: 'insignia_rrr', nome: 'Insígnia RRR', cat: 'insignia_especial' },
+    { id: 'insignia_energia_solar', nome: 'Energia Solar', cat: 'insignia_especial' },
+    { id: 'insignia_natureza', nome: 'Campeões da Natureza', cat: 'insignia_especial' },
+
     { id: 'lideranca_monitor', nome: 'Monitor / Sub', cat: 'lideranca' },
     { id: 'lideranca_primo', nome: 'Primo / Segundo', cat: 'lideranca' },
     { id: 'atividade_estrela', nome: 'Estrela de Atividade', cat: 'atividade' },
     { id: 'expansao_recrutador', nome: 'Recrutador', cat: 'expansao' },
-    { id: 'expansao_semeador', nome: 'Semeador', cat: 'expansao' },
-    { id: 'insignia_comunitaria', nome: 'Ação Comunitária', cat: 'insignia' },
-    { id: 'insignia_boa_acao', nome: 'Boa Ação', cat: 'insignia' },
-    { id: 'insignia_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia' },
-    { id: 'insignia_cone_sul', nome: 'Insígnia Cone Sul', cat: 'insignia' },
-    { id: 'insignia_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia' },
-    { id: 'insignia_rrr', nome: 'Insígnia RRR', cat: 'insignia' },
-    { id: 'insignia_energia_solar', nome: 'Energia Solar', cat: 'insignia' },
-    { id: 'insignia_natureza', nome: 'Campeões da Natureza', cat: 'insignia' },
-    { id: 'insignia_aviador', nome: 'Insígnia do Aviador', cat: 'insignia' },
-    { id: 'insignia_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia' },
-    { id: 'insignia_grumete', nome: 'Insígnia do Grumete', cat: 'insignia' },
-    { id: 'insignia_naval', nome: 'Insígnia Naval', cat: 'insignia' }
+    { id: 'expansao_semeador', nome: 'Semeador', cat: 'expansao' }
 ];
 
 function filtrarCategoria(categoria) {
@@ -163,6 +168,32 @@ function atualizarFormulario() {
     gerarCertificado();
 }
 
+function obterImagemFallback(modelo) {
+    if (modelo.startsWith('progressao_')) return './modelo_progressao_e.png';
+    if (modelo.startsWith('especialidade_')) return './modelo_especialidade_le.png';
+    if (modelo.startsWith('promessa_')) return './modelo_promessa_escoteiro.png';
+    if (modelo.startsWith('lideranca_')) return './modelo_lideranca_monitor.png';
+    if (modelo.startsWith('atividade_')) return './modelo_atividade_estrela.png';
+    if (modelo.startsWith('expansao_')) return './modelo_expansao_recrutador.png';
+    if (modelo.startsWith('insignia_')) return './modelo_insignia_modalidade.png';
+    return './modelo_insignia_modalidade.png';
+}
+
+function exibirErroCanvas(modelo) {
+    canvas.width = 800;
+    canvas.height = 600;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#1e1e1e';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#ff4d4d';
+    ctx.font = 'bold 18pt Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Imagem para "${modelo}" não encontrada`, canvas.width / 2, canvas.height / 2 - 10);
+    ctx.fillStyle = '#bbb';
+    ctx.font = '14pt Arial, sans-serif';
+    ctx.fillText(`Crie o arquivo "modelo_${modelo}.png" ou "${modelo}.png" na pasta.`, canvas.width / 2, canvas.height / 2 + 25);
+}
+
 function gerarCertificado() {
     const modelo = document.getElementById('modelo').value;
     const nome = document.getElementById('nome').value || "";
@@ -172,7 +203,7 @@ function gerarCertificado() {
     const ano = document.getElementById('ano').value || "";
 
     const img = new Image();
-    img.src = `./modelo_${modelo}.png`;
+    let etapaTentativa = 0;
 
     img.onload = function () {
         canvas.width = img.width;
@@ -358,8 +389,26 @@ function gerarCertificado() {
     };
     
     img.onerror = function() {
-        console.error("Erro ao carregar a imagem do modelo.");
+        if (etapaTentativa === 0) {
+            // Tenta carregar sem a palavra "modelo_" no inicio (ex: insignia_comunitaria.png)
+            etapaTentativa = 1;
+            img.src = `./${modelo}.png`;
+        } else if (etapaTentativa === 1) {
+            // Tenta o modelo base de fallback da categoria
+            etapaTentativa = 2;
+            const fallbackSrc = obterImagemFallback(modelo);
+            if (fallbackSrc !== `./${modelo}.png` && fallbackSrc !== `./modelo_${modelo}.png`) {
+                img.src = fallbackSrc;
+            } else {
+                exibirErroCanvas(modelo);
+            }
+        } else {
+            exibirErroCanvas(modelo);
+        }
     };
+
+    // Tenta carregar primeiro com 'modelo_' no início
+    img.src = `./modelo_${modelo}.png`;
 }
 
 function baixarPDF() {
