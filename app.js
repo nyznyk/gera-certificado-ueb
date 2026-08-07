@@ -612,3 +612,32 @@ function baixarPDF() {
 document.addEventListener('DOMContentLoaded', () => {
     filtrarCategoria('todas');
 });
+
+// ==========================================
+// REGISTRO E ATUALIZAÇÃO AUTOMÁTICA DO SERVICE WORKER
+// ==========================================
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+            reg.update();
+            reg.onupdatefound = () => {
+                const installingWorker = reg.installing;
+                if (installingWorker) {
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('Nova versão encontrada! Aplicando atualização...');
+                        }
+                    };
+                }
+            };
+        }).catch((err) => console.error('Erro ao registrar Service Worker:', err));
+    });
+
+    let recarregando = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!recarregando) {
+            recarregando = true;
+            window.location.reload();
+        }
+    });
+}
