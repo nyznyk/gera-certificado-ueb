@@ -5,7 +5,166 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerador de Certificados Escoteiros</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary-color: #00843D; /* Verde Escoteiro */
+      --accent-color: #003B5C;  /* Azul Escoteiro */
+      --bg-dark: #12181b;
+      --card-dark: #1e262c;
+      --text-light: #e0e6ed;
+      --border-dark: #323d47;
+      --input-bg: #2a343d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      /* Substitua 'background.jpg' pelo nome exato do arquivo da sua imagem de fundo */
+      background-image: linear-gradient(rgba(18, 24, 27, 0.85), rgba(18, 24, 27, 0.85)), url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-light);
+      line-height: 1.5;
+      padding: 20px 15px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: 0 auto;
+      background-color: var(--card-dark);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border-dark);
+    }
+
+    h1 {
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      color: #a0aec0;
+      display: block;
+      font-size: 0.95rem;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px 14px;
+      margin-top: 6px;
+      font-size: 1rem;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      background-color: var(--input-bg);
+      color: #ffffff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    select optgroup {
+      background-color: var(--card-dark);
+      color: #ffffff;
+    }
+
+    select option {
+      background-color: var(--input-bg);
+      color: #ffffff;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(0, 132, 61, 0.3);
+    }
+
+    #dynamic-fields {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    #btn-pdf {
+      width: 100%;
+      max-width: 280px;
+      padding: 14px 20px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      transition: transform 0.1s ease, background-color 0.2s ease;
+    }
+
+    #btn-pdf:hover {
+      background-color: #006830;
+    }
+
+    #btn-pdf:active {
+      transform: scale(0.98);
+    }
+
+    .preview-area {
+      margin-top: 30px;
+      text-align: center;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    #cert-canvas {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid var(--border-dark);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+      background-color: #ffffff;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      #btn-pdf {
+        max-width: 100%;
+      }
+
+      #dynamic-fields {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -13,7 +172,7 @@
 
     <form id="cert-form">
       <!-- Seleção do Modelo -->
-      <label for="template-select"><strong>Selecione o Certificado:</strong></label>
+      <label for="template-select">Selecione o Certificado:</label>
       <select id="template-select" required>
         <option value="">-- Selecione um modelo --</option>
         
@@ -25,13 +184,13 @@
         </optgroup>
 
         <!-- Liderança -->
-        <optgroup label="Monitores/Sub Monitores">
-          <option value="cert_primo">Certificado de Primo (Lobinho)</option>
-          <option value="cert_segundo">Certificado de Segundo (Lobinho)</option>
-          <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
-          <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
-          <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
-          <option value="cert_sub_s_2">Certificado de Submonitor (Sênior)</option>
+        <optgroup label="Liderança">
+          <option value="cert_primo">Certificado de Primo(a) (Lobinho)</option>
+          <option value="cert_segundo">Certificado de Segundo(a) (Lobinho)</option>
+          <option value="cert_monitor_e">Certificado de Monitor(a) (Escoteiro)</option>
+          <option value="cert_sub_e">Certificado de Submonitor(a) (Escoteiro)</option>
+          <option value="cert_monitor_s">Certificado de Monitor(a) (Sênior)</option>
+          <option value="cert_sub_s_2">Certificado de Submonitor(a) (Sênior)</option>
         </optgroup>
 
         <!-- Promessa e Expansão -->
@@ -60,13 +219,10 @@
       </select>
 
       <!-- Campos Dinâmicos -->
-      <div id="dynamic-fields">
-        <!-- O JS preencherá aqui com base no modelo selecionado -->
-      </div>
+      <div id="dynamic-fields"></div>
 
-      <!-- Botões de Ação -->
+      <!-- Botão Único para Baixar PDF -->
       <div class="actions">
-        <button type="button" id="btn-preview">Gerar Prévia</button>
         <button type="submit" id="btn-pdf">Baixar PDF</button>
       </div>
     </form>
