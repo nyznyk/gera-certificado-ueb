@@ -158,7 +158,7 @@ function atualizarFormulario() {
     const campoAnos = document.getElementById('campo-anos');
     const campoQtd = document.getElementById('campo-qtd');
 
-    // 1. Esconde tudo inicialmente (menos Nome, Data e Local que são padrão e nunca somem no seu HTML)
+    // 1. Esconde tudo inicialmente (menos Nome, Data e Local que são padrão)
     if (grupoProg) grupoProg.style.display = 'none';
     if (grupoEsp) grupoEsp.style.display = 'none';
     if (campoNivel) campoNivel.style.display = 'none';
@@ -186,23 +186,21 @@ function atualizarFormulario() {
         if (grupoEsp) grupoEsp.style.display = 'block';
         if (campoSpExtra) campoSpExtra.style.display = 'block';
     }
+    else if (cat === 'promessa') {
+        if (campoGrupo) campoGrupo.style.display = 'block';
+    }
     else if (cat === 'insignia_especial') {
-        // Conesul, Lusofonia, Reduzir Reciclar, Energia Solar, Campeões da Natureza
         if (campoRamo) campoRamo.style.display = 'block';
     }
     else if (cat === 'lideranca') {
-        // Monitoria (Sênior, Escoteiro, Primo, etc)
         if (campoPatrulha) campoPatrulha.style.display = 'block';
     }
     else if (cat === 'atividade') {
-        // Estrela de Atividade
         if (campoAnos) campoAnos.style.display = 'block';
     }
     else if (cat === 'expansao') {
-        // Recrutador e Semeador
         if (campoQtd) campoQtd.style.display = 'block';
     }
-    // Nota: 'insignia_modalidade' e 'insignia_comunitaria' (comunitário/ação) usarão apenas os campos padrão (nome/data/local).
     
     gerarCertificado();
 }
@@ -280,6 +278,18 @@ function gerarCertificado() {
             ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
             ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+        }
+
+        // PROMESSAS
+        else if (cat === 'promessa') {
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.40); 
+            ctx.fillText(grupo, canvas.width * 0.50, canvas.height * 0.48); 
+            
+            ctx.fillText(cidade, canvas.width * 0.29, canvas.height * 0.71);
+            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.71);
+            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.71);
+            ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.71);
         }
 
         // PROGRESSÃO 
