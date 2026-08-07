@@ -126,6 +126,7 @@ function gerarCertificado() {
     const ano = getVal('ano');
 
     const img = new Image();
+    let tentativa = 0;
 
     img.onload = function () {
         canvas.width = img.width;
@@ -287,21 +288,27 @@ function gerarCertificado() {
     };
     
     img.onerror = function() {
-        console.error(`Erro ao carregar a imagem: ${modelo}.png`);
-        canvas.width = 800;
-        canvas.height = 450;
-        ctx.fillStyle = '#1e1e1e';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#ff4d4d';
-        ctx.font = 'bold 16pt Arial, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(`Imagem não encontrada: ${modelo}.png`, canvas.width / 2, canvas.height / 2 - 10);
-        ctx.fillStyle = '#aaa';
-        ctx.font = '12pt Arial, sans-serif';
-        ctx.fillText(`Verifique se o arquivo está na pasta do projeto com esse nome exato.`, canvas.width / 2, canvas.height / 2 + 25);
+        tentativa++;
+        if (tentativa === 1) {
+            // Segunda tentativa: tenta adicionando o prefixo "modelo_" na frente (para os antigos)
+            img.src = `./modelo_${modelo}.png`;
+        } else {
+            console.error(`Erro ao carregar imagem para o modelo: ${modelo}`);
+            canvas.width = 800;
+            canvas.height = 450;
+            ctx.fillStyle = '#1e1e1e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff4d4d';
+            ctx.font = 'bold 16pt Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Imagem não encontrada: ${modelo}.png ou modelo_${modelo}.png`, canvas.width / 2, canvas.height / 2 - 10);
+            ctx.fillStyle = '#aaa';
+            ctx.font = '12pt Arial, sans-serif';
+            ctx.fillText(`Verifique se o arquivo existe na pasta do projeto.`, canvas.width / 2, canvas.height / 2 + 25);
+        }
     };
 
-    // Procura o arquivo com o mesmo nome do value (ex: cert_primo.png, ins_aeronauta.png)
+    // Primeira tentativa: tenta sem o prefixo (para os novos)
     img.src = `./${modelo}.png`;
 }
 
