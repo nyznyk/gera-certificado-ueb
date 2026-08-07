@@ -2,43 +2,52 @@
 // LÓGICA DE FILTROS DOS BOTÕES
 // ==========================================
 const listaCertificados = [
+    { id: 'cert_acolhida', nome: 'Acolhida', cat: 'progressao' },
     { id: 'progressao_l', nome: 'Progressão Lobinho', cat: 'progressao' },
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
+    { id: 'progressao_f', nome: 'Progressão Flor de Lis', cat: 'progressao' },
     { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
     { id: 'especialidade_sp', nome: 'Especialidade (Sênior / Pioneiro)', cat: 'especialidade' },
     { id: 'promessa_lobinho', nome: 'Promessa (Lobinho)', cat: 'promessa' },
     { id: 'promessa_escoteiro', nome: 'Promessa (Escoteiro)', cat: 'promessa' },
     
     // INSÍGNIAS DE MODALIDADE
-    { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignia_modalidade' },
-    { id: 'insignia_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
-    { id: 'insignia_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia_modalidade' },
-    { id: 'insignia_grumete', nome: 'Insígnia do Grumete', cat: 'insignia_modalidade' },
-    { id: 'insignia_naval', nome: 'Insígnia Naval', cat: 'insignia_modalidade' },
+    { id: 'ins_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
+    { id: 'ins_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia_modalidade' },
+    { id: 'ins_grumete', nome: 'Insígnia do Grumete', cat: 'insignia_modalidade' },
+    { id: 'ins_naval', nome: 'Insígnia Naval', cat: 'insignia_modalidade' },
 
     // INSÍGNIAS DE INTERESSE ESPECIAL
-    { id: 'insignia_comunitaria', nome: 'Ação Comunitária', cat: 'insignia_especial' },
-    { id: 'insignia_boa_acao', nome: 'Boa Ação', cat: 'insignia_especial' },
-    { id: 'insignia_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia_especial' },
-    { id: 'insignia_cone_sul', nome: 'Insígnia Cone Sul', cat: 'insignia_especial' },
-    { id: 'insignia_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia_especial' },
-    { id: 'insignia_rrr', nome: 'Insígnia RRR', cat: 'insignia_especial' },
-    { id: 'insignia_energia_solar', nome: 'Energia Solar', cat: 'insignia_especial' },
-    { id: 'insignia_natureza', nome: 'Campeões da Natureza', cat: 'insignia_especial' },
+    { id: 'ins_acao_comunitaria', nome: 'Ação Comunitária', cat: 'insignia_especial' },
+    { id: 'ins_boa_acao', nome: 'Boa Ação', cat: 'insignia_especial' },
+    { id: 'ins_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia_especial' },
+    { id: 'insignia_conesul', nome: 'Insígnia Cone Sul', cat: 'insignia_especial' },
+    { id: 'ins_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia_especial' },
+    { id: 'ins_rrr', nome: 'Insígnia Reduzir, Reciclar, Reutilizar', cat: 'insignia_especial' },
+    { id: 'ins_energia_solar', nome: 'Escoteiros pela Energia Solar', cat: 'insignia_especial' },
+    { id: 'ins_campeoes_natureza', nome: 'Campeões da Natureza', cat: 'insignia_especial' },
 
-    { id: 'lideranca_monitor', nome: 'Monitor / Sub', cat: 'lideranca' },
-    { id: 'lideranca_primo', nome: 'Primo / Segundo', cat: 'lideranca' },
-    { id: 'atividade_estrela', nome: 'Estrela de Atividade', cat: 'atividade' },
-    { id: 'expansao_recrutador', nome: 'Recrutador', cat: 'expansao' },
-    { id: 'expansao_semeador', nome: 'Semeador', cat: 'expansao' }
+    { id: 'cert_moni_s', nome: 'Monitor (Sênior)', cat: 'lideranca' },
+    { id: 'cert_sub_s', nome: 'Sub-monitor (Sênior)', cat: 'lideranca' },
+    { id: 'cert_moni_e', nome: 'Monitor (Escoteiro)', cat: 'lideranca' },
+    { id: 'cert_sub_e', nome: 'Sub-monitor (Escoteiro)', cat: 'lideranca' },
+    { id: 'cert_primo', nome: 'Primo', cat: 'lideranca' },
+    { id: 'cert_segundo', nome: 'Segundo', cat: 'lideranca' },
+    { id: 'estrelas_atv', nome: 'Estrela de Atividade', cat: 'atividade' },
+    { id: 'cert_recrutador', nome: 'Recrutador', cat: 'expansao' },
+    { id: 'ins_semeador', nome: 'Semeador', cat: 'expansao' }
 ];
+
+function obterItemCertificado(idModelo) {
+    return listaCertificados.find(item => item.id === idModelo);
+}
 
 function filtrarCategoria(categoria) {
     const botoes = document.querySelectorAll('.btn-cat');
     botoes.forEach(btn => btn.classList.remove('active'));
-    const btnClicado = Array.from(botoes).find(b => b.getAttribute('onclick').includes(`'${categoria}'`));
+    const btnClicado = Array.from(botoes).find(b => b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${categoria}'`));
     if (btnClicado) btnClicado.classList.add('active');
 
     const container = document.getElementById('container-certificados');
@@ -65,11 +74,9 @@ function selecionarModelo(idModelo, btnElemento) {
     if (btnElemento) btnElemento.classList.add('selected');
 
     const select = document.getElementById('modelo');
-    select.value = idModelo;
+    if (select) select.value = idModelo;
     atualizarFormulario();
 }
-// ==========================================
-
 
 let logoGroup = null; 
 
@@ -94,7 +101,7 @@ function carregarLogo(event) {
 }
 
 const canvas = document.getElementById('canvasCertificado');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeight) {
     if (!text) return;
@@ -126,6 +133,8 @@ function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeig
 
 function atualizarFormulario() {
     const modelo = document.getElementById('modelo').value;
+    const itemObj = obterItemCertificado(modelo);
+    const cat = itemObj ? itemObj.cat : '';
     
     const grupoProg = document.getElementById('grupo-progressao');
     const grupoEsp = document.getElementById('grupo-especialidade');
@@ -144,8 +153,8 @@ function atualizarFormulario() {
     if (campoPatrulha) campoPatrulha.style.display = 'none';
     if (campoInsignia) campoInsignia.style.display = 'none';
 
-    // Mostra condicionalmente
-    if (modelo.startsWith('progressao_')) {
+    // Mostra condicionalmente por Categoria/Modelo
+    if (cat === 'progressao') {
         if (grupoProg) grupoProg.style.display = 'block';
     } 
     else if (modelo === 'especialidade_le') {
@@ -156,11 +165,11 @@ function atualizarFormulario() {
         if (grupoEsp) grupoEsp.style.display = 'block';
         if (campoSpExtra) campoSpExtra.style.display = 'block';
     }
-    else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo.startsWith('lideranca_')) {
+    else if (cat === 'promessa' || cat === 'lideranca') {
         if (grupoOutros) grupoOutros.style.display = 'block';
         if (campoPatrulha) campoPatrulha.style.display = 'block';
     }
-    else if (modelo.startsWith('insignia_') || modelo.startsWith('atividade_') || modelo.startsWith('expansao_')) {
+    else if (cat.startsWith('insignia') || cat === 'atividade' || cat === 'expansao') {
         if (grupoOutros) grupoOutros.style.display = 'block';
         if (campoInsignia) campoInsignia.style.display = 'block';
     }
@@ -169,17 +178,21 @@ function atualizarFormulario() {
 }
 
 function obterImagemFallback(modelo) {
-    if (modelo.startsWith('progressao_')) return './modelo_progressao_e.png';
-    if (modelo.startsWith('especialidade_')) return './modelo_especialidade_le.png';
-    if (modelo.startsWith('promessa_')) return './modelo_promessa_escoteiro.png';
-    if (modelo.startsWith('lideranca_')) return './modelo_lideranca_monitor.png';
-    if (modelo.startsWith('atividade_')) return './modelo_atividade_estrela.png';
-    if (modelo.startsWith('expansao_')) return './modelo_expansao_recrutador.png';
-    if (modelo.startsWith('insignia_')) return './modelo_insignia_modalidade.png';
+    const itemObj = obterItemCertificado(modelo);
+    const cat = itemObj ? itemObj.cat : '';
+
+    if (cat === 'progressao') return './modelo_progressao_e.png';
+    if (cat === 'especialidade') return './modelo_especialidade_le.png';
+    if (cat === 'promessa') return './modelo_promessa_escoteiro.png';
+    if (cat === 'lideranca') return './modelo_lideranca_monitor.png';
+    if (cat === 'atividade') return './modelo_atividade_estrela.png';
+    if (cat === 'expansao') return './modelo_expansao_recrutador.png';
+    if (cat.startsWith('insignia')) return './modelo_insignia_modalidade.png';
     return './modelo_insignia_modalidade.png';
 }
 
 function exibirErroCanvas(modelo) {
+    if (!canvas || !ctx) return;
     canvas.width = 800;
     canvas.height = 600;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -195,12 +208,16 @@ function exibirErroCanvas(modelo) {
 }
 
 function gerarCertificado() {
+    if (!canvas || !ctx) return;
     const modelo = document.getElementById('modelo').value;
-    const nome = document.getElementById('nome').value || "";
-    const cidade = document.getElementById('cidade').value || "";
-    const dia = document.getElementById('dia').value || "";
-    const mes = document.getElementById('mes').value || "";
-    const ano = document.getElementById('ano').value || "";
+    const itemObj = obterItemCertificado(modelo);
+    const cat = itemObj ? itemObj.cat : '';
+
+    const nome = document.getElementById('nome')?.value || "";
+    const cidade = document.getElementById('cidade')?.value || "";
+    const dia = document.getElementById('dia')?.value || "";
+    const mes = document.getElementById('mes')?.value || "";
+    const ano = document.getElementById('ano')?.value || "";
 
     const img = new Image();
     let etapaTentativa = 0;
@@ -218,7 +235,7 @@ function gerarCertificado() {
 
         // 1. PROGRESSÃO - LOBINHO
         if (modelo === 'progressao_l') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.48, canvas.height * 0.315); 
             ctx.fillText(etapa, canvas.width * 0.53, canvas.height * 0.375); 
@@ -230,7 +247,7 @@ function gerarCertificado() {
         
         // 2. PROGRESSÃO - ESCOTEIRO
         else if (modelo === 'progressao_e') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.55, canvas.height * 0.405); 
@@ -242,7 +259,7 @@ function gerarCertificado() {
 
         // 3. PROGRESSÃO - SÊNIOR
         else if (modelo === 'progressao_s') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.59, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.65, canvas.height * 0.385); 
@@ -252,9 +269,9 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
         }
 
-        // 4. PROGRESSÃO - PIONEIRO
-        else if (modelo === 'progressao_p') {
-            const etapa = document.getElementById('etapa').value || "";
+        // 4. PROGRESSÃO - PIONEIRO / FLOR DE LIS / ACOLHIDA
+        else if (modelo === 'progressao_p' || modelo === 'progressao_f' || modelo === 'cert_acolhida') {
+            const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
@@ -266,9 +283,9 @@ function gerarCertificado() {
 
         // 5. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "";
-            const nivel = document.getElementById('nivel').value || "";
-            const itens = document.getElementById('itens').value || "";
+            const esp = document.getElementById('especialidade')?.value || "";
+            const nivel = document.getElementById('nivel')?.value || "";
+            const itens = document.getElementById('itens')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.36);
             ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.442);
@@ -286,12 +303,12 @@ function gerarCertificado() {
 
         // 6. ESPECIALIDADE (SÊNIOR / PIONEIRO)
         else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "";
-            const eixo = document.getElementById('eixo').value || "";
-            const carga = document.getElementById('carga').value || "";
-            const conhecer = document.getElementById('conhecer').value || "";
-            const fazer = document.getElementById('fazer').value || "";
-            const compartilhar = document.getElementById('compartilhar').value || "";
+            const esp = document.getElementById('especialidade')?.value || "";
+            const eixo = document.getElementById('eixo')?.value || "";
+            const carga = document.getElementById('carga')?.value || "";
+            const conhecer = document.getElementById('conhecer')?.value || "";
+            const fazer = document.getElementById('fazer')?.value || "";
+            const compartilhar = document.getElementById('compartilhar')?.value || "";
 
             ctx.textAlign = 'center'; 
             
@@ -337,9 +354,9 @@ function gerarCertificado() {
             );
         }
 
-        // 7. PROMESSAS E MONITORIA / LIDERANÇA
-        else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo.startsWith('lideranca_')) {
-            const patrulha = document.getElementById('patrulha').value || "";
+        // 7. PROMESSAS E LIDERANÇA
+        else if (cat === 'promessa' || cat === 'lideranca') {
+            const patrulha = document.getElementById('patrulha')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(patrulha, canvas.width * 0.50, canvas.height * 0.42); 
@@ -351,7 +368,9 @@ function gerarCertificado() {
 
         // 8. INSÍGNIAS, ATIVIDADE E EXPANSÃO
         else {
-            const insig = document.getElementById('nome_insignia').value || "";
+            const insigInput = document.getElementById('nome_insignia')?.value;
+            const insig = (insigInput && insigInput.trim() !== "") ? insigInput : (itemObj ? itemObj.nome : "");
+            
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(insig, canvas.width * 0.50, canvas.height * 0.42); 
@@ -375,7 +394,7 @@ function gerarCertificado() {
                 xPos = canvas.width * 0.84;
                 yPos = canvas.height * 0.84;
             } 
-            else if (modelo === 'progressao_l' || modelo === 'progressao_s' || modelo === 'progressao_p') {
+            else if (cat === 'progressao') {
                 xPos = canvas.width * 0.08;
                 yPos = canvas.height * 0.06;
             } 
@@ -390,11 +409,9 @@ function gerarCertificado() {
     
     img.onerror = function() {
         if (etapaTentativa === 0) {
-            // Tenta carregar sem a palavra "modelo_" no inicio (ex: insignia_comunitaria.png)
             etapaTentativa = 1;
             img.src = `./${modelo}.png`;
         } else if (etapaTentativa === 1) {
-            // Tenta o modelo base de fallback da categoria
             etapaTentativa = 2;
             const fallbackSrc = obterImagemFallback(modelo);
             if (fallbackSrc !== `./${modelo}.png` && fallbackSrc !== `./modelo_${modelo}.png`) {
@@ -407,7 +424,6 @@ function gerarCertificado() {
         }
     };
 
-    // Tenta carregar primeiro com 'modelo_' no início
     img.src = `./modelo_${modelo}.png`;
 }
 
