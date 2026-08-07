@@ -5,6 +5,9 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// Variável para guardar a imagem da logo da UEL
+let uelLogoImg = null;
+
 // Mapeamento de Configurações e Coordenadas dos Certificados
 const CERT_CONFIGS = {
   // --- ACOLHIDA E PROGRESSÃO ---
@@ -336,11 +339,11 @@ const CERT_CONFIGS = {
   }
 };
 
-// Mapeamento das Labels e HTML dos Campos
+// Mapeamento das Labels dos Campos
 const FIELD_LABELS = {
-  nome: '<label>Nome do Escoteiro/Filhote:<br><input type="text" id="input-nome" required></label>',
+  nome: '<label>Nome do jovem:<br><input type="text" id="input-nome" required></label>',
   responsaveis: '<label>Nome dos Responsáveis:<br><input type="text" id="input-responsaveis" required></label>',
-  grupo: '<label>Nome/Nº do Grupo Escoteiro:<br><input type="text" id="input-grupo" required></label>',
+  grupo: '<label>Nome do grupo:<br><input type="text" id="input-grupo" required></label>',
   matilha: '<label>Nome da Matilha:<br><input type="text" id="input-matilha" required></label>',
   patrulha: '<label>Nome da Patrulha:<br><input type="text" id="input-patrulha" required></label>',
   forma_promessa: '<label>Como prestou a promessa:<br><input type="text" id="input-forma_promessa" placeholder="ex: como Escoteiro(a)" required></label>',
@@ -356,9 +359,29 @@ const FIELD_LABELS = {
 
 const selectTemplate = document.getElementById('template-select');
 const dynamicFieldsDiv = document.getElementById('dynamic-fields');
+const logoInput = document.getElementById('logo-input');
 const canvas = document.getElementById('cert-canvas');
 const ctx = canvas.getContext('2d');
 const certForm = document.getElementById('cert-form');
+
+// Leitura da Logo enviada pelo usuário
+logoInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      uelLogoImg = new Image();
+      uelLogoImg.onload = () => {
+        renderCertificate();
+      };
+      uelLogoImg.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    uelLogoImg = null;
+    renderCertificate();
+  }
+});
 
 // Função para renderizar o certificado no canvas
 function renderCertificate() {
@@ -378,6 +401,13 @@ function renderCertificate() {
       canvas.height = img.naturalHeight;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
+
+      // Renderiza a Logo da UEL no topo superior direito se carregada
+      if (uelLogoImg) {
+        const logoSize = 110;
+        const padding = 40;
+        ctx.drawImage(uelLogoImg, canvas.width - logoSize - padding, padding, logoSize, logoSize);
+      }
 
       ctx.fillStyle = '#000000';
 
@@ -402,7 +432,7 @@ function renderCertificate() {
   });
 }
 
-// Atualização dinâmica do formulário e ligação de escutadores em tempo real (input)
+// Atualização dinâmica do formulário e digitação em tempo real
 selectTemplate.addEventListener('change', () => {
   const modelKey = selectTemplate.value;
   dynamicFieldsDiv.innerHTML = '';
@@ -420,7 +450,6 @@ selectTemplate.addEventListener('change', () => {
       wrapper.innerHTML = FIELD_LABELS[field];
       dynamicFieldsDiv.appendChild(wrapper);
 
-      // Vincula a digitação em tempo real ao redesenho do canvas
       const inputEl = wrapper.querySelector('input');
       if (inputEl) {
         inputEl.addEventListener('input', renderCertificate);
@@ -428,11 +457,10 @@ selectTemplate.addEventListener('change', () => {
     }
   });
 
-  // Desenha o certificado limpo ao selecionar
   renderCertificate();
 });
 
-// Submissão do formulário para geração direta do PDF
+// Submissão do formulário para PDF
 certForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
