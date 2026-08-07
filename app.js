@@ -268,21 +268,26 @@ function gerarCertificado() {
         ctx.fillStyle = '#111111';
         
         // Fonte dinâmica calculada proporcionalmente à altura da imagem (~3.2% da altura)
-const tamanhoFonte = Math.round(canvas.height * 0.032); 
-const fontePrincipal = `${tamanhoFonte}px Arial, sans-serif`;
-const fontePequena = `${Math.round(tamanhoFonte * 0.8)}px Arial, sans-serif`;
+        const tamanhoFonte = Math.round(canvas.height * 0.032); 
+        const fontePrincipal = `${tamanhoFonte}px Arial, sans-serif`;
+        const fontePequena = `${Math.round(tamanhoFonte * 0.8)}px Arial, sans-serif`;
+        const fonteDatas = `${Math.round(tamanhoFonte * 0.65)}px Arial, sans-serif`; // Nova fonte para datas (65%)
 
-ctx.font = fontePrincipal;
-ctx.textAlign = 'left';
+        ctx.font = fontePrincipal;
+        ctx.textAlign = 'left';
+
         // ACOLHIDA
         if (modelo === 'cert_acolhida') {
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.325); 
             ctx.fillText(responsaveis, canvas.width * 0.52, canvas.height * 0.378); 
             ctx.fillText(grupo, canvas.width * 0.432, canvas.height * 0.485); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.28, canvas.height * 0.585);
             ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.585);
             ctx.fillText(mes, canvas.width * 0.55, canvas.height * 0.585);
             ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.585);
+            ctx.font = fontePrincipal;
         }
 
         // PROMESSAS
@@ -290,20 +295,24 @@ ctx.textAlign = 'left';
             ctx.fillText(nome, canvas.width * 0.32, canvas.height * 0.438); 
             ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.525); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.685);
             ctx.fillText(dia, canvas.width * 0.39, canvas.height * 0.685);
             ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.685);
             ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.685);
+            ctx.font = fontePrincipal;
         }
              else if (modelo === 'cert_promessa') {
             ctx.fillText(nome, canvas.width * 0.32, canvas.height * 0.4);
             ctx.fillText(ramo, canvas.width * 0.53, canvas.height * 0.452);
             ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.487); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.18, canvas.height * 0.66);
             ctx.fillText(dia, canvas.width * 0.39, canvas.height * 0.66);
             ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.66);
             ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.66);
+            ctx.font = fontePrincipal;
         }
 
 
@@ -312,46 +321,61 @@ ctx.textAlign = 'left';
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.fillText(nome, canvas.width * 0.33, canvas.height * 0.315); 
             ctx.fillText(etapa, canvas.width * 0.38, canvas.height * 0.375); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.283, canvas.height * 0.525);
             ctx.fillText(dia, canvas.width * 0.40, canvas.height * 0.525);
             ctx.fillText(mes, canvas.width * 0.51, canvas.height * 0.525);
             ctx.fillText(ano, canvas.width * 0.65, canvas.height * 0.525);
+            ctx.font = fontePrincipal;
         }
         else if (modelo === 'progressao_e') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.40, canvas.height * 0.405); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.3, canvas.height * 0.56);
             ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.56);
             ctx.fillText(mes, canvas.width * 0.54, canvas.height * 0.56);
             ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.56);
+            ctx.font = fontePrincipal;
         }
         else if (modelo === 'progressao_s') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.fillText(nome, canvas.width * 0.44, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.50, canvas.height * 0.395); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.4, canvas.height * 0.545);
             ctx.fillText(dia, canvas.width * 0.532, canvas.height * 0.545);
             ctx.fillText(mes, canvas.width * 0.635, canvas.height * 0.545);
             ctx.fillText(ano, canvas.width * 0.79, canvas.height * 0.545);
+            ctx.font = fontePrincipal;
         }
         else if (modelo === 'progressao_p') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.36); 
             ctx.fillText(etapa, canvas.width * 0.41, canvas.height * 0.42); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.43, canvas.height * 0.56);
             ctx.fillText(dia, canvas.width * 0.55, canvas.height * 0.56);
             ctx.fillText(mes, canvas.width * 0.65, canvas.height * 0.56);
             ctx.fillText(ano, canvas.width * 0.78, canvas.height * 0.56);
+            ctx.font = fontePrincipal;
         }
         else if (modelo === 'progressao_f') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.fillText(nome, canvas.width * 0.4, canvas.height * 0.44); 
             ctx.fillText(etapa, canvas.width * 0.47, canvas.height * 0.5); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.3, canvas.height * 0.68);
             ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.68);
             ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.68);
             ctx.fillText(ano, canvas.width * 0.665, canvas.height * 0.68);
+            ctx.font = fontePrincipal;
         }
 
         // ESPECIALIDADES
@@ -362,13 +386,16 @@ ctx.textAlign = 'left';
             ctx.fillText(nome, canvas.width * 0.47, canvas.height * 0.36);
             ctx.fillText(esp, canvas.width * 0.59, canvas.height * 0.442);
             ctx.fillText(nivel, canvas.width * 0.588, canvas.height * 0.505);
+            
             ctx.font = fontePequena;
             ctx.fillText(itens, canvas.width * 0.47, canvas.height * 0.585);
-            ctx.font = fontePrincipal;
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.43, canvas.height * 0.685);
             ctx.fillText(dia, canvas.width * 0.57, canvas.height * 0.685);
             ctx.fillText(mes, canvas.width * 0.64, canvas.height * 0.685);
             ctx.fillText(ano, canvas.width * 0.775, canvas.height * 0.685);
+            ctx.font = fontePrincipal;
         }
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade')?.value || "";
@@ -380,6 +407,8 @@ ctx.textAlign = 'left';
 
             ctx.fillText(nome, canvas.width * 0.205, canvas.height * 0.188);
             ctx.fillText(esp, canvas.width * 0.315, canvas.height * 0.231);
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.12, canvas.height * 0.297);
             ctx.fillText(dia, canvas.width * 0.265, canvas.height * 0.297);
             ctx.fillText(mes, canvas.width * 0.35, canvas.height * 0.297);
@@ -404,57 +433,70 @@ ctx.textAlign = 'left';
         else if (cat === 'lideranca') {
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.56); 
             ctx.fillText(patrulha, canvas.width * 0.42, canvas.height * 0.652); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.234, canvas.height * 0.79);
             ctx.fillText(dia, canvas.width * 0.422, canvas.height * 0.79);
             ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.79);
             ctx.fillText(ano, canvas.width * 0.74, canvas.height * 0.79);
+            ctx.font = fontePrincipal;
         }
 
         // INSÍGNIAS ESPECIAIS (Com campo RAMO)
         else if (modelo === 'ins_conesul') {
-            ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.5); 
+            ctx.fillText(nome, canvas.width * 0.3, canvas.height * 0.52); 
             ctx.fillText(ramo, canvas.width * 0.45, canvas.height * 0.6); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.74);
-            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.74);
-            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.74);
-            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.74);
+            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.755);
+            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.755);
+            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.755);
+            ctx.font = fontePrincipal;
         }
             else if (modelo === 'ins_lusofonia') {
-            ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.49); 
+            ctx.fillText(nome, canvas.width * 0.31, canvas.height * 0.49); 
             ctx.fillText(ramo, canvas.width * 0.5, canvas.height * 0.59); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.737);
             ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.737);
             ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.737);
-            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.737);
+            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.737);
+            ctx.font = fontePrincipal;
         }
             else if (modelo === 'ins_rrr') {
-            ctx.fillText(nome, canvas.width * 0.325, canvas.height * 0.40); 
+            ctx.fillText(nome, canvas.width * 0.3, canvas.height * 0.40); 
             ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.433); 
             
-            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.57);
-            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.57);
-            ctx.fillText(mes, canvas.width * 0.43, canvas.height * 0.57);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.57);
+            ctx.font = fonteDatas;
+            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.55);
+            ctx.fillText(dia, canvas.width * 0.345, canvas.height * 0.55);
+            ctx.fillText(mes, canvas.width * 0.43, canvas.height * 0.55);
+            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.55);
+            ctx.font = fontePrincipal;
         }
             else if (modelo === 'ins_energia_solar') {
-            ctx.fillText(nome, canvas.width * 0.32, canvas.height * 0.383); 
-            ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.41); 
+            ctx.fillText(nome, canvas.width * 0.3, canvas.height * 0.383); 
+            ctx.fillText(ramo, canvas.width * 0.16, canvas.height * 0.41); 
             
-            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.57);
-            ctx.fillText(mes, canvas.width * 0.433, canvas.height * 0.57);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.57);
+            ctx.font = fonteDatas;
+            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.575);
+            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.575);
+            ctx.fillText(mes, canvas.width * 0.433, canvas.height * 0.575);
+            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.575);
+            ctx.font = fontePrincipal;
         }
             else if (modelo === 'ins_campeoes_natureza') {
             ctx.fillText(nome, canvas.width * 0.33, canvas.height * 0.32); 
-            ctx.fillText(ramo, canvas.width * 0.527, canvas.height * 0.4); 
+            ctx.fillText(ramo, canvas.width * 0.531, canvas.height * 0.4); 
             
-            ctx.fillText(cidade, canvas.width * 0.18, canvas.height * 0.52);
+            ctx.font = fonteDatas;
+            ctx.fillText(cidade, canvas.width * 0.2, canvas.height * 0.52);
             ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.52);
             ctx.fillText(mes, canvas.width * 0.56, canvas.height * 0.52);
             ctx.fillText(ano, canvas.width * 0.7, canvas.height * 0.52);
+            ctx.font = fontePrincipal;
         }
 
         // ESTRELA DE ATIVIDADE
@@ -462,10 +504,12 @@ ctx.textAlign = 'left';
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.54); 
             ctx.fillText(anosAtividade, canvas.width * 0.33, canvas.height * 0.6); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.28, canvas.height * 0.715);
             ctx.fillText(dia, canvas.width * 0.45, canvas.height * 0.715);
             ctx.fillText(mes, canvas.width * 0.55, canvas.height * 0.715);
             ctx.fillText(ano, canvas.width * 0.7, canvas.height * 0.715);
+            ctx.font = fontePrincipal;
         }
 
         // EXPANSÃO (Recrutador e Semeador)
@@ -473,19 +517,24 @@ ctx.textAlign = 'left';
             ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.48); 
             ctx.fillText(qtdJovens, canvas.width * 0.515, canvas.height * 0.582); 
             
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.08, canvas.height * 0.721);
             ctx.fillText(dia, canvas.width * 0.265, canvas.height * 0.721);
             ctx.fillText(mes, canvas.width * 0.355, canvas.height * 0.721);
             ctx.fillText(ano, canvas.width * 0.495, canvas.height * 0.721);
+            ctx.font = fontePrincipal;
         }
 
         // INSÍGNIAS DE MODALIDADE, COMUNITÁRIAS E GENÉRICAS (Apenas Nome, Data e Local)
         else {
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.52); 
+            
+            ctx.font = fonteDatas;
             ctx.fillText(cidade, canvas.width * 0.2, canvas.height * 0.71);
             ctx.fillText(dia, canvas.width * 0.4, canvas.height * 0.71);
             ctx.fillText(mes, canvas.width * 0.5215, canvas.height * 0.71);
             ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.71);
+            ctx.font = fontePrincipal;
         }
 
         // ==========================================
