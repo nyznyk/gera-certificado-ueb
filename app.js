@@ -2,16 +2,20 @@
 // LÓGICA DE FILTROS DOS BOTÕES
 // ==========================================
 const listaCertificados = [
+    // PROGRESSÃO
     { id: 'cert_acolhida', nome: 'Acolhida', cat: 'progressao' },
     { id: 'progressao_l', nome: 'Progressão Lobinho', cat: 'progressao' },
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
-    { id: 'progressao_f', nome: 'Progressão Flor de Lis', cat: 'progressao' },
+   
+    // ESPECIALIDADES
     { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
     { id: 'especialidade_sp', nome: 'Especialidade (Sênior / Pioneiro)', cat: 'especialidade' },
-    { id: 'promessa_lobinho', nome: 'Promessa (Lobinho)', cat: 'promessa' },
-    { id: 'promessa_escoteiro', nome: 'Promessa (Escoteiro)', cat: 'promessa' },
+
+    // PROMESSAS
+    { id: 'cert_promessa_l', nome: 'Promessa (Lobinho)', cat: 'promessa' },
+    { id: 'cert_promessa', nome: 'Promessa (Escoteiro)', cat: 'promessa' },
     
     // INSÍGNIAS DE MODALIDADE
     { id: 'ins_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
@@ -23,18 +27,21 @@ const listaCertificados = [
     { id: 'ins_acao_comunitaria', nome: 'Ação Comunitária', cat: 'insignia_especial' },
     { id: 'ins_boa_acao', nome: 'Boa Ação', cat: 'insignia_especial' },
     { id: 'ins_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia_especial' },
-    { id: 'insignia_conesul', nome: 'Insígnia Cone Sul', cat: 'insignia_especial' },
+    { id: 'ins_conesul', nome: 'Insígnia Cone Sul', cat: 'insignia_especial' },
     { id: 'ins_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia_especial' },
     { id: 'ins_rrr', nome: 'Insígnia Reduzir, Reciclar, Reutilizar', cat: 'insignia_especial' },
     { id: 'ins_energia_solar', nome: 'Escoteiros pela Energia Solar', cat: 'insignia_especial' },
     { id: 'ins_campeoes_natureza', nome: 'Campeões da Natureza', cat: 'insignia_especial' },
 
+    // LIDERANÇA
     { id: 'cert_moni_s', nome: 'Monitor (Sênior)', cat: 'lideranca' },
     { id: 'cert_sub_s', nome: 'Sub-monitor (Sênior)', cat: 'lideranca' },
     { id: 'cert_moni_e', nome: 'Monitor (Escoteiro)', cat: 'lideranca' },
     { id: 'cert_sub_e', nome: 'Sub-monitor (Escoteiro)', cat: 'lideranca' },
     { id: 'cert_primo', nome: 'Primo', cat: 'lideranca' },
     { id: 'cert_segundo', nome: 'Segundo', cat: 'lideranca' },
+
+    // OUTROS
     { id: 'estrelas_atv', nome: 'Estrela de Atividade', cat: 'atividade' },
     { id: 'cert_recrutador', nome: 'Recrutador', cat: 'expansao' },
     { id: 'ins_semeador', nome: 'Semeador', cat: 'expansao' }
@@ -183,12 +190,12 @@ function obterImagemFallback(modelo) {
 
     if (cat === 'progressao') return './modelo_progressao_e.png';
     if (cat === 'especialidade') return './modelo_especialidade_le.png';
-    if (cat === 'promessa') return './modelo_promessa_escoteiro.png';
-    if (cat === 'lideranca') return './modelo_lideranca_monitor.png';
-    if (cat === 'atividade') return './modelo_atividade_estrela.png';
-    if (cat === 'expansao') return './modelo_expansao_recrutador.png';
-    if (cat.startsWith('insignia')) return './modelo_insignia_modalidade.png';
-    return './modelo_insignia_modalidade.png';
+    if (cat === 'promessa') return './cert_promessa.png';
+    if (cat === 'lideranca') return './cert_moni_e.png';
+    if (cat === 'atividade') return './estrelas_atv.png';
+    if (cat === 'expansao') return './cert_recrutador.png';
+    if (cat.startsWith('insignia')) return './ins_aviador.png';
+    return './ins_aviador.png';
 }
 
 function exibirErroCanvas(modelo) {
@@ -204,7 +211,7 @@ function exibirErroCanvas(modelo) {
     ctx.fillText(`Imagem para "${modelo}" não encontrada`, canvas.width / 2, canvas.height / 2 - 10);
     ctx.fillStyle = '#bbb';
     ctx.font = '14pt Arial, sans-serif';
-    ctx.fillText(`Crie o arquivo "modelo_${modelo}.png" ou "${modelo}.png" na pasta.`, canvas.width / 2, canvas.height / 2 + 25);
+    ctx.fillText(`Verifique se existe o arquivo "${modelo}.png" ou "modelo_${modelo}.png".`, canvas.width / 2, canvas.height / 2 + 25);
 }
 
 function gerarCertificado() {
@@ -424,6 +431,7 @@ function gerarCertificado() {
         }
     };
 
+    // Tenta primeiro carregar com prefixo 'modelo_', caso contrário o onerror tentará carregar sem o prefixo
     img.src = `./modelo_${modelo}.png`;
 }
 
