@@ -297,13 +297,13 @@ ctx.textAlign = 'left';
         }
              else if (modelo === 'cert_promessa') {
             ctx.fillText(nome, canvas.width * 0.32, canvas.height * 0.4);
-            ctx.fillText(ramo, canvas.width * 0.51, canvas.height * 0.4335);
-            ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.485); 
+            ctx.fillText(ramo, canvas.width * 0.51, canvas.height * 0.455);
+            ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.487); 
             
-            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.635);
-            ctx.fillText(dia, canvas.width * 0.39, canvas.height * 0.635);
-            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.635);
-            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.635);
+            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.66);
+            ctx.fillText(dia, canvas.width * 0.39, canvas.height * 0.66);
+            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.66);
+            ctx.fillText(ano, canvas.width * 0.72, canvas.height * 0.66);
         }
 
 
@@ -435,12 +435,12 @@ ctx.textAlign = 'left';
         // EXPANSÃO (Recrutador e Semeador)
         else if (cat === 'expansao') {
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.48); 
-            ctx.fillText(qtdJovens, canvas.width * 0.515, canvas.height * 0.585); 
+            ctx.fillText(qtdJovens, canvas.width * 0.515, canvas.height * 0.582); 
             
-            ctx.fillText(cidade, canvas.width * 0.08, canvas.height * 0.715);
-            ctx.fillText(dia, canvas.width * 0.265, canvas.height * 0.715);
-            ctx.fillText(mes, canvas.width * 0.355, canvas.height * 0.715);
-            ctx.fillText(ano, canvas.width * 0.495, canvas.height * 0.715);
+            ctx.fillText(cidade, canvas.width * 0.08, canvas.height * 0.721);
+            ctx.fillText(dia, canvas.width * 0.265, canvas.height * 0.721);
+            ctx.fillText(mes, canvas.width * 0.355, canvas.height * 0.721);
+            ctx.fillText(ano, canvas.width * 0.495, canvas.height * 0.721);
         }
 
         // INSÍGNIAS DE MODALIDADE, COMUNITÁRIAS E GENÉRICAS (Apenas Nome, Data e Local)
