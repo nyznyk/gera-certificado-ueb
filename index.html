@@ -10,10 +10,10 @@
       --primary-color: #00843D; /* Verde Escoteiro */
       --accent-color: #003B5C;  /* Azul Escoteiro */
       --bg-dark: #12181b;
-      --card-dark: #1e262c;
+      --card-dark: rgba(30, 38, 44, 0.78); /* Semi-transparente */
       --text-light: #e0e6ed;
-      --border-dark: #323d47;
-      --input-bg: #2a343d;
+      --border-dark: rgba(255, 255, 255, 0.15);
+      --input-bg: rgba(42, 52, 61, 0.7);
     }
 
     * {
@@ -25,8 +25,8 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-dark);
-      /* Substitua 'background.jpg' pelo nome do seu arquivo de imagem de fundo */
-      background-image: linear-gradient(rgba(18, 24, 27, 0.85), rgba(18, 24, 27, 0.85)), url('fundo.jpg');
+      /* Overlay mais leve para deixar a imagem de fundo mais forte */
+      background-image: linear-gradient(rgba(18, 24, 27, 0.45), rgba(18, 24, 27, 0.45)), url('background.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -40,9 +40,11 @@
       max-width: 850px;
       margin: 0 auto;
       background-color: var(--card-dark);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
       border: 1px solid var(--border-dark);
     }
 
@@ -62,7 +64,7 @@
 
     label {
       font-weight: 600;
-      color: #a0aec0;
+      color: #cbd5e0;
       display: block;
       font-size: 0.95rem;
     }
@@ -80,19 +82,24 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
+    input[type="file"] {
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
     select optgroup {
-      background-color: var(--card-dark);
+      background-color: #1e262c;
       color: #ffffff;
     }
 
     select option {
-      background-color: var(--input-bg);
+      background-color: #2a343d;
       color: #ffffff;
     }
 
     select:focus, input:focus {
       border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(0, 132, 61, 0.3);
+      box-shadow: 0 0 0 3px rgba(0, 132, 61, 0.4);
     }
 
     #dynamic-fields {
@@ -125,6 +132,7 @@
       background-color: var(--primary-color);
       color: #ffffff;
       transition: transform 0.1s ease, background-color 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 132, 61, 0.4);
     }
 
     #btn-pdf:hover {
@@ -151,11 +159,11 @@
       background-color: #ffffff;
     }
 
-    /* Bloco Guia de Instalação no Celular */
+    /* Guia de Instalação */
     .install-guide {
       margin-top: 35px;
       padding: 20px;
-      background-color: rgba(255, 255, 255, 0.03);
+      background-color: rgba(0, 0, 0, 0.25);
       border: 1px dashed var(--border-dark);
       border-radius: 10px;
     }
@@ -178,10 +186,17 @@
     }
 
     .install-guide strong {
-      color: var(--text-light);
+      color: #ffffff;
     }
 
-    /* Rodapé de Créditos */
+    .install-note {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: #a0aec0;
+      font-style: italic;
+    }
+
+    /* Rodapé */
     .footer {
       margin-top: 30px;
       padding-top: 15px;
@@ -221,7 +236,7 @@
         <option value=""> Selecione um modelo </option>
         
         <!-- Acolhida e Progressão -->
-        <optgroup label="Acolhida e Progressão">
+        <optgroup label="Progressão/Estrela de Atividade">
           <option value="cert_acolhida">Certificado de Acolhida (Filhotes)</option>
           <option value="progressao_f">Certificado de Progressão Pessoal</option>
           <option value="estrelas_atv">Certificado de Estrela de Atividade</option>
@@ -229,8 +244,8 @@
 
         <!-- Liderança -->
         <optgroup label="Liderança">
-          <option value="cert_primo">Certificado de Primo (Lobinho)</option>
-          <option value="cert_segundo">Certificado de Segundo (Lobinho)</option>
+          <option value="cert_primo">Certificado de Primo </option>
+          <option value="cert_segundo">Certificado de Segundo</option>
           <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
           <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
           <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
@@ -250,17 +265,23 @@
           <option value="ins_acao_comunitaria">Insígnia da Ação Comunitária</option>
           <option value="ins_aeronauta">Insígnia Aeronauta</option>
           <option value="ins_aviador">Insígnia Aviador</option>
-          <option value="ins_boa_acao">Insígnia da Boa Ação</option>
-          <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza (Tribo da Terra)</option>
+          <option value="ins_boa_acao">Insígnia Boa Ação</option>
+          <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza</option>
           <option value="ins_conesul">Insígnia Cone Sul</option>
           <option value="ins_desafio_comunitario">Insígnia Desafio Comunitário</option>
-          <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar (Go Solar)</option>
+          <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar</option>
           <option value="ins_grumete">Insígnia Grumete</option>
-          <option value="ins_lusofonia">Insígnia Lusofonia</option>
+          <option value="ins_lusofonia">Insígnia da Lusofonia</option>
           <option value="ins_naval">Insígnia Naval</option>
-          <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar (Tide Turners)</option>
+          <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
         </optgroup>
       </select>
+
+      <!-- Botão para Logo da UEL -->
+      <div class="field-group">
+        <label for="logo-input">Adicionar logo da UEL(opcional):</label>
+        <input type="file" id="logo-input" accept="image/*">
+      </div>
 
       <!-- Campos Dinâmicos -->
       <div id="dynamic-fields"></div>
@@ -280,9 +301,10 @@
     <div class="install-guide">
       <h2>Como instalar no celular</h2>
       <ul>
-        <li><strong>Android (via Chrome):</strong> Toque nos três pontos (⋮) no canto superior e selecione <em>"Adicionar à tela inicial"</em> ou <em>"Instalar aplicativo"</em>.</li>
-        <li><strong>iPhone (via Safari):</strong> Toque no ícone de Compartilhar (compartilhar/seta) e selecione <em>"Adicionar à Tela de Início"</em>.</li>
+        <li>- <strong>Android (via Chrome):</strong> toque nos três pontos (⋮) e selecione "Adicionar à tela inicial" ou "Instalar aplicativo".</li>
+        <li>- <strong>iPhone (via Safari):</strong> toque no botão de Compartilhar e selecione "Adicionar à Tela de Início".</li>
       </ul>
+      <p class="install-note">Este sistema, além de funcionar no computador, funciona como um aplicativo no seu celular (inclusive offline)! Veja como instalar:[</p>
     </div>
 
     <!-- Rodapé -->
