@@ -7,26 +7,26 @@ const listaCertificados = [
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
     { id: 'especialidade_le', nome: 'Especialidade (L / E)', cat: 'especialidade' },
-    { id: 'especialidade_sp', nome: 'Especialidade (S / P)', cat: 'especialidade' }
+    { id: 'especialidade_sp', nome: 'Especialidade (S / P)', cat: 'especialidade' },
+    { id: 'promessa_lobinho', nome: 'Promessa Lobinho', cat: 'promessa' },
+    { id: 'promessa_escoteiro', nome: 'Promessa Escoteira', cat: 'promessa' },
+    { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignia' },
+    { id: 'lideranca_monitor', nome: 'Monitor / Sub', cat: 'lideranca' }
 ];
 
 function filtrarCategoria(categoria) {
-    // Atualiza a cor dos botões de categoria
     const botoes = document.querySelectorAll('.btn-cat');
     botoes.forEach(btn => btn.classList.remove('active'));
     const btnClicado = Array.from(botoes).find(b => b.getAttribute('onclick').includes(`'${categoria}'`));
     if (btnClicado) btnClicado.classList.add('active');
 
-    // Limpa a tela
     const container = document.getElementById('container-certificados');
     container.innerHTML = '';
 
-    // Filtra
     const filtrados = categoria === 'todas' 
         ? listaCertificados 
         : listaCertificados.filter(item => item.cat === categoria);
 
-    // Cria os botões
     filtrados.forEach((item, index) => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -35,44 +35,33 @@ function filtrarCategoria(categoria) {
         btn.onclick = () => selecionarModelo(item.id, btn);
         container.appendChild(btn);
 
-        // Seleciona automaticamente o primeiro item da lista filtrada
-        if (index === 0) {
-            btn.click();
-        }
+        if (index === 0) btn.click();
     });
 }
 
 function selecionarModelo(idModelo, btnElemento) {
-    // Remove classe selected de todos
     document.querySelectorAll('.btn-modelo').forEach(b => b.classList.remove('selected'));
-    // Adiciona ao botão clicado
     if (btnElemento) btnElemento.classList.add('selected');
 
-    // Atualiza o select invisível para as suas funções continuarem funcionando perfeitamente
     const select = document.getElementById('modelo');
     select.value = idModelo;
-    
     atualizarFormulario();
 }
 // ==========================================
 
 
-let logoGroup = null; // Guarda a imagem da logo em memória
+let logoGroup = null; 
 
-// Função chamada quando o usuário escolhe a foto no campo <input type="file">
 function carregarLogo(event) {
     const file = event.target.files[0];
     const statusTxt = document.getElementById('statusLogo');
 
     if (file) {
         if (statusTxt) statusTxt.innerText = `Logo selecionada: ${file.name}`;
-
         const reader = new FileReader();
         reader.onload = function(e) {
             logoGroup = new Image();
-            logoGroup.onload = function() {
-                gerarCertificado();
-            };
+            logoGroup.onload = function() { gerarCertificado(); };
             logoGroup.src = e.target.result;
         };
         reader.readAsDataURL(file);
@@ -121,12 +110,20 @@ function atualizarFormulario() {
     const grupoEsp = document.getElementById('grupo-especialidade');
     const campoNivel = document.getElementById('campo-nivel');
     const campoSpExtra = document.getElementById('campo-sp-extra');
+    const grupoOutros = document.getElementById('grupo-outros');
+    const campoPatrulha = document.getElementById('campo-patrulha');
+    const campoInsignia = document.getElementById('campo-insignia');
 
+    // Esconde todos
     if (grupoProg) grupoProg.style.display = 'none';
     if (grupoEsp) grupoEsp.style.display = 'none';
     if (campoNivel) campoNivel.style.display = 'none';
     if (campoSpExtra) campoSpExtra.style.display = 'none';
+    if (grupoOutros) grupoOutros.style.display = 'none';
+    if (campoPatrulha) campoPatrulha.style.display = 'none';
+    if (campoInsignia) campoInsignia.style.display = 'none';
 
+    // Mostra condicionalmente
     if (modelo.startsWith('progressao_')) {
         if (grupoProg) grupoProg.style.display = 'block';
     } 
@@ -137,6 +134,14 @@ function atualizarFormulario() {
     else if (modelo === 'especialidade_sp') {
         if (grupoEsp) grupoEsp.style.display = 'block';
         if (campoSpExtra) campoSpExtra.style.display = 'block';
+    }
+    else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo === 'lideranca_monitor') {
+        if (grupoOutros) grupoOutros.style.display = 'block';
+        if (campoPatrulha) campoPatrulha.style.display = 'block';
+    }
+    else if (modelo === 'insignia_modalidade') {
+        if (grupoOutros) grupoOutros.style.display = 'block';
+        if (campoInsignia) campoInsignia.style.display = 'block';
     }
     
     gerarCertificado();
@@ -285,6 +290,30 @@ function gerarCertificado() {
             );
         }
 
+        // 7. PROMESSAS E MONITORIA
+        else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo === 'lideranca_monitor') {
+            const patrulha = document.getElementById('patrulha').value || "";
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
+            ctx.fillText(patrulha, canvas.width * 0.50, canvas.height * 0.42); 
+            ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
+            ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
+            ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
+            ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+        }
+
+        // 8. INSÍGNIAS
+        else if (modelo === 'insignia_modalidade') {
+            const insig = document.getElementById('nome_insignia').value || "";
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
+            ctx.fillText(insig, canvas.width * 0.50, canvas.height * 0.42); 
+            ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
+            ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
+            ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
+            ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+        }
+
         // ==========================================
         // DESENHAR LOGO DO GRUPO (UEL)
         // ==========================================
@@ -338,7 +367,6 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// Inicializa selecionando o primeiro filtro de categoria em vez do atualizarFormulario() solto
 document.addEventListener('DOMContentLoaded', () => {
     filtrarCategoria('todas');
 });
