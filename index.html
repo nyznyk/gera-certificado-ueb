@@ -25,8 +25,8 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-dark);
-      /* Substitua 'background.jpg' pelo nome exato do arquivo da sua imagem de fundo */
-      background-image: linear-gradient(rgba(18, 24, 27, 0.85), rgba(18, 24, 27, 0.85)), url('background.jpg');
+      /* Substitua 'background.jpg' pelo nome do seu arquivo de imagem de fundo */
+      background-image: linear-gradient(rgba(18, 24, 27, 0.85), rgba(18, 24, 27, 0.85)), url('fundo.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -151,6 +151,50 @@
       background-color: #ffffff;
     }
 
+    /* Bloco Guia de Instalação no Celular */
+    .install-guide {
+      margin-top: 35px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.03);
+      border: 1px dashed var(--border-dark);
+      border-radius: 10px;
+    }
+
+    .install-guide h2 {
+      font-size: 1.1rem;
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .install-guide ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .install-guide li {
+      font-size: 0.9rem;
+      color: #a0aec0;
+      margin-bottom: 8px;
+    }
+
+    .install-guide strong {
+      color: var(--text-light);
+    }
+
+    /* Rodapé de Créditos */
+    .footer {
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-dark);
+      text-align: center;
+      font-size: 0.9rem;
+      color: #a0aec0;
+    }
+
+    .footer strong {
+      color: #ffffff;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 20px 15px;
@@ -168,13 +212,13 @@
 </head>
 <body>
   <div class="container">
-    <h1>Gerador de Certificados Escoteiros</h1>
+    <h1>Gerador de Certificados Escoteiros ⚜️</h1>
 
     <form id="cert-form">
       <!-- Seleção do Modelo -->
-      <label for="template-select">Selecione o Certificado:</label>
+      <label for="template-select">Selecione o modelo do certificado:</label>
       <select id="template-select" required>
-        <option value="">-- Selecione um modelo --</option>
+        <option value=""> Selecione um modelo </option>
         
         <!-- Acolhida e Progressão -->
         <optgroup label="Acolhida e Progressão">
@@ -185,12 +229,12 @@
 
         <!-- Liderança -->
         <optgroup label="Liderança">
-          <option value="cert_primo">Certificado de Primo(a) (Lobinho)</option>
-          <option value="cert_segundo">Certificado de Segundo(a) (Lobinho)</option>
-          <option value="cert_monitor_e">Certificado de Monitor(a) (Escoteiro)</option>
-          <option value="cert_sub_e">Certificado de Submonitor(a) (Escoteiro)</option>
-          <option value="cert_monitor_s">Certificado de Monitor(a) (Sênior)</option>
-          <option value="cert_sub_s_2">Certificado de Submonitor(a) (Sênior)</option>
+          <option value="cert_primo">Certificado de Primo (Lobinho)</option>
+          <option value="cert_segundo">Certificado de Segundo (Lobinho)</option>
+          <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
+          <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
+          <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
+          <option value="cert_sub_s_2">Certificado de Submonitor (Sênior)</option>
         </optgroup>
 
         <!-- Promessa e Expansão -->
@@ -204,24 +248,24 @@
         <!-- Insígnias Especiais e Modalidades -->
         <optgroup label="Insígnias e Modalidades">
           <option value="ins_acao_comunitaria">Insígnia da Ação Comunitária</option>
-          <option value="ins_aeronauta">Insígnia do Aeronauta</option>
-          <option value="ins_aviador">Insígnia do Aviador</option>
+          <option value="ins_aeronauta">Insígnia Aeronauta</option>
+          <option value="ins_aviador">Insígnia Aviador</option>
           <option value="ins_boa_acao">Insígnia da Boa Ação</option>
-          <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza</option>
+          <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza (Tribo da Terra)</option>
           <option value="ins_conesul">Insígnia Cone Sul</option>
-          <option value="ins_desafio_comunitario">Insígnia do Desafio Comunitário</option>
-          <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar</option>
-          <option value="ins_grumete">Insígnia do Grumete</option>
-          <option value="ins_lusofonia">Insígnia da Lusofonia</option>
+          <option value="ins_desafio_comunitario">Insígnia Desafio Comunitário</option>
+          <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar (Go Solar)</option>
+          <option value="ins_grumete">Insígnia Grumete</option>
+          <option value="ins_lusofonia">Insígnia Lusofonia</option>
           <option value="ins_naval">Insígnia Naval</option>
-          <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
+          <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar (Tide Turners)</option>
         </optgroup>
       </select>
 
       <!-- Campos Dinâmicos -->
       <div id="dynamic-fields"></div>
 
-      <!-- Botão Único para Baixar PDF -->
+      <!-- Botão para Baixar PDF -->
       <div class="actions">
         <button type="submit" id="btn-pdf">Baixar PDF</button>
       </div>
@@ -231,6 +275,20 @@
     <div class="preview-area">
       <canvas id="cert-canvas"></canvas>
     </div>
+
+    <!-- Guia de Instalação no Celular -->
+    <div class="install-guide">
+      <h2>Como instalar no celular</h2>
+      <ul>
+        <li><strong>Android (via Chrome):</strong> Toque nos três pontos (⋮) no canto superior e selecione <em>"Adicionar à tela inicial"</em> ou <em>"Instalar aplicativo"</em>.</li>
+        <li><strong>iPhone (via Safari):</strong> Toque no ícone de Compartilhar (compartilhar/seta) e selecione <em>"Adicionar à Tela de Início"</em>.</li>
+      </ul>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+      Desenvolvido por <strong>Beatriz Nyznyk GENSM 49/PR</strong>
+    </footer>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
