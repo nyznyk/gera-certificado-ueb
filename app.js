@@ -263,30 +263,28 @@ function gerarCertificado() {
         ctx.drawImage(img, 0, 0);
         ctx.fillStyle = '#111111';
         
-        const fontePrincipal = '20pt Arial, sans-serif';
-        const fontePequena = '16pt Arial, sans-serif';
-        
-        ctx.font = fontePrincipal;
-        
-        // AQUI ESTÁ A MÁGICA GLOBAL:
-        // Configura o alinhamento à esquerda para TODOS os textos gerados daqui para baixo
-        ctx.textAlign = 'left';
+        // Fonte dinâmica calculada proporcionalmente à altura da imagem (~3.2% da altura)
+const tamanhoFonte = Math.round(canvas.height * 0.032); 
+const fontePrincipal = `${tamanhoFonte}px Arial, sans-serif`;
+const fontePequena = `${Math.round(tamanhoFonte * 0.8)}px Arial, sans-serif`;
 
+ctx.font = fontePrincipal;
+ctx.textAlign = 'left';
         // ACOLHIDA
         if (modelo === 'cert_acolhida') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.36); 
-            ctx.fillText(responsaveis, canvas.width * 0.35, canvas.height * 0.42); 
-            ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.48); 
-            ctx.fillText(cidade, canvas.width * 0.31, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.55);
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.31); 
+            ctx.fillText(responsaveis, canvas.width * 0.52, canvas.height * 0.34); 
+            ctx.fillText(grupo, canvas.width * 0.42, canvas.height * 0.5); 
+            ctx.fillText(cidade, canvas.width * 0.28, canvas.height * 0.6);
+            ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.6);
+            ctx.fillText(mes, canvas.width * 0.55, canvas.height * 0.6);
+            ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.6);
         }
 
         // PROMESSAS
         else if (cat === 'promessa') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.40); 
-            ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.48); 
+            ctx.fillText(nome, canvas.width * 0.4, canvas.height * 0.44); 
+            ctx.fillText(grupo, canvas.width * 0.35, canvas.height * 0.51); 
             
             ctx.fillText(cidade, canvas.width * 0.14, canvas.height * 0.71);
             ctx.fillText(dia, canvas.width * 0.27, canvas.height * 0.71);
@@ -333,12 +331,12 @@ function gerarCertificado() {
         }
         else if (modelo === 'progressao_f') {
             const etapa = document.getElementById('etapa')?.value || "";
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.44); 
-            ctx.fillText(etapa, canvas.width * 0.43, canvas.height * 0.50); 
-            ctx.fillText(cidade, canvas.width * 0.23, canvas.height * 0.695);
-            ctx.fillText(dia, canvas.width * 0.36, canvas.height * 0.695);
-            ctx.fillText(mes, canvas.width * 0.48, canvas.height * 0.695);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.695);
+            ctx.fillText(nome, canvas.width * 0.4, canvas.height * 0.44); 
+            ctx.fillText(etapa, canvas.width * 0.45, canvas.height * 0.49); 
+            ctx.fillText(cidade, canvas.width * 0.3, canvas.height * 0.67);
+            ctx.fillText(dia, canvas.width * 0.43, canvas.height * 0.67);
+            ctx.fillText(mes, canvas.width * 0.53, canvas.height * 0.67);
+            ctx.fillText(ano, canvas.width * 0.63, canvas.height * 0.67);
         }
 
         // ESPECIALIDADES
@@ -348,14 +346,14 @@ function gerarCertificado() {
             const itens = document.getElementById('itens')?.value || "";
             ctx.fillText(nome, canvas.width * 0.47, canvas.height * 0.36);
             ctx.fillText(esp, canvas.width * 0.59, canvas.height * 0.442);
-            ctx.fillText(nivel, canvas.width * 0.442, canvas.height * 0.505);
+            ctx.fillText(nivel, canvas.width * 0.57, canvas.height * 0.505);
             ctx.font = fontePequena;
             ctx.fillText(itens, canvas.width * 0.47, canvas.height * 0.585);
             ctx.font = fontePrincipal;
-            ctx.fillText(cidade, canvas.width * 0.33, canvas.height * 0.685);
-            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.685);
-            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.685);
-            ctx.fillText(ano, canvas.width * 0.63, canvas.height * 0.685);
+            ctx.fillText(cidade, canvas.width * 0.43, canvas.height * 0.685);
+            ctx.fillText(dia, canvas.width * 0.54, canvas.height * 0.685);
+            ctx.fillText(mes, canvas.width * 0.64, canvas.height * 0.685);
+            ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.685);
         }
         else if (modelo === 'especialidade_sp') {
             const esp = document.getElementById('especialidade')?.value || "";
@@ -367,10 +365,10 @@ function gerarCertificado() {
 
             ctx.fillText(nome, canvas.width * 0.205, canvas.height * 0.188);
             ctx.fillText(esp, canvas.width * 0.315, canvas.height * 0.231);
-            ctx.fillText(cidade, canvas.width * 0.04, canvas.height * 0.292);
-            ctx.fillText(dia, canvas.width * 0.13, canvas.height * 0.292);
-            ctx.fillText(mes, canvas.width * 0.25, canvas.height * 0.292);
-            ctx.fillText(ano, canvas.width * 0.35, canvas.height * 0.292);
+            ctx.fillText(cidade, canvas.width * 0.15, canvas.height * 0.292);
+            ctx.fillText(dia, canvas.width * 0.27, canvas.height * 0.292);
+            ctx.fillText(mes, canvas.width * 0.35, canvas.height * 0.292);
+            ctx.fillText(ano, canvas.width * 0.45, canvas.height * 0.292);
 
             ctx.font = '14pt Arial, sans-serif'; 
             ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
@@ -389,12 +387,12 @@ function gerarCertificado() {
 
         // LIDERANÇA / MONITORIA
         else if (cat === 'lideranca') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.36); 
-            ctx.fillText(patrulha, canvas.width * 0.35, canvas.height * 0.42); 
-            ctx.fillText(cidade, canvas.width * 0.31, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.55);
+            ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.56); 
+            ctx.fillText(patrulha, canvas.width * 0.42, canvas.height * 0.67); 
+            ctx.fillText(cidade, canvas.width * 0.275, canvas.height * 0.75);
+            ctx.fillText(dia, canvas.width * 0.425, canvas.height * 0.75);
+            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.75);
+            ctx.fillText(ano, canvas.width * 0.7, canvas.height * 0.75);
         }
 
         // INSÍGNIAS ESPECIAIS (Com campo RAMO)
@@ -410,33 +408,33 @@ function gerarCertificado() {
 
         // ESTRELA DE ATIVIDADE
         else if (cat === 'atividade') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.40); 
-            ctx.fillText(anosAtividade, canvas.width * 0.35, canvas.height * 0.48); 
+            ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.53); 
+            ctx.fillText(anosAtividade, canvas.width * 0.33, canvas.height * 0.58); 
             
-            ctx.fillText(cidade, canvas.width * 0.14, canvas.height * 0.70);
-            ctx.fillText(dia, canvas.width * 0.27, canvas.height * 0.70);
-            ctx.fillText(mes, canvas.width * 0.42, canvas.height * 0.70);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.70);
+            ctx.fillText(cidade, canvas.width * 0.28, canvas.height * 0.715);
+            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.715);
+            ctx.fillText(mes, canvas.width * 0.445, canvas.height * 0.715);
+            ctx.fillText(ano, canvas.width * 0.6, canvas.height * 0.715);
         }
 
         // EXPANSÃO (Recrutador e Semeador)
         else if (cat === 'expansao') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.40); 
-            ctx.fillText(qtdJovens, canvas.width * 0.35, canvas.height * 0.48); 
+            ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.48); 
+            ctx.fillText(qtdJovens, canvas.width * 0.34, canvas.height * 0.59); 
             
-            ctx.fillText(cidade, canvas.width * 0.04, canvas.height * 0.73);
-            ctx.fillText(dia, canvas.width * 0.15, canvas.height * 0.73);
-            ctx.fillText(mes, canvas.width * 0.29, canvas.height * 0.73);
-            ctx.fillText(ano, canvas.width * 0.43, canvas.height * 0.73);
+            ctx.fillText(cidade, canvas.width * 0.08, canvas.height * 0.73);
+            ctx.fillText(dia, canvas.width * 0.24, canvas.height * 0.73);
+            ctx.fillText(mes, canvas.width * 0.31, canvas.height * 0.73);
+            ctx.fillText(ano, canvas.width * 0.46, canvas.height * 0.73);
         }
 
         // INSÍGNIAS DE MODALIDADE, COMUNITÁRIAS E GENÉRICAS (Apenas Nome, Data e Local)
         else {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.45); 
-            ctx.fillText(cidade, canvas.width * 0.14, canvas.height * 0.71);
-            ctx.fillText(dia, canvas.width * 0.27, canvas.height * 0.71);
-            ctx.fillText(mes, canvas.width * 0.42, canvas.height * 0.71);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.71);
+            ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.49); 
+            ctx.fillText(cidade, canvas.width * 0.2, canvas.height * 0.71);
+            ctx.fillText(dia, canvas.width * 0.4, canvas.height * 0.71);
+            ctx.fillText(mes, canvas.width * 0.5215, canvas.height * 0.71);
+            ctx.fillText(ano, canvas.width * 0.62, canvas.height * 0.71);
         }
 
         // ==========================================
