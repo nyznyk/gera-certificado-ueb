@@ -412,49 +412,49 @@ ctx.textAlign = 'left';
 
         // INSÍGNIAS ESPECIAIS (Com campo RAMO)
         else if (modelo === 'ins_conesul') {
-            ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.53); 
-            ctx.fillText(ramo, canvas.width * 0.43, canvas.height * 0.6); 
+            ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.5); 
+            ctx.fillText(ramo, canvas.width * 0.45, canvas.height * 0.6); 
             
-            ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.738);
-            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.738);
-            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.738);
-            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.738);
+            ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.74);
+            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.74);
+            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.74);
+            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.74);
         }
             else if (modelo === 'ins_lusofonia') {
-            ctx.fillText(nome, canvas.width * 0.36, canvas.height * 0.52); 
+            ctx.fillText(nome, canvas.width * 0.34, canvas.height * 0.49); 
             ctx.fillText(ramo, canvas.width * 0.5, canvas.height * 0.59); 
             
-            ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.735);
-            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.735);
-            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.735);
-            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.735);
+            ctx.fillText(cidade, canvas.width * 0.21, canvas.height * 0.737);
+            ctx.fillText(dia, canvas.width * 0.41, canvas.height * 0.737);
+            ctx.fillText(mes, canvas.width * 0.52, canvas.height * 0.737);
+            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.737);
         }
             else if (modelo === 'ins_rrr') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.40); 
-            ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.435); 
+            ctx.fillText(nome, canvas.width * 0.325, canvas.height * 0.40); 
+            ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.433); 
             
-            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.43, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.55);
+            ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.57);
+            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.57);
+            ctx.fillText(mes, canvas.width * 0.43, canvas.height * 0.57);
+            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.57);
         }
             else if (modelo === 'ins_energia_solar') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.38); 
-            ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.47); 
+            ctx.fillText(nome, canvas.width * 0.32, canvas.height * 0.383); 
+            ctx.fillText(ramo, canvas.width * 0.155, canvas.height * 0.41); 
             
             ctx.fillText(cidade, canvas.width * 0.16, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.433, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.55);
+            ctx.fillText(dia, canvas.width * 0.32, canvas.height * 0.57);
+            ctx.fillText(mes, canvas.width * 0.433, canvas.height * 0.57);
+            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.57);
         }
             else if (modelo === 'ins_campeoes_natureza') {
-            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.30); 
-            ctx.fillText(ramo, canvas.width * 0.515, canvas.height * 0.395); 
+            ctx.fillText(nome, canvas.width * 0.33, canvas.height * 0.32); 
+            ctx.fillText(ramo, canvas.width * 0.527, canvas.height * 0.4); 
             
-            ctx.fillText(cidade, canvas.width * 0.165, canvas.height * 0.52);
+            ctx.fillText(cidade, canvas.width * 0.18, canvas.height * 0.52);
             ctx.fillText(dia, canvas.width * 0.44, canvas.height * 0.52);
             ctx.fillText(mes, canvas.width * 0.56, canvas.height * 0.52);
-            ctx.fillText(ano, canvas.width * 0.67, canvas.height * 0.52);
+            ctx.fillText(ano, canvas.width * 0.7, canvas.height * 0.52);
         }
 
         // ESTRELA DE ATIVIDADE
@@ -470,7 +470,7 @@ ctx.textAlign = 'left';
 
         // EXPANSÃO (Recrutador e Semeador)
         else if (cat === 'expansao') {
-            ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.48); 
+            ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.48); 
             ctx.fillText(qtdJovens, canvas.width * 0.515, canvas.height * 0.582); 
             
             ctx.fillText(cidade, canvas.width * 0.08, canvas.height * 0.721);
