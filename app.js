@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-
+// Mapeamento de Configurações e Coordenadas dos Certificados
 const CERT_CONFIGS = {
   // --- ACOLHIDA E PROGRESSÃO ---
   cert_acolhida: {
@@ -358,34 +358,15 @@ const selectTemplate = document.getElementById('template-select');
 const dynamicFieldsDiv = document.getElementById('dynamic-fields');
 const canvas = document.getElementById('cert-canvas');
 const ctx = canvas.getContext('2d');
-const btnPreview = document.getElementById('btn-preview');
 const certForm = document.getElementById('cert-form');
 
-// Atualização dinâmica do formulário conforme modelo
-selectTemplate.addEventListener('change', () => {
-  const modelKey = selectTemplate.value;
-  dynamicFieldsDiv.innerHTML = '';
-
-  if (!modelKey || !CERT_CONFIGS[modelKey]) return;
-
-  const fieldsNeeded = CERT_CONFIGS[modelKey].fields;
-  fieldsNeeded.forEach(field => {
-    if (FIELD_LABELS[field]) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'field-group';
-      wrapper.innerHTML = FIELD_LABELS[field];
-      dynamicFieldsDiv.appendChild(wrapper);
-    }
-  });
-});
-
-// Função para desenhar a imagem e o texto no Canvas
+// Função para renderizar o certificado no canvas
 function renderCertificate() {
   return new Promise((resolve, reject) => {
     const modelKey = selectTemplate.value;
     if (!modelKey || !CERT_CONFIGS[modelKey]) {
-      alert('Selecione um certificado válido.');
-      return reject('Nenhum modelo selecionado');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      return resolve(null);
     }
 
     const config = CERT_CONFIGS[modelKey];
@@ -416,22 +397,48 @@ function renderCertificate() {
     };
 
     img.onerror = () => {
-      alert('Erro ao carregar a imagem do modelo.');
-      reject('Erro de imagem');
+      reject('Erro ao carregar a imagem do modelo.');
     };
   });
 }
 
-// Botão de Prévia
-btnPreview.addEventListener('click', () => {
-  renderCertificate().catch(console.error);
+// Atualização dinâmica do formulário e ligação de escutadores em tempo real (input)
+selectTemplate.addEventListener('change', () => {
+  const modelKey = selectTemplate.value;
+  dynamicFieldsDiv.innerHTML = '';
+
+  if (!modelKey || !CERT_CONFIGS[modelKey]) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    return;
+  }
+
+  const fieldsNeeded = CERT_CONFIGS[modelKey].fields;
+  fieldsNeeded.forEach(field => {
+    if (FIELD_LABELS[field]) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'field-group';
+      wrapper.innerHTML = FIELD_LABELS[field];
+      dynamicFieldsDiv.appendChild(wrapper);
+
+      // Vincula a digitação em tempo real ao redesenho do canvas
+      const inputEl = wrapper.querySelector('input');
+      if (inputEl) {
+        inputEl.addEventListener('input', renderCertificate);
+      }
+    }
+  });
+
+  // Desenha o certificado limpo ao selecionar
+  renderCertificate();
 });
 
-// Submissão e Geramento de PDF
+// Submissão do formulário para geração direta do PDF
 certForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
   renderCertificate().then((config) => {
+    if (!config) return;
+
     const { jsPDF } = window.jspdf;
     const isLandscape = config.orientation === 'landscape';
     const pdf = new jsPDF({
