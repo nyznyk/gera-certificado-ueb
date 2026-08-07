@@ -1,319 +1,295 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Certificados Escoteiros</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    :root {
-      --primary-color: #00843D; /* Verde Escoteiro */
-      --accent-color: #003B5C;  /* Azul Escoteiro */
-      --bg-dark: #12181b;
-      --card-dark: rgba(30, 38, 44, 0.78); /* Semi-transparente */
-      --text-light: #e0e6ed;
-      --border-dark: rgba(255, 255, 255, 0.15);
-      --input-bg: rgba(42, 52, 61, 0.7);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-dark);
-      /* Overlay mais leve para deixar a imagem de fundo mais forte */
-      background-image: linear-gradient(rgba(18, 24, 27, 0.45), rgba(18, 24, 27, 0.45)), url('background.jpg');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      color: var(--text-light);
-      line-height: 1.5;
-      padding: 20px 15px;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 850px;
-      margin: 0 auto;
-      background-color: var(--card-dark);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-      border: 1px solid var(--border-dark);
-    }
-
-    h1 {
-      text-align: center;
-      color: #ffffff;
-      margin-bottom: 25px;
-      font-size: 1.8rem;
-      font-weight: 700;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    label {
-      font-weight: 600;
-      color: #cbd5e0;
-      display: block;
-      font-size: 0.95rem;
-    }
-
-    select, input {
-      width: 100%;
-      padding: 12px 14px;
-      margin-top: 6px;
-      font-size: 1rem;
-      border: 1px solid var(--border-dark);
-      border-radius: 8px;
-      background-color: var(--input-bg);
-      color: #ffffff;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    input[type="file"] {
-      padding: 8px 12px;
-      cursor: pointer;
-    }
-
-    select optgroup {
-      background-color: #1e262c;
-      color: #ffffff;
-    }
-
-    select option {
-      background-color: #2a343d;
-      color: #ffffff;
-    }
-
-    select:focus, input:focus {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(0, 132, 61, 0.4);
-    }
-
-    #dynamic-fields {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .actions {
-      display: flex;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    #btn-pdf {
-      width: 100%;
-      max-width: 280px;
-      padding: 14px 20px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: #ffffff;
-      transition: transform 0.1s ease, background-color 0.2s ease;
-      box-shadow: 0 4px 12px rgba(0, 132, 61, 0.4);
-    }
-
-    #btn-pdf:hover {
-      background-color: #006830;
-    }
-
-    #btn-pdf:active {
-      transform: scale(0.98);
-    }
-
-    .preview-area {
-      margin-top: 30px;
-      text-align: center;
-      overflow-x: auto;
-      padding: 10px 0;
-    }
-
-    #cert-canvas {
-      max-width: 100%;
-      height: auto;
-      border: 1px solid var(--border-dark);
-      border-radius: 8px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
-      background-color: #ffffff;
-    }
-
-    /* Guia de Instalação */
-    .install-guide {
-      margin-top: 35px;
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.25);
-      border: 1px dashed var(--border-dark);
-      border-radius: 10px;
-    }
-
-    .install-guide h2 {
-      font-size: 1.1rem;
-      color: #ffffff;
-      margin-bottom: 12px;
-    }
-
-    .install-guide ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-
-    .install-guide li {
-      font-size: 0.9rem;
-      color: #a0aec0;
-      margin-bottom: 8px;
-    }
-
-    .install-guide strong {
-      color: #ffffff;
-    }
-
-    .install-note {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: #a0aec0;
-      font-style: italic;
-    }
-
-    /* Rodapé */
-    .footer {
-      margin-top: 30px;
-      padding-top: 15px;
-      border-top: 1px solid var(--border-dark);
-      text-align: center;
-      font-size: 0.9rem;
-      color: #a0aec0;
-    }
-
-    .footer strong {
-      color: #ffffff;
-    }
-
-    @media (max-width: 600px) {
-      .container {
-        padding: 20px 15px;
-      }
-
-      #btn-pdf {
-        max-width: 100%;
-      }
-
-      #dynamic-fields {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Certificados Escoteiros</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            
+            /* --- CONFIGURAÇÕES DA IMAGEM DE FUNDO --- */
+            background-image: url('fundo.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-attachment: fixed; 
+            background-color: #121212; 
+            /* ---------------------------------------- */
+            
+            color: #e0e0e0; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+            gap: 20px; 
+        }
+        .box { 
+            /* Transparência e efeito de desfoque estilo vidro (Glassmorphism) */
+            background: rgba(30, 30, 30, 0.85); 
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            
+            padding: 20px; 
+            border-radius: 12px; 
+            max-width: 500px; 
+            width: 100%; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.7); 
+        }
+        h2 { text-align: center; color: #3792ff; margin-top: 0; font-size: 1.4rem; }
+        label { display: block; margin-top: 12px; font-weight: bold; font-size: 0.85rem; color: #bbb; }
+        input, select, button { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 4px; 
+            border-radius: 6px; 
+            border: 1px solid #333; 
+            background: rgba(45, 45, 45, 0.9);
+            color: white; 
+            box-sizing: border-box; 
+            font-size: 0.95rem; 
+        }
+        input:focus, select:focus { border-color: #3792ff; outline: none; }
+        button { background: #3792ff; font-weight: bold; border: none; margin-top: 20px; cursor: pointer; padding: 12px; transition: background 0.2s; }
+        button:hover { background: #0066cc; }
+        canvas { width: 100%; height: auto; margin-top: 15px; border-radius: 6px; border: 1px solid #444; background-color: #000; }
+        .campo-dinamico { display: none; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <div class="container">
-    <h1>Gerador de Certificados Escoteiros ⚜️</h1>
 
-    <form id="cert-form">
-      <!-- Seleção do Modelo -->
-      <label for="template-select">Selecione o modelo do certificado:</label>
-      <select id="template-select" required>
-        <option value=""> Selecione um modelo </option>
+    <!-- CAIXA 1: GERADOR DE CERTIFICADOS -->
+    <div class="box">
+        <h2>⚜️ Gerador de Certificados</h2>
+
+        <label for="modelo">Selecione o modelo de certificado:</label>
+        <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
+            <optgroup label="Progressão Pessoal e Acolhida">
+                <option value="progressao_l">Progressão - Lobinho</option>
+                <option value="progressao_e">Progressão - Escoteiro</option>
+                <option value="progressao_s">Progressão - Sênior</option>
+                <option value="progressao_p">Progressão - Pioneiro</option>
+                <option value="progressao_f">Progressão Pessoal (Geral)</option>
+                <option value="cert_acolhida">Certificado de Acolhida (Filhotes)</option>
+                <option value="estrelas_atv">Estrela de Atividade</option>
+            </optgroup>
+            <optgroup label="Liderança">
+                <option value="cert_primo">Certificado de Primo</option>
+                <option value="cert_segundo">Certificado de Segundo</option>
+                <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
+                <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
+                <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
+                <option value="cert_sub_s_2">Certificado de Submonitor (Sênior)</option>
+            </optgroup>
+            <optgroup label="Promessa e Expansão">
+                <option value="cert_promessa">Certificado de Promessa (Geral)</option>
+                <option value="cert_promessa_l">Certificado de Promessa (Lobinho)</option>
+                <option value="cert_recrutador">Certificado de Recrutador</option>
+                <option value="ins_semeador">Certificado de Semeador</option>
+            </optgroup>
+            <optgroup label="Especialidades">
+                <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
+                <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
+            </optgroup>
+            <optgroup label="Insígnias e Modalidades">
+                <option value="ins_acao_comunitaria">Insígnia da Ação Comunitária</option>
+                <option value="ins_aeronauta">Insígnia Aeronauta</option>
+                <option value="ins_aviador">Insígnia Aviador</option>
+                <option value="ins_boa_acao">Insígnia da Boa Ação</option>
+                <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza</option>
+                <option value="ins_conesul">Insígnia Cone Sul</option>
+                <option value="ins_desafio_comunitario">Insígnia do Desafio Comunitário</option>
+                <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar</option>
+                <option value="ins_grumete">Insígnia Grumete</option>
+                <option value="ins_lusofonia">Insígnia da Lusofonia</option>
+                <option value="ins_naval">Insígnia Naval</option>
+                <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
+            </optgroup>
+        </select>
         
-        <!-- Acolhida e Progressão -->
-        <optgroup label="Progressão/Estrela de Atividade">
-          <option value="cert_acolhida">Certificado de Acolhida (Filhotes)</option>
-          <option value="progressao_f">Certificado de Progressão Pessoal</option>
-          <option value="estrelas_atv">Certificado de Estrela de Atividade</option>
-        </optgroup>
+        <!-- LOGO DA UEL -->
+        <div class="grupo-campo" style="margin-top: 10px;">
+            <label for="logoInput">Adicionar logo da UEL (opcional):</label>
+            <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
+            <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
+        </div>
 
-        <!-- Liderança -->
-        <optgroup label="Liderança">
-          <option value="cert_primo">Certificado de Primo </option>
-          <option value="cert_segundo">Certificado de Segundo</option>
-          <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
-          <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
-          <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
-          <option value="cert_sub_s_2">Certificado de Submonitor (Sênior)</option>
-        </optgroup>
+        <!-- NOME DO JOVEM -->
+        <div id="campo-nome">
+            <label for="nome">Nome do jovem:</label>
+        </div>
 
-        <!-- Promessa e Expansão -->
-        <optgroup label="Promessa e Expansão">
-          <option value="cert_promessa">Certificado de Promessa (Geral)</option>
-          <option value="cert_promessa_l">Certificado de Promessa (Lobinho)</option>
-          <option value="cert_recrutador">Certificado de Recrutador</option>
-          <option value="ins_semeador">Certificado de Semeador</option>
-        </optgroup>
+        <!-- RESPONSÁVEIS -->
+        <div id="campo-responsaveis" class="campo-dinamico">
+            <label for="responsaveis">Nome dos Responsáveis:</label>
+        </div>
 
-        <!-- Insígnias Especiais e Modalidades -->
-        <optgroup label="Insígnias e Modalidades">
-          <option value="ins_acao_comunitaria">Insígnia da Ação Comunitária</option>
-          <option value="ins_aeronauta">Insígnia Aeronauta</option>
-          <option value="ins_aviador">Insígnia Aviador</option>
-          <option value="ins_boa_acao">Insígnia Boa Ação</option>
-          <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza</option>
-          <option value="ins_conesul">Insígnia Cone Sul</option>
-          <option value="ins_desafio_comunitario">Insígnia Desafio Comunitário</option>
-          <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar</option>
-          <option value="ins_grumete">Insígnia Grumete</option>
-          <option value="ins_lusofonia">Insígnia da Lusofonia</option>
-          <option value="ins_naval">Insígnia Naval</option>
-          <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
-        </optgroup>
-      </select>
+        <!-- GRUPO ESCOTEIRO -->
+        <div id="campo-grupo" class="campo-dinamico">
+            <label for="grupo">Nome/nº do Grupo:</label>
+        </div>
 
-      <!-- Botão para Logo da UEL -->
-      <div class="field-group">
-        <label for="logo-input">Adicionar logo da UEL(opcional):</label>
-        <input type="file" id="logo-input" accept="image/*">
-      </div>
+        <!-- MATILHA -->
+        <div id="campo-matilha" class="campo-dinamico">
+            <label for="matilha">Nome da Matilha:</label>
+            <input type="text" id="matilha" placeholder="Ex: Vermelha" oninput="gerarCertificado()">
+        </div>
 
-      <!-- Campos Dinâmicos -->
-      <div id="dynamic-fields"></div>
+        <!-- PATRULHA -->
+        <div id="campo-patrulha" class="campo-dinamico">
+            <label for="patrulha">Nome da Patrulha:</label>
+            <input type="text" id="patrulha" placeholder="Ex: Leão" oninput="gerarCertificado()">
+        </div>
 
-      <!-- Botão para Baixar PDF -->
-      <div class="actions">
-        <button type="submit" id="btn-pdf">Baixar PDF</button>
-      </div>
-    </form>
+        <!-- FORMA DA PROMESSA -->
+        <div id="campo-forma_promessa" class="campo-dinamico">
+            <label for="forma_promessa">Como (em que ramo) prestou a promessa:</label>
+            <input type="text" id="forma_promessa" placeholder="Ex: como sênior" oninput="gerarCertificado()">
+        </div>
 
-    <!-- Canvas para renderização -->
-    <div class="preview-area">
-      <canvas id="cert-canvas"></canvas>
+        <!-- QUANTIDADE -->
+        <div id="campo-quantidade" class="campo-dinamico">
+            <label for="quantidade">Quantidade (Membros/UELs):</label>
+            <input type="text" id="quantidade" placeholder="Ex: 5 novos membros" oninput="gerarCertificado()">
+        </div>
+
+        <!-- ANOS DE ATIVIDADE -->
+        <div id="campo-anos" class="campo-dinamico">
+            <label for="anos">Anos de Atividade:</label>
+        </div>
+
+        <!-- RAMO -->
+        <div id="campo-ramo" class="campo-dinamico">
+            <label for="ramo">Ramo:</label>
+            <input type="text" id="ramo" placeholder="Ex: Escoteiro, Lobinho, Sênior" oninput="gerarCertificado()">
+        </div>
+
+        <!-- PROGRESSÃO -->
+        <div id="campo-etapa" class="campo-dinamico">
+            <label for="etapa">Etapa de progressão:</label>
+            <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
+        </div>
+
+        <!-- ESPECIALIDADE -->
+        <div id="grupo-especialidade" class="campo-dinamico">
+            <label for="especialidade">Nome da especialidade:</label>
+            <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
+            
+            <div id="campo-nivel" class="campo-dinamico">
+                <label for="nivel">Nível conquistado:</label>
+                <select id="nivel" onchange="gerarCertificado()">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+                <label for="itens">Itens completados:</label>
+                <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
+            </div>
+
+            <div id="campo-sp-extra" class="campo-dinamico">
+                <label for="eixo">Eixo de Progressão Pessoal:</label>
+                <input type="text" id="eixo" placeholder="Ex: Habilidades para a Vida" oninput="gerarCertificado()">
+                
+                <label for="carga">Carga horária estimada:</label>
+                <input type="text" id="carga" placeholder="Ex: 30 horas" oninput="gerarCertificado()">
+                
+                <label for="conhecer">Etapa Conhecer:</label>
+                <input type="text" id="conhecer" placeholder="Resumo das pesquisas e estudos..." oninput="gerarCertificado()">
+                
+                <label for="fazer">Etapa Fazer:</label>
+                <input type="text" id="fazer" placeholder="Resumo da aplicação prática..." oninput="gerarCertificado()">
+                
+                <label for="compartilhar">Etapa Compartilhar:</label>
+                <input type="text" id="compartilhar" placeholder="Resumo da socialização..." oninput="gerarCertificado()">
+            </div>
+        </div>
+
+        <!-- DATAS E LOCAL -->
+        <div id="campo-datas">
+            <label for="cidade">Local:</label>
+            <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
+
+            <div style="display: flex; gap: 10px;">
+                <div style="flex:1;">
+                    <label for="dia">Dia:</label>
+                    <input type="text" id="dia" placeholder="25" oninput="gerarCertificado()">
+                </div>
+                <div style="flex:2;">
+                    <label for="mes">Mês:</label>
+                    <input type="text" id="mes" placeholder="Agosto" oninput="gerarCertificado()">
+                </div>
+                <div style="flex:1;">
+                    <label for="ano">Ano:</label>
+                    <input type="text" id="ano" placeholder="2026" oninput="gerarCertificado()">
+                </div>
+            </div>
+        </div>
+
+        <canvas id="canvasCertificado"></canvas>
+
+        <button onclick="baixarPDF()">Baixar PDF</button>
     </div>
 
-    <!-- Guia de Instalação no Celular -->
-    <div class="install-guide">
-      <h2>Como instalar no celular</h2>
-      <ul>
-        <li>- <strong>Android (via Chrome):</strong> toque nos três pontos (⋮) e selecione "Adicionar à tela inicial" ou "Instalar aplicativo".</li>
-        <li>- <strong>iPhone (via Safari):</strong> toque no botão de Compartilhar e selecione "Adicionar à Tela de Início".</li>
-      </ul>
-      <p class="install-note">Este sistema, além de funcionar no computador, funciona como um aplicativo no seu celular (inclusive offline)! Veja como instalar:[</p>
+    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
+    <div class="box">
+        <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">Como baixar o app</h3>
+        <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema, além de funcionar no computador, funciona como um aplicativo no seu celular (inclusive offline)! Veja como instalar:</p>
+        
+        <!-- Instruções Android -->
+        <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444;">
+            <strong style="color: #4CAF50;">Android (via Google Chrome)</strong>
+            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
+                <li style="margin-bottom: 4px;">Toque nos <strong>três pontinhos</strong> no canto superior direito.</li>
+                <li style="margin-bottom: 4px;">Selecione <strong>"Adicionar à tela inicial"</strong> (ou "Instalar aplicativo").</li>
+                <li>Toque em <strong>Adicionar</strong>.</li>
+            </ul>
+        </div>
+
+        <!-- Instruções iOS -->
+        <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; border: 1px solid #444;">
+            <strong style="color: #007AFF;">iPhone (via Safari)</strong>
+            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
+                <li style="margin-bottom: 4px;">Toque no ícone de <strong>Compartilhar</strong> (o quadrado com uma seta para cima, na barra inferior).</li>
+                <li style="margin-bottom: 4px;">Role a tela para baixo e selecione <strong>"Adicionar à Tela de Início"</strong>.</li>
+                <li>Toque em <strong>Adicionar</strong> no canto superior direito.</li>
+            </ul>
+        </div>
     </div>
 
-    <!-- Rodapé -->
-    <footer class="footer">
-      Desenvolvido por <strong>Beatriz Nyznyk GENSM 49/PR</strong>
+    <!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
+    <footer style="text-align: center; font-size: 0.75rem; color: #777; opacity: 0.6; margin-top: -5px; padding-bottom: 10px;">
+        Desenvolvido por <strong style="color: #aaa;">Beatriz Nyznyk GENSM 49/PR</strong>
     </footer>
-  </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="app.js"></script>
+    <!-- SCRIPT PRINCIPAL DO APP -->
+    <script src="app.js?v=4"></script>
+
+    <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then((reg) => {
+                reg.update();
+            });
+
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof atualizarFormulario === 'function') {
+                atualizarFormulario();
+            }
+        });
+    </script>
 </body>
 </html>
