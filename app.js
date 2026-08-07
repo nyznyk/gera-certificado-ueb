@@ -149,7 +149,7 @@ function atualizarFormulario() {
     const campoNivel = document.getElementById('campo-nivel');
     const campoSpExtra = document.getElementById('campo-sp-extra');
     const grupoOutros = document.getElementById('grupo-outros');
-    const campoPatrulha = document.getElementById('campo-patrulha');
+    const campoPatrulha = document.getElementById('campo-patrulha'); // Mantido para não quebrar seu HTML
     const campoInsignia = document.getElementById('campo-insignia');
 
     // Esconde todos
@@ -162,8 +162,8 @@ function atualizarFormulario() {
     if (campoInsignia) campoInsignia.style.display = 'none';
 
     // Mostra condicionalmente por Categoria/Modelo
-    if (cat === 'progressao') {
-        if (grupoProg) grupoProg.style.display = 'block';
+    if (cat === 'progressao' || modelo === 'ins_lusofonia' || modelo === 'ins_rrr') {
+        if (grupoProg) grupoProg.style.display = 'block'; // Ativa grupo de progressão para pegar o Ramo/Etapa nestes certificados
     } 
     else if (modelo === 'especialidade_le') {
         if (grupoEsp) grupoEsp.style.display = 'block';
@@ -179,14 +179,13 @@ function atualizarFormulario() {
     }
     else if (cat.startsWith('insignia') || cat === 'atividade' || cat === 'expansao') {
         if (grupoOutros) grupoOutros.style.display = 'block';
-        if (campoInsignia) campoInsignia.style.display = 'block';
+        // Não mostra campo de nome de insígnia, pois removemos a exigência dele ser digitado
     }
     
     gerarCertificado();
 }
 
 function obterCaminhoImagem(modelo) {
-    // Modelos cujos arquivos contêm o prefixo "modelo_" no nome do arquivo físico
     const modelosComPrefixo = [
         'progressao_l', 'progressao_e', 'progressao_s', 'progressao_p', 'progressao_f',
         'especialidade_le', 'especialidade_sp'
@@ -277,7 +276,7 @@ function gerarCertificado() {
         }
 
         // 4. PROGRESSÃO - PIONEIRO / FLOR DE LIS / ACOLHIDA
-        else if (modelo === 'progressao_p' || modelo === 'progressao_f' || modelo === 'cert_acolhida') {
+        else if (modelo === 'progressao_p' || modelo === 'cert_acolhida') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
@@ -286,6 +285,18 @@ function gerarCertificado() {
             ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
             ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+        }
+
+        // NOVO: PROGRESSÃO - FLOR DE LIS (Cálculo Específico da Imagem)
+        else if (modelo === 'progressao_f') {
+            const etapa = document.getElementById('etapa')?.value || "";
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.44); 
+            ctx.fillText(etapa, canvas.width * 0.58, canvas.height * 0.50); 
+            ctx.fillText(cidade, canvas.width * 0.38, canvas.height * 0.695);
+            ctx.fillText(dia, canvas.width * 0.51, canvas.height * 0.695);
+            ctx.fillText(mes, canvas.width * 0.63, canvas.height * 0.695);
+            ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.695);
         }
 
         // 5. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
@@ -318,10 +329,8 @@ function gerarCertificado() {
             const compartilhar = document.getElementById('compartilhar')?.value || "";
 
             ctx.textAlign = 'center'; 
-            
             ctx.fillText(nome, canvas.width * 0.355, canvas.height * 0.188);
             ctx.fillText(esp, canvas.width * 0.465, canvas.height * 0.231);
-            
             ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.292);
             ctx.fillText(dia, canvas.width * 0.28, canvas.height * 0.292);
             ctx.fillText(mes, canvas.width * 0.40, canvas.height * 0.292);
@@ -329,7 +338,6 @@ function gerarCertificado() {
 
             ctx.textAlign = 'left'; 
             ctx.font = '14pt Arial, sans-serif'; 
-
             ctx.fillText(esp, canvas.width * 0.295, canvas.height * 0.645);
             ctx.fillText(eixo, canvas.width * 0.535, canvas.height * 0.667);
             ctx.fillText(carga, canvas.width * 0.315, canvas.height * 0.684);
@@ -339,52 +347,77 @@ function gerarCertificado() {
             const limiteDireito = 0.91; 
             const maxWidthGeral = canvas.width * (limiteDireito - 0.07);
 
-            wrapText(
-                ctx, conhecer,
-                canvas.width * 0.485, canvas.height * 0.745, canvas.width * (limiteDireito - 0.485),
-                xInicioGeral, maxWidthGeral,
-                lineHeight
-            );
-
-            wrapText(
-                ctx, fazer,
-                canvas.width * 0.585, canvas.height * 0.798, canvas.width * (limiteDireito - 0.585),
-                xInicioGeral, maxWidthGeral,
-                lineHeight
-            );
-
-            wrapText(
-                ctx, compartilhar,
-                canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615),
-                xInicioGeral, maxWidthGeral,
-                lineHeight
-            );
+            wrapText(ctx, conhecer, canvas.width * 0.485, canvas.height * 0.745, canvas.width * (limiteDireito - 0.485), xInicioGeral, maxWidthGeral, lineHeight);
+            wrapText(ctx, fazer, canvas.width * 0.585, canvas.height * 0.798, canvas.width * (limiteDireito - 0.585), xInicioGeral, maxWidthGeral, lineHeight);
+            wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
         }
 
-        // 7. PROMESSAS E LIDERANÇA
+        // 7. PROMESSAS E LIDERANÇA (Corrigido para Grupo Escoteiro)
         else if (cat === 'promessa' || cat === 'lideranca') {
-            const patrulha = document.getElementById('patrulha')?.value || "";
+            // Busca o campo existente, mas utiliza como Grupo Escoteiro
+            const grupoEscoteiro = document.getElementById('patrulha')?.value || document.getElementById('grupo')?.value || ""; 
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
-            ctx.fillText(patrulha, canvas.width * 0.50, canvas.height * 0.42); 
+            ctx.fillText(grupoEscoteiro, canvas.width * 0.50, canvas.height * 0.42); 
             ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
             ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
             ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // 8. INSÍGNIAS, ATIVIDADE E EXPANSÃO
-        else {
-            const insigInput = document.getElementById('nome_insignia')?.value;
-            const insig = (insigInput && insigInput.trim() !== "") ? insigInput : (itemObj ? itemObj.nome : "");
-            
+        // NOVO: INSÍGNIA DA LUSOFONIA (Cálculo Específico)
+        else if (modelo === 'ins_lusofonia') {
+            const ramo = document.getElementById('etapa')?.value || ""; // Usa campo de etapa para o Ramo
             ctx.textAlign = 'center';
-            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
-            ctx.fillText(insig, canvas.width * 0.50, canvas.height * 0.42); 
-            ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
-            ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
-            ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
-            ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.505); 
+            ctx.fillText(ramo, canvas.width * 0.63, canvas.height * 0.575); 
+            ctx.fillText(cidade, canvas.width * 0.29, canvas.height * 0.735);
+            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.735);
+            ctx.fillText(mes, canvas.width * 0.56, canvas.height * 0.735);
+            ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.735);
+        }
+
+        // NOVO: INSÍGNIA NAVAL (Cálculo Específico)
+        else if (modelo === 'ins_naval') {
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.515); 
+            ctx.fillText(cidade, canvas.width * 0.29, canvas.height * 0.705);
+            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.705);
+            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.705);
+            ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.705);
+        }
+
+        // NOVO: INSÍGNIA REDUZIR, RECICLAR, REUTILIZAR (Cálculo Específico)
+        else if (modelo === 'ins_rrr') {
+            const ramo = document.getElementById('etapa')?.value || "";
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.385); 
+            ctx.fillText(ramo, canvas.width * 0.24, canvas.height * 0.435); 
+            ctx.fillText(cidade, canvas.width * 0.32, canvas.height * 0.545);
+            ctx.fillText(dia, canvas.width * 0.45, canvas.height * 0.545);
+            ctx.fillText(mes, canvas.width * 0.56, canvas.height * 0.545);
+            ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.545);
+        }
+
+        // NOVO: CERTIFICADO DE SEMEADOR (Cálculo Específico)
+        else if (modelo === 'ins_semeador') {
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.495); 
+            ctx.fillText(cidade, canvas.width * 0.19, canvas.height * 0.73);
+            ctx.fillText(dia, canvas.width * 0.30, canvas.height * 0.73);
+            ctx.fillText(mes, canvas.width * 0.44, canvas.height * 0.73);
+            ctx.fillText(ano, canvas.width * 0.58, canvas.height * 0.73);
+        }
+
+        // 8. DEMAIS INSÍGNIAS GENÉRICAS
+        else {
+            ctx.textAlign = 'center';
+            ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.45); 
+            ctx.fillText(cidade, canvas.width * 0.29, canvas.height * 0.71);
+            ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.71);
+            ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.71);
+            ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.71);
+            // Removida a inserção de insig (nome da insígnia) para não sobrepor aos modelos pré-impressos.
         }
 
         // ==========================================
@@ -401,7 +434,7 @@ function gerarCertificado() {
                 xPos = canvas.width * 0.84;
                 yPos = canvas.height * 0.84;
             } 
-            else if (cat === 'progressao') {
+            else if (cat === 'progressao' || modelo === 'progressao_f') {
                 xPos = canvas.width * 0.08;
                 yPos = canvas.height * 0.06;
             } 
@@ -432,7 +465,6 @@ function gerarCertificado() {
         }
     };
 
-    // Tenta carregar inicialmente o caminho padrão (.png) mapeado
     img.src = obterCaminhoImagem(modelo);
 }
 
