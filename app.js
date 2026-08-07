@@ -11,7 +11,23 @@ const listaCertificados = [
     { id: 'promessa_lobinho', nome: 'Promessa Lobinho', cat: 'promessa' },
     { id: 'promessa_escoteiro', nome: 'Promessa Escoteira', cat: 'promessa' },
     { id: 'insignia_modalidade', nome: 'Insígnia de Modalidade', cat: 'insignia' },
-    { id: 'lideranca_monitor', nome: 'Monitor / Sub', cat: 'lideranca' }
+    { id: 'lideranca_monitor', nome: 'Monitor / Sub', cat: 'lideranca' },
+    { id: 'lideranca_primo', nome: 'Primo / Segundo', cat: 'lideranca' },
+    { id: 'atividade_estrela', nome: 'Estrela de Atividade', cat: 'atividade' },
+    { id: 'expansao_recrutador', nome: 'Recrutador', cat: 'expansao' },
+    { id: 'expansao_semeador', nome: 'Semeador', cat: 'expansao' },
+    { id: 'insignia_comunitaria', nome: 'Ação Comunitária', cat: 'insignia' },
+    { id: 'insignia_boa_acao', nome: 'Boa Ação', cat: 'insignia' },
+    { id: 'insignia_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia' },
+    { id: 'insignia_cone_sul', nome: 'Insígnia Cone Sul', cat: 'insignia' },
+    { id: 'insignia_lusofonia', nome: 'Insígnia da Lusofonia', cat: 'insignia' },
+    { id: 'insignia_rrr', nome: 'Insígnia RRR', cat: 'insignia' },
+    { id: 'insignia_energia_solar', nome: 'Energia Solar', cat: 'insignia' },
+    { id: 'insignia_natureza', nome: 'Campeões da Natureza', cat: 'insignia' },
+    { id: 'insignia_aviador', nome: 'Insígnia do Aviador', cat: 'insignia' },
+    { id: 'insignia_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia' },
+    { id: 'insignia_grumete', nome: 'Insígnia do Grumete', cat: 'insignia' },
+    { id: 'insignia_naval', nome: 'Insígnia Naval', cat: 'insignia' }
 ];
 
 function filtrarCategoria(categoria) {
@@ -135,11 +151,11 @@ function atualizarFormulario() {
         if (grupoEsp) grupoEsp.style.display = 'block';
         if (campoSpExtra) campoSpExtra.style.display = 'block';
     }
-    else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo === 'lideranca_monitor') {
+    else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo.startsWith('lideranca_')) {
         if (grupoOutros) grupoOutros.style.display = 'block';
         if (campoPatrulha) campoPatrulha.style.display = 'block';
     }
-    else if (modelo === 'insignia_modalidade') {
+    else if (modelo.startsWith('insignia_') || modelo.startsWith('atividade_') || modelo.startsWith('expansao_')) {
         if (grupoOutros) grupoOutros.style.display = 'block';
         if (campoInsignia) campoInsignia.style.display = 'block';
     }
@@ -290,8 +306,8 @@ function gerarCertificado() {
             );
         }
 
-        // 7. PROMESSAS E MONITORIA
-        else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo === 'lideranca_monitor') {
+        // 7. PROMESSAS E MONITORIA / LIDERANÇA
+        else if (modelo === 'promessa_lobinho' || modelo === 'promessa_escoteiro' || modelo.startsWith('lideranca_')) {
             const patrulha = document.getElementById('patrulha').value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
@@ -302,8 +318,8 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // 8. INSÍGNIAS
-        else if (modelo === 'insignia_modalidade') {
+        // 8. INSÍGNIAS, ATIVIDADE E EXPANSÃO
+        else {
             const insig = document.getElementById('nome_insignia').value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
