@@ -611,28 +611,4 @@ function baixarPDF() {
 
 document.addEventListener('DOMContentLoaded', () => {
     filtrarCategoria('todas');
-    
-// ==========================================
-// REGISTRO E ATUALIZAÇÃO AUTOMÁTICA (PWA)
-// ==========================================
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').then((registration) => {
-            // Força o celular a checar no servidor se o sw.js mudou de versão
-            registration.update();
-        });
-
-        // Recarrega a tela sozinho no celular assim que o v5 entrar em ação
-        let recarregando = false;
-        navigator.serviceWorker.addEventListener('controllerchange', () => {
-            if (!recarregando) {
-                recarregando = true;
-                window.location.reload();
-            }
-        });
-    });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    filtrarCategoria('todas');
 });
