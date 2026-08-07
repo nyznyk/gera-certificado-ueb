@@ -8,6 +8,7 @@ const listaCertificados = [
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
     { id: 'progressao_s', nome: 'Progressão Sênior', cat: 'progressao' },
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
+    { id: 'progressao_f', nome: 'Progressão Filhotes', cat: 'progressao' },
 
     // ESPECIALIDADES
     { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
@@ -187,7 +188,7 @@ function atualizarFormulario() {
 function obterCaminhoImagem(modelo) {
     // Modelos cujos arquivos contêm o prefixo "modelo_" no nome do arquivo físico
     const modelosComPrefixo = [
-        'progressao_l', 'progressao_e', 'progressao_s', 'progressao_p',
+        'progressao_l', 'progressao_e', 'progressao_s', 'progressao_p', 'progressao_f',
         'especialidade_le', 'especialidade_sp'
     ];
     
@@ -210,7 +211,7 @@ function exibirErroCanvas(modelo) {
     ctx.fillText(`Imagem para "${modelo}" não encontrada`, canvas.width / 2, canvas.height / 2 - 10);
     ctx.fillStyle = '#bbb';
     ctx.font = '14pt Arial, sans-serif';
-    ctx.fillText(`Verifique se existe o arquivo "${modelo}.png" ou "modelo_${modelo}.png".`, canvas.width / 2, canvas.height / 2 + 25);
+    ctx.fillText(`Verifique os arquivos .png ou .jpg na pasta.`, canvas.width / 2, canvas.height / 2 + 25);
 }
 
 function gerarCertificado() {
@@ -413,17 +414,25 @@ function gerarCertificado() {
         }
     };
     
+    // Tratamento infalível para carregar .png, modelo_*.png, .jpg ou modelo_*.jpg
     img.onerror = function() {
-        if (etapaTentativa === 0) {
-            etapaTentativa = 1;
-            // Tenta o caminho alternativo caso o primário falhe
-            img.src = img.src.includes('modelo_') ? `./${modelo}.png` : `./modelo_${modelo}.png`;
+        etapaTentativa++;
+        
+        const caminhoPrincipal = obterCaminhoImagem(modelo);
+        const alternativo1 = caminhoPrincipal.includes('modelo_') ? `./${modelo}.png` : `./modelo_${modelo}.png`;
+        const alternativo2 = caminhoPrincipal.replace('.png', '.jpg');
+        const alternativo3 = alternativo1.replace('.png', '.jpg');
+        
+        const tentativas = [alternativo1, alternativo2, alternativo3];
+
+        if (etapaTentativa <= tentativas.length) {
+            img.src = tentativas[etapaTentativa - 1];
         } else {
             exibirErroCanvas(modelo);
         }
     };
 
-    // Carrega o caminho mapeado correto
+    // Tenta carregar inicialmente o caminho padrão (.png) mapeado
     img.src = obterCaminhoImagem(modelo);
 }
 
