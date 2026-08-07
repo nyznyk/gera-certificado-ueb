@@ -4,296 +4,393 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de Certificados Escoteiros</title>
-    <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            
-            /* --- CONFIGURAÇÕES DA IMAGEM DE FUNDO --- */
-            background-image: url('fundo.jpg');
-            background-size: cover; 
-            background-position: center; 
-            background-attachment: fixed; 
-            background-color: #121212; 
-            /* ---------------------------------------- */
-            
-            color: #e0e0e0; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh;
-            margin: 0;
-            box-sizing: border-box;
-            gap: 20px; 
-        }
-        .box { 
-            /* Transparência e efeito de desfoque estilo vidro (Glassmorphism) */
-            background: rgba(30, 30, 30, 0.85); 
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            
-            padding: 20px; 
-            border-radius: 12px; 
-            max-width: 500px; 
-            width: 100%; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7); 
-        }
-        h2 { text-align: center; color: #3792ff; margin-top: 0; font-size: 1.4rem; }
-        label { display: block; margin-top: 12px; font-weight: bold; font-size: 0.85rem; color: #bbb; }
-        input, select, button { 
-            width: 100%; 
-            padding: 10px; 
-            margin-top: 4px; 
-            border-radius: 6px; 
-            border: 1px solid #333; 
-            background: rgba(45, 45, 45, 0.9);
-            color: white; 
-            box-sizing: border-box; 
-            font-size: 0.95rem; 
-        }
-        input:focus, select:focus { border-color: #3792ff; outline: none; }
-        button { background: #3792ff; font-weight: bold; border: none; margin-top: 20px; cursor: pointer; padding: 12px; transition: background 0.2s; }
-        button:hover { background: #0066cc; }
-        canvas { width: 100%; height: auto; margin-top: 15px; border-radius: 6px; border: 1px solid #444; background-color: #000; }
-        .campo-dinamico { display: none; }
-    </style>
+
+    <!-- Biblioteca para geração de PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <link rel="manifest" href="manifest.json">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1a365d;
+        }
+
+        .card-secao {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .card-secao h3 {
+            margin-bottom: 15px;
+            color: #2b6cb0;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 8px;
+        }
+
+        /* Estilos dos Botões de Categoria */
+        .botoes-categorias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-cat {
+            background-color: #edf2f7;
+            color: #4a5568;
+            border: 1px solid #cbd5e0;
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cat:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-cat.active {
+            background-color: #2b6cb0;
+            color: #ffffff;
+            border-color: #2b6cb0;
+        }
+
+        /* Grade dos Botões de Certificados */
+        .grid-certificados {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 8px;
+            max-height: 220px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            background-color: #f8fafc;
+        }
+
+        .btn-modelo {
+            background-color: #ffffff;
+            color: #2d3748;
+            border: 1px solid #cbd5e0;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modelo:hover {
+            border-color: #3182ce;
+            background-color: #ebf8ff;
+        }
+
+        .btn-modelo.selected {
+            background-color: #3182ce;
+            color: white;
+            border-color: #2b6cb0;
+            font-weight: bold;
+        }
+
+        /* Formulário e Inputs */
+        .grid-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .col-full {
+            grid-column: span 2;
+        }
+
+        .grid-data {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 8px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campo label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4a5568;
+        }
+
+        .campo input, .campo textarea {
+            padding: 10px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .campo input:focus, .campo textarea:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+        }
+
+        .status-info {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        /* Canvas de Pré-visualização em Tempo Real */
+        .canvas-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            text-align: center;
+            background: #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        #canvasCertificado {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-download {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            background-color: #38a169;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn-download:hover {
+            background-color: #2f855a;
+        }
+
+        @media (max-width: 600px) {
+            .grid-form {
+                grid-template-columns: 1fr;
+            }
+            .col-full {
+                grid-column: span 1;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- CAIXA 1: GERADOR DE CERTIFICADOS -->
-    <div class="box">
-        <h2>⚜️ Gerador de Certificados</h2>
+    <div class="container">
+        <h1>Gerador de Certificados Escoteiros</h1>
 
-        <label for="modelo">Selecione o modelo de certificado:</label>
-        <select id="modelo" onchange="atualizarFormulario()" oninput="atualizarFormulario()">
-            <optgroup label="Progressão Pessoal e Acolhida">
-                <option value="progressao_l">Progressão - Lobinho</option>
-                <option value="progressao_e">Progressão - Escoteiro</option>
-                <option value="progressao_s">Progressão - Sênior</option>
-                <option value="progressao_p">Progressão - Pioneiro</option>
-                <option value="progressao_f">Progressão Pessoal (Geral)</option>
-                <option value="cert_acolhida">Certificado de Acolhida (Filhotes)</option>
-                <option value="estrelas_atv">Estrela de Atividade</option>
-            </optgroup>
-            <optgroup label="Liderança">
-                <option value="cert_primo">Certificado de Primo</option>
-                <option value="cert_segundo">Certificado de Segundo</option>
-                <option value="cert_monitor_e">Certificado de Monitor (Escoteiro)</option>
-                <option value="cert_sub_e">Certificado de Submonitor (Escoteiro)</option>
-                <option value="cert_monitor_s">Certificado de Monitor (Sênior)</option>
-                <option value="cert_sub_s_2">Certificado de Submonitor (Sênior)</option>
-            </optgroup>
-            <optgroup label="Promessa e Expansão">
-                <option value="cert_promessa">Certificado de Promessa (Geral)</option>
-                <option value="cert_promessa_l">Certificado de Promessa (Lobinho)</option>
-                <option value="cert_recrutador">Certificado de Recrutador</option>
-                <option value="ins_semeador">Certificado de Semeador</option>
-            </optgroup>
-            <optgroup label="Especialidades">
-                <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
-                <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
-            </optgroup>
-            <optgroup label="Insígnias e Modalidades">
-                <option value="ins_acao_comunitaria">Insígnia da Ação Comunitária</option>
-                <option value="ins_aeronauta">Insígnia Aeronauta</option>
-                <option value="ins_aviador">Insígnia Aviador</option>
-                <option value="ins_boa_acao">Insígnia da Boa Ação</option>
-                <option value="ins_campeoes_natureza">Insígnia Campeões da Natureza</option>
-                <option value="ins_conesul">Insígnia Cone Sul</option>
-                <option value="ins_desafio_comunitario">Insígnia do Desafio Comunitário</option>
-                <option value="ins_energia_solar">Insígnia Escoteiros pela Energia Solar</option>
-                <option value="ins_grumete">Insígnia Grumete</option>
-                <option value="ins_lusofonia">Insígnia da Lusofonia</option>
-                <option value="ins_naval">Insígnia Naval</option>
-                <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
-            </optgroup>
-        </select>
-        
-        <!-- LOGO DA UEL -->
-        <div class="grupo-campo" style="margin-top: 10px;">
-            <label for="logoInput">Adicionar logo da UEL (opcional):</label>
-            <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
-            <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
-        </div>
-
-        <!-- NOME DO JOVEM -->
-        <div id="campo-nome">
-            <label for="nome">Nome do jovem:</label>
-            <input type="text" id="nome" oninput="gerarCertificado()">
-        </div>
-
-        <!-- RESPONSÁVEIS -->
-        <div id="campo-responsaveis" class="campo-dinamico">
-            <label for="responsaveis">Nome dos Responsáveis:</label>
-            <input type="text" id="responsaveis" oninput="gerarCertificado()">
-        </div>
-
-        <!-- GRUPO ESCOTEIRO -->
-        <div id="campo-grupo" class="campo-dinamico">
-            <label for="grupo">Nome/nº do Grupo:</label>
-            <input type="text" id="grupo" oninput="gerarCertificado()">
-        </div>
-
-        <!-- MATILHA -->
-        <div id="campo-matilha" class="campo-dinamico">
-            <label for="matilha">Nome da Matilha:</label>
-            <input type="text" id="matilha" placeholder="Ex: Vermelha" oninput="gerarCertificado()">
-        </div>
-
-        <!-- PATRULHA -->
-        <div id="campo-patrulha" class="campo-dinamico">
-            <label for="patrulha">Nome da Patrulha:</label>
-            <input type="text" id="patrulha" placeholder="Ex: Leão" oninput="gerarCertificado()">
-        </div>
-
-        <!-- FORMA DA PROMESSA -->
-        <div id="campo-forma_promessa" class="campo-dinamico">
-            <label for="forma_promessa">Como (em que ramo) prestou a promessa:</label>
-            <input type="text" id="forma_promessa" placeholder="Ex: como sênior" oninput="gerarCertificado()">
-        </div>
-
-        <!-- QUANTIDADE -->
-        <div id="campo-quantidade" class="campo-dinamico">
-            <label for="quantidade">Quantidade (Membros/UELs):</label>
-            <input type="text" id="quantidade" placeholder="Ex: 5 novos membros" oninput="gerarCertificado()">
-        </div>
-
-        <!-- ANOS DE ATIVIDADE -->
-        <div id="campo-anos" class="campo-dinamico">
-            <label for="anos">Anos de Atividade:</label>
-            <input type="text" id="anos" oninput="gerarCertificado()">
-        </div>
-
-        <!-- RAMO -->
-        <div id="campo-ramo" class="campo-dinamico">
-            <label for="ramo">Ramo:</label>
-            <input type="text" id="ramo" placeholder="Ex: Escoteiro, Lobinho, Sênior" oninput="gerarCertificado()">
-        </div>
-
-        <!-- PROGRESSÃO -->
-        <div id="campo-etapa" class="campo-dinamico">
-            <label for="etapa">Etapa de progressão:</label>
-            <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
-        </div>
-
-        <!-- ESPECIALIDADE -->
-        <div id="grupo-especialidade" class="campo-dinamico">
-            <label for="especialidade">Nome da especialidade:</label>
-            <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
-            
-            <div id="campo-nivel" class="campo-dinamico">
-                <label for="nivel">Nível conquistado:</label>
-                <select id="nivel" onchange="gerarCertificado()">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-                <label for="itens">Itens completados:</label>
-                <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
-            </div>
-
-            <div id="campo-sp-extra" class="campo-dinamico">
-                <label for="eixo">Eixo de Progressão Pessoal:</label>
-                <input type="text" id="eixo" placeholder="Ex: Habilidades para a Vida" oninput="gerarCertificado()">
-                
-                <label for="carga">Carga horária estimada:</label>
-                <input type="text" id="carga" placeholder="Ex: 30 horas" oninput="gerarCertificado()">
-                
-                <label for="conhecer">Etapa Conhecer:</label>
-                <input type="text" id="conhecer" placeholder="Resumo das pesquisas e estudos..." oninput="gerarCertificado()">
-                
-                <label for="fazer">Etapa Fazer:</label>
-                <input type="text" id="fazer" placeholder="Resumo da aplicação prática..." oninput="gerarCertificado()">
-                
-                <label for="compartilhar">Etapa Compartilhar:</label>
-                <input type="text" id="compartilhar" placeholder="Resumo da socialização..." oninput="gerarCertificado()">
+        <!-- 1. SEÇÃO DA LOGO -->
+        <div class="card-secao">
+            <h3>Logo do Grupo (UEL)</h3>
+            <div class="campo">
+                <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
+                <p id="statusLogo" class="status-info">Nenhuma logo personalizada selecionada</p>
             </div>
         </div>
 
-        <!-- DATAS E LOCAL -->
-        <div id="campo-datas">
-            <label for="cidade">Local:</label>
-            <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
+        <!-- 2. SEÇÃO DE MODELOS (CATEGORIAS E BOTÕES) -->
+        <div class="card-secao">
+            <h3>Escolha o Modelo do Certificado</h3>
+            <div class="secao-modelos">
+                <label><strong>Filtrar Categoria:</strong></label>
+                <div class="botoes-categorias">
+                    <button type="button" class="btn-cat active" onclick="filtrarCategoria('todas')">Todas</button>
+                    <button type="button" class="btn-cat" onclick="filtrarCategoria('progressao')">Progressão & Acolhida</button>
+                    <button type="button" class="btn-cat" onclick="filtrarCategoria('lideranca')">Liderança</button>
+                    <button type="button" class="btn-cat" onclick="filtrarCategoria('promessa')">Promessa & Expansão</button>
+                    <button type="button" class="btn-cat" onclick="filtrarCategoria('especialidades')">Especialidades</button>
+                    <button type="button" class="btn-cat" onclick="filtrarCategoria('insignias')">Insígnias & Ramos</button>
+                </div>
 
-            <div style="display: flex; gap: 10px;">
-                <div style="flex:1;">
-                    <label for="dia">Dia:</label>
-                    <input type="text" id="dia" placeholder="25" oninput="gerarCertificado()">
+                <label style="margin-top: 10px; display: block;"><strong>Selecione o Certificado:</strong></label>
+                <div id="container-certificados" class="grid-certificados">
+                    <!-- Os botões dos certificados são renderizados dinamicamente pelo JS -->
                 </div>
-                <div style="flex:2;">
-                    <label for="mes">Mês:</label>
-                    <input type="text" id="mes" placeholder="Agosto" oninput="gerarCertificado()">
-                </div>
-                <div style="flex:1;">
-                    <label for="ano">Ano:</label>
-                    <input type="text" id="ano" placeholder="2026" oninput="gerarCertificado()">
-                </div>
+
+                <!-- Select original mantido invisível para compatibilidade -->
+                <select id="modelo" style="display: none;" onchange="atualizarFormulario()"></select>
             </div>
         </div>
 
-        <canvas id="canvasCertificado"></canvas>
+        <!-- 3. FORMULÁRIO DE DADOS (Atualiza o Canvas em tempo real a cada digitação) -->
+        <div class="card-secao">
+            <h3>Dados do Certificado</h3>
+            <form id="formCertificado" oninput="gerarCertificado()">
+                
+                <!-- Campos Gerais -->
+                <div class="grid-form">
+                    <div class="campo col-full">
+                        <label for="nome">Nome Completo:</label>
+                        <input type="text" id="nome" placeholder="Digite o nome do agraciado">
+                    </div>
 
-        <button onclick="baixarPDF()">Baixar PDF</button>
+                    <div class="campo">
+                        <label for="cidade">Cidade:</label>
+                        <input type="text" id="cidade" placeholder="Ex: Curitiba">
+                    </div>
+
+                    <div class="campo grid-data">
+                        <div>
+                            <label for="dia">Dia:</label>
+                            <input type="text" id="dia" placeholder="01">
+                        </div>
+                        <div>
+                            <label for="mes">Mês:</label>
+                            <input type="text" id="mes" placeholder="Janeiro">
+                        </div>
+                        <div>
+                            <label for="ano">Ano:</label>
+                            <input type="text" id="ano" placeholder="2026">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campos Dinâmicos -->
+                <div class="grid-form campos-dinamicos" style="margin-top: 15px;">
+                    <div class="campo" id="campo-etapa" style="display: none;">
+                        <label for="etapa">Etapa / Nível:</label>
+                        <input type="text" id="etapa" placeholder="Ex: Pista / Cordão do Redentor">
+                    </div>
+
+                    <div class="campo" id="campo-responsaveis" style="display: none;">
+                        <label for="responsaveis">Nome dos Responsáveis:</label>
+                        <input type="text" id="responsaveis" placeholder="Nome dos pais ou responsáveis">
+                    </div>
+
+                    <div class="campo" id="campo-grupo" style="display: none;">
+                        <label for="grupo">Nome do Grupo Escoteiro:</label>
+                        <input type="text" id="grupo" placeholder="Ex: G.E. São Paulo 101º">
+                    </div>
+
+                    <div class="campo" id="campo-matilha" style="display: none;">
+                        <label for="matilha">Matilha:</label>
+                        <input type="text" id="matilha" placeholder="Ex: Matilha Vermelha">
+                    </div>
+
+                    <div class="campo" id="campo-patrulha" style="display: none;">
+                        <label for="patrulha">Patrulha:</label>
+                        <input type="text" id="patrulha" placeholder="Ex: Patrulha Lopo">
+                    </div>
+
+                    <div class="campo" id="campo-forma_promessa" style="display: none;">
+                        <label for="forma_promessa">Forma da Promessa:</label>
+                        <input type="text" id="forma_promessa" placeholder="Ex: Solene">
+                    </div>
+
+                    <div class="campo" id="campo-quantidade" style="display: none;">
+                        <label for="quantidade">Quantidade / Detalhe:</label>
+                        <input type="text" id="quantidade" placeholder="Ex: 5 novos membros">
+                    </div>
+
+                    <div class="campo" id="campo-anos" style="display: none;">
+                        <label for="anos">Anos de Atividade:</label>
+                        <input type="text" id="anos" placeholder="Ex: 3 Anos">
+                    </div>
+
+                    <div class="campo" id="campo-ramo" style="display: none;">
+                        <label for="ramo">Ramo:</label>
+                        <input type="text" id="ramo" placeholder="Ex: Ramo Escoteiro">
+                    </div>
+
+                    <!-- Especialidades -->
+                    <div id="grupo-especialidade" class="col-full" style="display: none;">
+                        <div class="grid-form">
+                            <div class="campo col-full">
+                                <label for="especialidade">Nome da Especialidade:</label>
+                                <input type="text" id="especialidade" placeholder="Ex: Primeiros Socorros">
+                            </div>
+
+                            <div class="campo" id="campo-nivel" style="display: none;">
+                                <label for="nivel">Nível da Especialidade:</label>
+                                <input type="text" id="nivel" placeholder="Ex: Nível 2">
+                            </div>
+
+                            <div class="campo col-full">
+                                <label for="itens">Requisitos / Itens Cumpridos:</label>
+                                <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sênior / Pioneiro -->
+                    <div id="campo-sp-extra" class="col-full" style="display: none;">
+                        <div class="grid-form">
+                            <div class="campo">
+                                <label for="eixo">Eixo de Desenvolvimento:</label>
+                                <input type="text" id="eixo" placeholder="Ex: Físico / Intelectual">
+                            </div>
+
+                            <div class="campo">
+                                <label for="carga">Carga Horária / Período:</label>
+                                <input type="text" id="carga" placeholder="Ex: 20 horas">
+                            </div>
+
+                            <div class="campo col-full">
+                                <label for="conhecer">Demonstrar Conhecer:</label>
+                                <textarea id="conhecer" rows="2" placeholder="Descrição do que foi demonstrado"></textarea>
+                            </div>
+
+                            <div class="campo col-full">
+                                <label for="fazer">Demonstrar Fazer:</label>
+                                <textarea id="fazer" rows="2" placeholder="Descrição da prática realizada"></textarea>
+                            </div>
+
+                            <div class="campo col-full">
+                                <label for="compartilhar">Demonstrar Compartilhar:</label>
+                                <textarea id="compartilhar" rows="2" placeholder="Descrição do compartilhamento"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Pré-visualização do Canvas em Tempo Real -->
+            <div class="canvas-wrapper">
+                <canvas id="canvasCertificado"></canvas>
+            </div>
+
+            <button type="button" class="btn-download" onclick="baixarPDF()">Baixar PDF</button>
+        </div>
+
     </div>
 
-    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
-    <div class="box">
-        <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">Como baixar o app</h3>
-        <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema, além de funcionar no computador, funciona como um aplicativo no seu celular (inclusive offline)! Veja como instalar:</p>
-        
-        <!-- Instruções Android -->
-        <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444;">
-            <strong style="color: #4CAF50;">Android (via Google Chrome)</strong>
-            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
-                <li style="margin-bottom: 4px;">Toque nos <strong>três pontinhos</strong> no canto superior direito.</li>
-                <li style="margin-bottom: 4px;">Selecione <strong>"Adicionar à tela inicial"</strong> (ou "Instalar aplicativo").</li>
-                <li>Toque em <strong>Adicionar</strong>.</li>
-            </ul>
-        </div>
-
-        <!-- Instruções iOS -->
-        <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; border: 1px solid #444;">
-            <strong style="color: #007AFF;">iPhone (via Safari)</strong>
-            <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
-                <li style="margin-bottom: 4px;">Toque no ícone de <strong>Compartilhar</strong> (o quadrado com uma seta para cima, na barra inferior).</li>
-                <li style="margin-bottom: 4px;">Role a tela para baixo e selecione <strong>"Adicionar à Tela de Início"</strong>.</li>
-                <li>Toque em <strong>Adicionar</strong> no canto superior direito.</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
-    <footer style="text-align: center; font-size: 0.75rem; color: #777; opacity: 0.6; margin-top: -5px; padding-bottom: 10px;">
-        Desenvolvido por <strong style="color: #aaa;">Beatriz Nyznyk GENSM 49/PR</strong>
-    </footer>
-
-    <!-- SCRIPT PRINCIPAL DO APP -->
-    <script src="app.js?v=4"></script>
-
-    <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then((reg) => {
-                reg.update();
-            });
-
-            let refreshing = false;
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (!refreshing) {
-                    refreshing = true;
-                    window.location.reload();
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof atualizarFormulario === 'function') {
-                atualizarFormulario();
-            }
-        });
-    </script>
+    <!-- Script Principal -->
+    <script src="app.js"></script>
 </body>
 </html>
