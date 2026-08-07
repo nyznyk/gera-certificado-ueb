@@ -125,22 +125,7 @@ function gerarCertificado() {
     const mes = getVal('mes');
     const ano = getVal('ano');
 
-    // Lista dos modelos que costumam ser PNG
-    const pngModels = [
-        'cert_acolhida', 'ins_conesul', 'ins_acao_comunitaria', 'ins_aeronauta',
-        'ins_aviador', 'ins_boa_acao', 'ins_desafio_comunitario', 'ins_grumete',
-        'ins_naval', 'especialidade_le', 'especialidade_sp'
-    ];
-
-    let extPrimaria = 'jpg';
-    if (pngModels.includes(modelo) || (modelo.startsWith('progressao_') && modelo !== 'progressao_f')) {
-        extPrimaria = 'png';
-    }
-
-    let extSecundaria = (extPrimaria === 'png') ? 'jpg' : 'png';
-
     const img = new Image();
-    let tentouSecundaria = false;
 
     img.onload = function () {
         canvas.width = img.width;
@@ -302,26 +287,22 @@ function gerarCertificado() {
     };
     
     img.onerror = function() {
-        if (!tentouSecundaria) {
-            tentouSecundaria = true;
-            img.src = `./modelo_${modelo}.${extSecundaria}`;
-        } else {
-            console.error(`Erro ao carregar a imagem do modelo: modelo_${modelo}`);
-            canvas.width = 800;
-            canvas.height = 500;
-            ctx.fillStyle = '#1e1e1e';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ff4d4d';
-            ctx.font = 'bold 16pt Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(`Imagem não encontrada: modelo_${modelo}.png / .jpg`, canvas.width / 2, canvas.height / 2 - 10);
-            ctx.fillStyle = '#aaa';
-            ctx.font = '12pt Arial, sans-serif';
-            ctx.fillText(`Verifique se o arquivo está salvo na mesma pasta do projeto.`, canvas.width / 2, canvas.height / 2 + 25);
-        }
+        console.error(`Erro ao carregar a imagem: ${modelo}.png`);
+        canvas.width = 800;
+        canvas.height = 450;
+        ctx.fillStyle = '#1e1e1e';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#ff4d4d';
+        ctx.font = 'bold 16pt Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Imagem não encontrada: ${modelo}.png`, canvas.width / 2, canvas.height / 2 - 10);
+        ctx.fillStyle = '#aaa';
+        ctx.font = '12pt Arial, sans-serif';
+        ctx.fillText(`Verifique se o arquivo está na pasta do projeto com esse nome exato.`, canvas.width / 2, canvas.height / 2 + 25);
     };
 
-    img.src = `./modelo_${modelo}.${extPrimaria}`;
+    // Procura o arquivo com o mesmo nome do value (ex: cert_primo.png, ins_aeronauta.png)
+    img.src = `./${modelo}.png`;
 }
 
 function baixarPDF() {
