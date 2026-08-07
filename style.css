@@ -1,0 +1,159 @@
+:root {
+  --primary-color: #003B5C; /* Azul Escoteiro */
+  --secondary-color: #00843D; /* Verde Escoteiro */
+  --bg-color: #f0f4f8;
+  --card-bg: #ffffff;
+  --text-color: #2c3e50;
+  --border-color: #dcdfe6;
+  --focus-ring: rgba(0, 59, 92, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  padding: 20px 15px;
+}
+
+.container {
+  max-width: 850px;
+  margin: 0 auto;
+  background-color: var(--card-bg);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+h1 {
+  text-align: center;
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+  font-weight: 600;
+  color: var(--primary-color);
+  display: block;
+  font-size: 0.95rem;
+}
+
+select, input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 6px;
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background-color: #fcfcfc;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+select:focus, input:focus {
+  border-color: var(--primary-color);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+#dynamic-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  max-width: 220px;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+#btn-preview {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+#btn-preview:hover {
+  background-color: #002a42;
+}
+
+#btn-pdf {
+  background-color: var(--secondary-color);
+  color: #ffffff;
+}
+
+#btn-pdf:hover {
+  background-color: #006830;
+}
+
+.preview-area {
+  margin-top: 30px;
+  text-align: center;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+#cert-canvas {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 20px 15px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  button {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  #dynamic-fields {
+    grid-template-columns: 1fr;
+  }
+}
