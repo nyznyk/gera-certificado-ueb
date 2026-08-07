@@ -106,19 +106,22 @@
     <div class="box">
         <h2>⚜️ Gerador de Certificados</h2>
 
-        <!-- CAIXAS DE FILTRO ADICIONADAS AQUI -->
+        <!-- CAIXAS DE FILTRO -->
         <label>Selecione a categoria e o modelo:</label>
         <div id="filtros-categoria" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; margin-top: 8px;">
             <button class="btn-cat active" onclick="filtrarCategoria('todas')" type="button">Todas</button>
             <button class="btn-cat" onclick="filtrarCategoria('progressao')" type="button">Progressão</button>
             <button class="btn-cat" onclick="filtrarCategoria('especialidade')" type="button">Especialidades</button>
+            <button class="btn-cat" onclick="filtrarCategoria('promessa')" type="button">Promessas</button>
+            <button class="btn-cat" onclick="filtrarCategoria('insignia')" type="button">Insígnias</button>
+            <button class="btn-cat" onclick="filtrarCategoria('lideranca')" type="button">Monitoria</button>
         </div>
 
         <div id="container-certificados" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
             <!-- Preenchido via JS -->
         </div>
         
-        <!-- Select escondido para manter a compatibilidade perfeita com o seu app.js -->
+        <!-- Select escondido -->
         <select id="modelo" style="display:none;" onchange="atualizarFormulario()">
             <option value="progressao_l">Progressão - Lobinho</option>
             <option value="progressao_e">Progressão - Escoteiro</option>
@@ -126,22 +129,26 @@
             <option value="progressao_p">Progressão - Pioneiro</option>
             <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
             <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
+            <option value="promessa_lobinho">Promessa (Lobinho)</option>
+            <option value="promessa_escoteiro">Promessa (Escoteiro)</option>
+            <option value="insignia_modalidade">Insígnia de Modalidade</option>
+            <option value="lideranca_monitor">Monitor / Sub</option>
         </select>
         <!-- FIM DAS CAIXAS DE FILTRO -->
 
         <div class="grupo-campo">
-            <label for="logoInput">Adicionar logo da UEL:</label>
+            <label for="logoInput">Adicionar logo da UEL (opcional):</label>
             <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
             <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
         </div>
 
         <label for="nome">Nome do jovem:</label>
-        <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
+        <input type="text" id="nome" placeholder="" oninput="gerarCertificado()">
 
         <!-- GRUPO: PROGRESSÃO -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
-            <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
+            <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
         </div>
 
         <!-- GRUPO: ESPECIALIDADE -->
@@ -179,6 +186,18 @@
             </div>
         </div>
 
+        <!-- GRUPO: OUTROS (PROMESSA, INSÍGNIA, MONITORIA) -->
+        <div id="grupo-outros" class="campo-dinamico">
+            <div id="campo-patrulha" class="campo-dinamico">
+                <label for="patrulha">Matilha / Patrulha:</label>
+                <input type="text" id="patrulha" placeholder="Ex: Xavante" oninput="gerarCertificado()">
+            </div>
+            <div id="campo-insignia" class="campo-dinamico">
+                <label for="nome_insignia">Nome da Insígnia:</label>
+                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia de B.P." oninput="gerarCertificado()">
+            </div>
+        </div>
+
         <!-- DATAS E LOCAL -->
         <label for="cidade">Local (Cidade):</label>
         <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
@@ -186,7 +205,7 @@
         <div style="display: flex; gap: 10px;">
             <div style="flex:1;">
                 <label for="dia">Dia:</label>
-                <input type="text" id="dia" placeholder="15" oninput="gerarCertificado()">
+                <input type="text" id="dia" placeholder="25" oninput="gerarCertificado()">
             </div>
             <div style="flex:2;">
                 <label for="mes">Mês:</label>
