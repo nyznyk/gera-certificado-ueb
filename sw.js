@@ -1,4 +1,4 @@
-const CACHE_NAME = 'certificados-escoteiros-v4';
+const CACHE_NAME = 'certificados-escoteiros-v5';
 
 // Lista de todos os arquivos que o celular deve guardar na memória
 const ASSETS = [
