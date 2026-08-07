@@ -182,6 +182,16 @@
         <label for="nome">Nome do jovem:</label>
         <input type="text" id="nome" placeholder="" oninput="gerarCertificado()">
 
+        <!-- NOVOS CAMPOS PARA ACOLHIDA -->
+        <div id="campo-responsaveis" class="campo-dinamico">
+            <label for="responsaveis">Responsáveis:</label>
+            <input type="text" id="responsaveis" placeholder="Nome dos pais/responsáveis" oninput="gerarCertificado()">
+        </div>
+        <div id="campo-grupo" class="campo-dinamico">
+            <label for="grupo">Nome do Grupo Escoteiro:</label>
+            <input type="text" id="grupo" placeholder="Ex: GE Falcão Negro" oninput="gerarCertificado()">
+        </div>
+
         <!-- GRUPO: PROGRESSÃO -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
@@ -223,16 +233,28 @@
             </div>
         </div>
 
-        <!-- GRUPO: OUTROS (PROMESSA, INSÍGNIA, MONITORIA) -->
-        <div id="grupo-outros" class="campo-dinamico">
-            <div id="campo-patrulha" class="campo-dinamico">
-                <label for="patrulha">Matilha / Patrulha:</label>
-                <input type="text" id="patrulha" placeholder="Ex: Xavante" oninput="gerarCertificado()">
-            </div>
-            <div id="campo-insignia" class="campo-dinamico">
-                <label for="nome_insignia">Nome da Insígnia:</label>
-                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia da Lusofonia." oninput="gerarCertificado()">
-            </div>
+        <!-- NOVO CAMPO: RAMO (Insígnias Especiais) -->
+        <div id="campo-ramo" class="campo-dinamico">
+            <label for="ramo">Ramo:</label>
+            <input type="text" id="ramo" placeholder="Ex: Lobinho / Escoteiro / Sênior" oninput="gerarCertificado()">
+        </div>
+
+        <!-- NOVO CAMPO: PATRULHA / MATILHA (Monitoria) -->
+        <div id="campo-patrulha" class="campo-dinamico">
+            <label for="patrulha">Matilha / Patrulha:</label>
+            <input type="text" id="patrulha" placeholder="Ex: Xavante / Preta" oninput="gerarCertificado()">
+        </div>
+
+        <!-- NOVO CAMPO: ESTRELA DE ATIVIDADE -->
+        <div id="campo-anos" class="campo-dinamico">
+            <label for="anos">Quantidade de anos:</label>
+            <input type="number" id="anos" placeholder="Ex: 1, 2, 5..." oninput="gerarCertificado()">
+        </div>
+
+        <!-- NOVO CAMPO: RECRUTADOR / SEMEADOR -->
+        <div id="campo-qtd" class="campo-dinamico">
+            <label for="qtd_jovens">Quantidade de jovens (ou UELs):</label>
+            <input type="number" id="qtd_jovens" placeholder="Ex: 3" oninput="gerarCertificado()">
         </div>
 
         <!-- DATAS E LOCAL -->
