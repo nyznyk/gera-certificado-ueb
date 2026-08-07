@@ -149,8 +149,11 @@ function atualizarFormulario() {
     const campoNivel = document.getElementById('campo-nivel');
     const campoSpExtra = document.getElementById('campo-sp-extra');
     const grupoOutros = document.getElementById('grupo-outros');
-    const campoPatrulha = document.getElementById('campo-patrulha'); // Mantido para não quebrar seu HTML
-    const campoInsignia = document.getElementById('campo-insignia');
+    
+    // VARIÁVEIS SUBSTITUÍDAS:
+    const campoGrupo = document.getElementById('campo-grupo'); // Substituiu patrulha
+    const campoRamo = document.getElementById('grupo-ramo'); // Substituiu insignia
+    const campoResponsaveis = document.getElementById('campo-responsaveis'); // Novo para acolhida
 
     // Esconde todos
     if (grupoProg) grupoProg.style.display = 'none';
@@ -158,12 +161,14 @@ function atualizarFormulario() {
     if (campoNivel) campoNivel.style.display = 'none';
     if (campoSpExtra) campoSpExtra.style.display = 'none';
     if (grupoOutros) grupoOutros.style.display = 'none';
-    if (campoPatrulha) campoPatrulha.style.display = 'none';
-    if (campoInsignia) campoInsignia.style.display = 'none';
+    if (campoGrupo) campoGrupo.style.display = 'none';
+    if (campoRamo) campoRamo.style.display = 'none';
+    if (campoResponsaveis) campoResponsaveis.style.display = 'none';
 
     // Mostra condicionalmente por Categoria/Modelo
-    if (cat === 'progressao' || modelo === 'ins_lusofonia' || modelo === 'ins_rrr') {
-        if (grupoProg) grupoProg.style.display = 'block'; // Ativa grupo de progressão para pegar o Ramo/Etapa nestes certificados
+    if (cat === 'progressao') {
+        if (grupoProg) grupoProg.style.display = 'block'; 
+        if (modelo === 'cert_acolhida' && campoResponsaveis) campoResponsaveis.style.display = 'block';
     } 
     else if (modelo === 'especialidade_le') {
         if (grupoEsp) grupoEsp.style.display = 'block';
@@ -175,11 +180,11 @@ function atualizarFormulario() {
     }
     else if (cat === 'promessa' || cat === 'lideranca') {
         if (grupoOutros) grupoOutros.style.display = 'block';
-        if (campoPatrulha) campoPatrulha.style.display = 'block';
+        if (campoGrupo) campoGrupo.style.display = 'block';
     }
     else if (cat.startsWith('insignia') || cat === 'atividade' || cat === 'expansao') {
         if (grupoOutros) grupoOutros.style.display = 'block';
-        // Não mostra campo de nome de insígnia, pois removemos a exigência dele ser digitado
+        if (campoRamo) campoRamo.style.display = 'block';
     }
     
     gerarCertificado();
@@ -275,19 +280,28 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
         }
 
-        // 4. PROGRESSÃO - PIONEIRO / FLOR DE LIS / ACOLHIDA
+        // 4. PROGRESSÃO - PIONEIRO / ACOLHIDA
         else if (modelo === 'progressao_p' || modelo === 'cert_acolhida') {
             const etapa = document.getElementById('etapa')?.value || "";
+            const responsaveis = document.getElementById('responsaveis')?.value || ""; 
+            
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
-            ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
+            
+            // Renderiza Responsáveis para Acolhida ou Etapa para Pioneiro
+            if (modelo === 'cert_acolhida') {
+                ctx.fillText(responsaveis, canvas.width * 0.56, canvas.height * 0.42); 
+            } else {
+                ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
+            }
+            
             ctx.fillText(cidade, canvas.width * 0.46, canvas.height * 0.55);
             ctx.fillText(dia, canvas.width * 0.59, canvas.height * 0.55);
             ctx.fillText(mes, canvas.width * 0.72, canvas.height * 0.55);
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // NOVO: PROGRESSÃO - FLOR DE LIS (Cálculo Específico da Imagem)
+        // NOVO: PROGRESSÃO - FLOR DE LIS
         else if (modelo === 'progressao_f') {
             const etapa = document.getElementById('etapa')?.value || "";
             ctx.textAlign = 'center';
@@ -352,10 +366,9 @@ function gerarCertificado() {
             wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
         }
 
-        // 7. PROMESSAS E LIDERANÇA (Corrigido para Grupo Escoteiro)
+        // 7. PROMESSAS E LIDERANÇA
         else if (cat === 'promessa' || cat === 'lideranca') {
-            // Busca o campo existente, mas utiliza como Grupo Escoteiro
-            const grupoEscoteiro = document.getElementById('patrulha')?.value || document.getElementById('grupo')?.value || ""; 
+            const grupoEscoteiro = document.getElementById('grupo')?.value || ""; 
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(grupoEscoteiro, canvas.width * 0.50, canvas.height * 0.42); 
@@ -365,9 +378,9 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // NOVO: INSÍGNIA DA LUSOFONIA (Cálculo Específico)
+        // NOVO: INSÍGNIA DA LUSOFONIA
         else if (modelo === 'ins_lusofonia') {
-            const ramo = document.getElementById('etapa')?.value || ""; // Usa campo de etapa para o Ramo
+            const ramo = document.getElementById('ramo')?.value || "";
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.505); 
             ctx.fillText(ramo, canvas.width * 0.63, canvas.height * 0.575); 
@@ -377,7 +390,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.735);
         }
 
-        // NOVO: INSÍGNIA NAVAL (Cálculo Específico)
+        // NOVO: INSÍGNIA NAVAL
         else if (modelo === 'ins_naval') {
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.515); 
@@ -387,9 +400,9 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.705);
         }
 
-        // NOVO: INSÍGNIA REDUZIR, RECICLAR, REUTILIZAR (Cálculo Específico)
+        // NOVO: INSÍGNIA REDUZIR, RECICLAR, REUTILIZAR
         else if (modelo === 'ins_rrr') {
-            const ramo = document.getElementById('etapa')?.value || "";
+            const ramo = document.getElementById('ramo')?.value || ""; 
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.385); 
             ctx.fillText(ramo, canvas.width * 0.24, canvas.height * 0.435); 
@@ -399,7 +412,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.68, canvas.height * 0.545);
         }
 
-        // NOVO: CERTIFICADO DE SEMEADOR (Cálculo Específico)
+        // NOVO: CERTIFICADO DE SEMEADOR
         else if (modelo === 'ins_semeador') {
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.495); 
@@ -417,7 +430,6 @@ function gerarCertificado() {
             ctx.fillText(dia, canvas.width * 0.42, canvas.height * 0.71);
             ctx.fillText(mes, canvas.width * 0.57, canvas.height * 0.71);
             ctx.fillText(ano, canvas.width * 0.73, canvas.height * 0.71);
-            // Removida a inserção de insig (nome da insígnia) para não sobrepor aos modelos pré-impressos.
         }
 
         // ==========================================
