@@ -55,9 +55,17 @@ function wrapText(context, text, x1, y, maxWidth1, xNext, maxWidthNext, lineHeig
     context.fillText(line, currentX, y);
 }
 
+// Helper seguro para obter valores dos campos sem causar erro de null
+function getVal(id) {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+}
+
 // Atualiza quais campos aparecem de acordo com o certificado escolhido
 function atualizarFormulario() {
-    const modelo = document.getElementById('modelo').value;
+    const modeloSelect = document.getElementById('modelo');
+    if (!modeloSelect) return;
+    const modelo = modeloSelect.value;
 
     const idsDinamicos = [
         'campo-responsaveis', 'campo-grupo', 'campo-matilha', 'campo-patrulha',
@@ -70,50 +78,69 @@ function atualizarFormulario() {
         if (el) el.style.display = 'none';
     });
 
+    const mostrar = (id) => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'block';
+    };
+
     if (modelo === 'cert_acolhida') {
-        document.getElementById('campo-responsaveis').style.display = 'block';
-        document.getElementById('campo-grupo').style.display = 'block';
+        mostrar('campo-responsaveis');
+        mostrar('campo-grupo');
     } else if (modelo === 'progressao_f' || modelo.startsWith('progressao_')) {
-        document.getElementById('campo-etapa').style.display = 'block';
+        mostrar('campo-etapa');
     } else if (modelo === 'estrelas_atv') {
-        document.getElementById('campo-anos').style.display = 'block';
+        mostrar('campo-anos');
     } else if (modelo === 'cert_primo' || modelo === 'cert_segundo') {
-        document.getElementById('campo-matilha').style.display = 'block';
+        mostrar('campo-matilha');
     } else if (modelo.startsWith('cert_monitor_') || modelo.startsWith('cert_sub_')) {
-        document.getElementById('campo-patrulha').style.display = 'block';
+        mostrar('campo-patrulha');
     } else if (modelo === 'cert_promessa') {
-        document.getElementById('campo-forma_promessa').style.display = 'block';
-        document.getElementById('campo-grupo').style.display = 'block';
+        mostrar('campo-forma_promessa');
+        mostrar('campo-grupo');
     } else if (modelo === 'cert_promessa_l') {
-        document.getElementById('campo-grupo').style.display = 'block';
+        mostrar('campo-grupo');
     } else if (modelo === 'cert_recrutador' || modelo === 'ins_semeador') {
-        document.getElementById('campo-quantidade').style.display = 'block';
+        mostrar('campo-quantidade');
     } else if (modelo === 'especialidade_le') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
-        document.getElementById('campo-nivel').style.display = 'block';
+        mostrar('grupo-especialidade');
+        mostrar('campo-nivel');
     } else if (modelo === 'especialidade_sp') {
-        document.getElementById('grupo-especialidade').style.display = 'block';
-        document.getElementById('campo-sp-extra').style.display = 'block';
+        mostrar('grupo-especialidade');
+        mostrar('campo-sp-extra');
     } else if (['ins_energia_solar', 'ins_campeoes_natureza', 'ins_rrr', 'ins_conesul', 'ins_lusofonia'].includes(modelo)) {
-        document.getElementById('campo-ramo').style.display = 'block';
+        mostrar('campo-ramo');
     }
 
     gerarCertificado();
 }
 
 function gerarCertificado() {
-    const modelo = document.getElementById('modelo').value;
-    const nome = document.getElementById('nome').value || "";
-    const cidade = document.getElementById('cidade').value || "";
-    const dia = document.getElementById('dia').value || "";
-    const mes = document.getElementById('mes').value || "";
-    const ano = document.getElementById('ano').value || "";
+    const modeloSelect = document.getElementById('modelo');
+    if (!modeloSelect) return;
+    const modelo = modeloSelect.value;
 
-    // Mapeamento das extensões dos modelos de imagem
-    const ext = ['cert_acolhida', 'ins_conesul', 'ins_acao_comunitaria', 'ins_aeronauta', 'ins_aviador', 'ins_boa_acao', 'ins_desafio_comunitario', 'ins_grumete', 'ins_naval'].includes(modelo) ? 'png' : (modelo.startsWith('progressao_') && modelo !== 'progressao_f' ? 'png' : (modelo.startsWith('especialidade_') ? 'png' : 'jpg'));
+    const nome = getVal('nome');
+    const cidade = getVal('cidade');
+    const dia = getVal('dia');
+    const mes = getVal('mes');
+    const ano = getVal('ano');
+
+    // Lista dos modelos que costumam ser PNG
+    const pngModels = [
+        'cert_acolhida', 'ins_conesul', 'ins_acao_comunitaria', 'ins_aeronauta',
+        'ins_aviador', 'ins_boa_acao', 'ins_desafio_comunitario', 'ins_grumete',
+        'ins_naval', 'especialidade_le', 'especialidade_sp'
+    ];
+
+    let extPrimaria = 'jpg';
+    if (pngModels.includes(modelo) || (modelo.startsWith('progressao_') && modelo !== 'progressao_f')) {
+        extPrimaria = 'png';
+    }
+
+    let extSecundaria = (extPrimaria === 'png') ? 'jpg' : 'png';
 
     const img = new Image();
-    img.src = `./modelo_${modelo}.${ext}`;
+    let tentouSecundaria = false;
 
     img.onload = function () {
         canvas.width = img.width;
@@ -127,7 +154,7 @@ function gerarCertificado() {
 
         // 1. PROGRESSÃO TRADICIONAL
         if (modelo === 'progressao_l') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = getVal('etapa');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.48, canvas.height * 0.315); 
             ctx.fillText(etapa, canvas.width * 0.53, canvas.height * 0.375); 
@@ -137,7 +164,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.69, canvas.height * 0.525);
         }
         else if (modelo === 'progressao_e') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = getVal('etapa');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.49, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.55, canvas.height * 0.405); 
@@ -147,7 +174,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.71, canvas.height * 0.56);
         }
         else if (modelo === 'progressao_s') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = getVal('etapa');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.59, canvas.height * 0.33); 
             ctx.fillText(etapa, canvas.width * 0.65, canvas.height * 0.385); 
@@ -157,7 +184,7 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.82, canvas.height * 0.545);
         }
         else if (modelo === 'progressao_p') {
-            const etapa = document.getElementById('etapa').value || "";
+            const etapa = getVal('etapa');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.36); 
             ctx.fillText(etapa, canvas.width * 0.56, canvas.height * 0.42); 
@@ -167,10 +194,10 @@ function gerarCertificado() {
             ctx.fillText(ano, canvas.width * 0.83, canvas.height * 0.55);
         }
 
-        // 2. ACOLHIDA E OUTROS MODELOS
+        // 2. ACOLHIDA
         else if (modelo === 'cert_acolhida') {
-            const resp = document.getElementById('responsaveis').value || "";
-            const grupo = document.getElementById('grupo').value || "";
+            const resp = getVal('responsaveis');
+            const grupo = getVal('grupo');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.34);
             ctx.fillText(resp, canvas.width * 0.50, canvas.height * 0.41);
@@ -183,9 +210,9 @@ function gerarCertificado() {
 
         // 3. ESPECIALIDADE (LOBINHO / ESCOTEIRO)
         else if (modelo === 'especialidade_le') {
-            const esp = document.getElementById('especialidade').value || "";
-            const nivel = document.getElementById('nivel').value || "";
-            const itens = document.getElementById('itens').value || "";
+            const esp = getVal('especialidade');
+            const nivel = getVal('nivel');
+            const itens = getVal('itens');
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.62, canvas.height * 0.36);
             ctx.fillText(esp, canvas.width * 0.74, canvas.height * 0.442);
@@ -203,12 +230,12 @@ function gerarCertificado() {
 
         // 4. ESPECIALIDADE (SÊNIOR / PIONEIRO)
         else if (modelo === 'especialidade_sp') {
-            const esp = document.getElementById('especialidade').value || "";
-            const eixo = document.getElementById('eixo').value || "";
-            const carga = document.getElementById('carga').value || "";
-            const conhecer = document.getElementById('conhecer').value || "";
-            const fazer = document.getElementById('fazer').value || "";
-            const compartilhar = document.getElementById('compartilhar').value || "";
+            const esp = getVal('especialidade');
+            const eixo = getVal('eixo');
+            const carga = getVal('carga');
+            const conhecer = getVal('conhecer');
+            const fazer = getVal('fazer');
+            const compartilhar = getVal('compartilhar');
 
             ctx.textAlign = 'center'; 
             
@@ -237,7 +264,7 @@ function gerarCertificado() {
             wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
         }
 
-        // 5. OUTROS CERTIFICADOS GENÉRICOS DE LIDERANÇA, INSÍGNIAS, ETC.
+        // 5. MODELOS GENÉRICOS DE LIDERANÇA, INSÍGNIAS, ETC.
         else {
             ctx.textAlign = 'center';
             ctx.fillText(nome, canvas.width * 0.50, canvas.height * 0.48);
@@ -275,8 +302,26 @@ function gerarCertificado() {
     };
     
     img.onerror = function() {
-        console.error("Erro ao carregar a imagem do modelo.");
+        if (!tentouSecundaria) {
+            tentouSecundaria = true;
+            img.src = `./modelo_${modelo}.${extSecundaria}`;
+        } else {
+            console.error(`Erro ao carregar a imagem do modelo: modelo_${modelo}`);
+            canvas.width = 800;
+            canvas.height = 500;
+            ctx.fillStyle = '#1e1e1e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff4d4d';
+            ctx.font = 'bold 16pt Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`Imagem não encontrada: modelo_${modelo}.png / .jpg`, canvas.width / 2, canvas.height / 2 - 10);
+            ctx.fillStyle = '#aaa';
+            ctx.font = '12pt Arial, sans-serif';
+            ctx.fillText(`Verifique se o arquivo está salvo na mesma pasta do projeto.`, canvas.width / 2, canvas.height / 2 + 25);
+        }
     };
+
+    img.src = `./modelo_${modelo}.${extPrimaria}`;
 }
 
 function baixarPDF() {
@@ -286,7 +331,10 @@ function baixarPDF() {
     }
     const { jsPDF } = window.jspdf;
     
-    const modelo = document.getElementById('modelo').value;
+    const modeloSelect = document.getElementById('modelo');
+    if (!modeloSelect) return;
+    const modelo = modeloSelect.value;
+
     const orientacao = (modelo === 'especialidade_sp' || modelo.startsWith('cert_primo') || modelo.startsWith('cert_segundo') || modelo.startsWith('cert_monitor_') || modelo.startsWith('cert_sub_') || modelo.startsWith('cert_promessa') || modelo.startsWith('cert_recrutador') || modelo.startsWith('ins_semeador') || ['ins_conesul', 'ins_lusofonia', 'ins_acao_comunitaria', 'ins_aeronauta', 'ins_aviador', 'ins_boa_acao', 'ins_desafio_comunitario', 'ins_grumete', 'ins_naval'].includes(modelo)) ? 'portrait' : 'landscape';
     
     const imgData = canvas.toDataURL('image/png', 1.0);
@@ -297,8 +345,10 @@ function baixarPDF() {
     });
     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
     
-    const nome = document.getElementById('nome').value || "Certificado";
+    const nome = getVal('nome') || "Certificado";
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-atualizarFormulario();
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarFormulario();
+});
