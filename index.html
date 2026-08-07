@@ -115,6 +115,8 @@
             <button class="btn-cat" onclick="filtrarCategoria('promessa')" type="button">Promessas</button>
             <button class="btn-cat" onclick="filtrarCategoria('insignia')" type="button">Insígnias</button>
             <button class="btn-cat" onclick="filtrarCategoria('lideranca')" type="button">Monitoria</button>
+            <button class="btn-cat" onclick="filtrarCategoria('atividade')" type="button">Atividade</button>
+            <button class="btn-cat" onclick="filtrarCategoria('expansao')" type="button">Expansão</button>
         </div>
 
         <div id="container-certificados" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
@@ -127,28 +129,44 @@
             <option value="progressao_e">Progressão - Escoteiro</option>
             <option value="progressao_s">Progressão - Sênior</option>
             <option value="progressao_p">Progressão - Pioneiro</option>
-            <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
-            <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
-            <option value="promessa_lobinho">Promessa (Lobinho)</option>
-            <option value="promessa_escoteiro">Promessa (Escoteiro)</option>
+            <option value="especialidade_le">Especialidade (L / E)</option>
+            <option value="especialidade_sp">Especialidade (S / P)</option>
+            <option value="promessa_lobinho">Promessa Lobinho</option>
+            <option value="promessa_escoteiro">Promessa Escoteira</option>
             <option value="insignia_modalidade">Insígnia de Modalidade</option>
             <option value="lideranca_monitor">Monitor / Sub</option>
+            <option value="lideranca_primo">Primo / Segundo</option>
+            <option value="atividade_estrela">Estrela de Atividade</option>
+            <option value="expansao_recrutador">Recrutador</option>
+            <option value="expansao_semeador">Semeador</option>
+            <option value="insignia_comunitaria">Ação Comunitária</option>
+            <option value="insignia_boa_acao">Boa Ação</option>
+            <option value="insignia_desafio_comunitario">Desafio Comunitário</option>
+            <option value="insignia_cone_sul">Insígnia Cone Sul</option>
+            <option value="insignia_lusofonia">Insígnia da Lusofonia</option>
+            <option value="insignia_rrr">Insígnia RRR</option>
+            <option value="insignia_energia_solar">Energia Solar</option>
+            <option value="insignia_natureza">Campeões da Natureza</option>
+            <option value="insignia_aviador">Insígnia do Aviador</option>
+            <option value="insignia_aeronauta">Insígnia do Aeronauta</option>
+            <option value="insignia_grumete">Insígnia do Grumete</option>
+            <option value="insignia_naval">Insígnia Naval</option>
         </select>
         <!-- FIM DAS CAIXAS DE FILTRO -->
 
         <div class="grupo-campo">
-            <label for="logoInput">Adicionar logo da UEL (opcional):</label>
+            <label for="logoInput">Adicionar logo da UEL:</label>
             <input type="file" id="logoInput" accept="image/*" onchange="carregarLogo(event)">
             <small id="statusLogo" style="display: block; margin-top: 4px; color: #999; font-size: 0.8rem;">Nenhuma logo selecionada</small>
         </div>
 
         <label for="nome">Nome do jovem:</label>
-        <input type="text" id="nome" placeholder="" oninput="gerarCertificado()">
+        <input type="text" id="nome" placeholder="Ex: Baden Powell" oninput="gerarCertificado()">
 
         <!-- GRUPO: PROGRESSÃO -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
-            <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
+            <input type="text" id="etapa" placeholder="Ex: Pista / Trilha" oninput="gerarCertificado()">
         </div>
 
         <!-- GRUPO: ESPECIALIDADE -->
@@ -190,7 +208,7 @@
         <div id="grupo-outros" class="campo-dinamico">
             <div id="campo-patrulha" class="campo-dinamico">
                 <label for="patrulha">Matilha / Patrulha:</label>
-                <input type="text" id="patrulha" placeholder="Ex: Xavante" oninput="gerarCertificado()">
+                <input type="text" id="patrulha" placeholder="Ex: Patrulha Lobo" oninput="gerarCertificado()">
             </div>
             <div id="campo-insignia" class="campo-dinamico">
                 <label for="nome_insignia">Nome da Insígnia:</label>
@@ -205,7 +223,7 @@
         <div style="display: flex; gap: 10px;">
             <div style="flex:1;">
                 <label for="dia">Dia:</label>
-                <input type="text" id="dia" placeholder="25" oninput="gerarCertificado()">
+                <input type="text" id="dia" placeholder="15" oninput="gerarCertificado()">
             </div>
             <div style="flex:2;">
                 <label for="mes">Mês:</label>
