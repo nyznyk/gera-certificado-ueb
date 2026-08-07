@@ -462,15 +462,19 @@ function gerarCertificado() {
 
             if (modelo === 'especialidade_sp') {
                 xPos = canvas.width * 0.84;
-                yPos = canvas.height * 0.84;
+                yPos = canvas.height * 0.43;
+            } 
+               else if (modelo === 'progressao_l') {
+                xPos = canvas.width * 0.03;
+                yPos = canvas.height * 0.03;
             } 
             else if (cat === 'progressao' || modelo === 'progressao_f') {
-                xPos = canvas.width * 0.08;
-                yPos = canvas.height * 0.06;
+                xPos = canvas.width * 0.03;
+                yPos = canvas.height * 0.03;
             } 
             else {
-                xPos = canvas.width * 0.05;
-                yPos = canvas.height * 0.05;
+                xPos = canvas.width * 0.03;
+                yPos = canvas.height * 0.03;
             }
 
             ctx.drawImage(logoGroup, xPos, yPos, logoLargura, logoAltura);
