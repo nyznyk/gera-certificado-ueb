@@ -124,34 +124,52 @@
             <!-- Preenchido via JS -->
         </div>
         
-        <!-- Select escondido -->
+        <!-- Select escondido (VALORES CORRIGIDOS CONFORME O APP.JS) -->
         <select id="modelo" style="display:none;" onchange="atualizarFormulario()">
-            <option value="progressao_l">Progressão - Lobinho</option>
-            <option value="progressao_e">Progressão - Escoteiro</option>
-            <option value="progressao_s">Progressão - Sênior</option>
-            <option value="progressao_p">Progressão - Pioneiro</option>
-            <option value="especialidade_le">Especialidade (L / E)</option>
-            <option value="especialidade_sp">Especialidade (S / P)</option>
-            <option value="promessa_lobinho">Promessa Lobinho</option>
-            <option value="promessa_escoteiro">Promessa Escoteira</option>
-            <option value="insignia_modalidade">Insígnia de Modalidade</option>
-            <option value="lideranca_monitor">Monitor / Sub</option>
-            <option value="lideranca_primo">Primo / Segundo</option>
-            <option value="atividade_estrela">Estrela de Atividade</option>
-            <option value="expansao_recrutador">Recrutador</option>
-            <option value="expansao_semeador">Semeador</option>
-            <option value="insignia_comunitaria">Ação Comunitária</option>
-            <option value="insignia_boa_acao">Boa Ação</option>
-            <option value="insignia_desafio_comunitario">Desafio Comunitário</option>
-            <option value="insignia_cone_sul">Insígnia Cone Sul</option>
-            <option value="insignia_lusofonia">Insígnia da Lusofonia</option>
-            <option value="insignia_rrr">Insígnia RRR</option>
-            <option value="insignia_energia_solar">Energia Solar</option>
-            <option value="insignia_natureza">Campeões da Natureza</option>
-            <option value="insignia_aviador">Insígnia do Aviador</option>
-            <option value="insignia_aeronauta">Insígnia do Aeronauta</option>
-            <option value="insignia_grumete">Insígnia do Grumete</option>
-            <option value="insignia_naval">Insígnia Naval</option>
+            <!-- PROGRESSÃO -->
+            <option value="cert_acolhida">Acolhida</option>
+            <option value="progressao_l">Progressão Lobinho</option>
+            <option value="progressao_e">Progressão Escoteiro</option>
+            <option value="progressao_s">Progressão Sênior</option>
+            <option value="progressao_p">Progressão Pioneiro</option>
+            <option value="progressao_f">Progressão Flor de Lis</option>
+
+            <!-- ESPECIALIDADES -->
+            <option value="especialidade_le">Especialidade (Lobinho / Escoteiro)</option>
+            <option value="especialidade_sp">Especialidade (Sênior / Pioneiro)</option>
+
+            <!-- PROMESSAS -->
+            <option value="cert_promessa_l">Promessa (Lobinho)</option>
+            <option value="cert_promessa">Promessa (Escoteiro)</option>
+
+            <!-- INSÍGNIAS DE MODALIDADE -->
+            <option value="ins_aviador">Insígnia do Aviador</option>
+            <option value="ins_aeronauta">Insígnia do Aeronauta</option>
+            <option value="ins_grumete">Insígnia do Grumete</option>
+            <option value="ins_naval">Insígnia Naval</option>
+
+            <!-- INSÍGNIAS DE INTERESSE ESPECIAL -->
+            <option value="ins_acao_comunitaria">Ação Comunitária</option>
+            <option value="ins_boa_acao">Boa Ação</option>
+            <option value="ins_desafio_comunitario">Desafio Comunitário</option>
+            <option value="ins_conesul">Insígnia Cone Sul</option>
+            <option value="ins_lusofonia">Insígnia da Lusofonia</option>
+            <option value="ins_rrr">Insígnia Reduzir, Reciclar, Reutilizar</option>
+            <option value="ins_energia_solar">Escoteiros pela Energia Solar</option>
+            <option value="ins_campeoes_natureza">Campeões da Natureza</option>
+
+            <!-- LIDERANÇA -->
+            <option value="cert_moni_s">Monitor (Sênior)</option>
+            <option value="cert_sub_s">Sub-monitor (Sênior)</option>
+            <option value="cert_moni_e">Monitor (Escoteiro)</option>
+            <option value="cert_sub_e">Sub-monitor (Escoteiro)</option>
+            <option value="cert_primo">Primo</option>
+            <option value="cert_segundo">Segundo</option>
+
+            <!-- OUTROS -->
+            <option value="estrelas_atv">Estrela de Atividade</option>
+            <option value="cert_recrutador">Recrutador</option>
+            <option value="ins_semeador">Semeador</option>
         </select>
         <!-- FIM DAS CAIXAS DE FILTRO -->
 
@@ -213,7 +231,7 @@
             </div>
             <div id="campo-insignia" class="campo-dinamico">
                 <label for="nome_insignia">Nome da Insígnia:</label>
-                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia do Aprender." oninput="gerarCertificado()">
+                <input type="text" id="nome_insignia" placeholder="Ex: Insígnia da Lusofonia." oninput="gerarCertificado()">
             </div>
         </div>
 
@@ -274,7 +292,7 @@
     </footer>
 
     <!-- SCRIPT PRINCIPAL DO APP -->
-    <script src="app.js?v=6"></script>
+    <script src="app.js?v=7"></script>
 
     <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
     <script>
