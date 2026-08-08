@@ -171,23 +171,21 @@ function atualizarFormulario() {
     if (campoQtd) campoQtd.style.display = 'none';
 
     // 2. Mostra os campos corretos baseado na regra de cada certificado
-
-    // 2. Mostra os campos corretos baseado na regra de cada certificado
-    
-    if (cat === 'progressao') {
-        if (grupoProg) grupoProg.style.display = 'block';
-    }
     if (modelo === 'cert_acolhida') {
         if (campoResponsaveis) campoResponsaveis.style.display = 'block';
         if (campoGrupo) campoGrupo.style.display = 'block';
     } 
+    else if (cat === 'progressao') {
+        // Se for progressão (e não for acolhida), mostra o campo Etapa
+        if (grupoProg) grupoProg.style.display = 'block';
+    }
     else if (modelo === 'cert_promessa_l') {
-    if (campoGrupo) campoGrupo.style.display = 'block';
-}
-else if (modelo === 'cert_promessa') {
-    if (campoGrupo) campoGrupo.style.display = 'block';
-    if (campoRamo) campoRamo.style.display = 'block'; // Mostra o campo Ramo no formulário
-}
+        if (campoGrupo) campoGrupo.style.display = 'block';
+    }
+    else if (modelo === 'cert_promessa') {
+        if (campoGrupo) campoGrupo.style.display = 'block';
+        if (campoRamo) campoRamo.style.display = 'block'; 
+    }
     else if (modelo === 'especialidade_le') {
         if (grupoEsp) grupoEsp.style.display = 'block';
         if (campoNivel) campoNivel.style.display = 'block';
