@@ -171,6 +171,12 @@ function atualizarFormulario() {
     if (campoQtd) campoQtd.style.display = 'none';
 
     // 2. Mostra os campos corretos baseado na regra de cada certificado
+
+    // 2. Mostra os campos corretos baseado na regra de cada certificado
+    
+    if (cat === 'progressao') {
+        if (grupoProg) grupoProg.style.display = 'block';
+    }
     if (modelo === 'cert_acolhida') {
         if (campoResponsaveis) campoResponsaveis.style.display = 'block';
         if (campoGrupo) campoGrupo.style.display = 'block';
@@ -257,6 +263,7 @@ function gerarCertificado() {
     const patrulha = document.getElementById('patrulha')?.value || "";
     const anosAtividade = document.getElementById('anos')?.value || "";
     const qtdJovens = document.getElementById('qtd_jovens')?.value || "";
+    
 
     const img = new Image();
     let etapaTentativa = 0;
@@ -595,22 +602,23 @@ function baixarPDF() {
     }
     const { jsPDF } = window.jspdf;
     
-    const orientacao = document.getElementById('modelo').value === 'especialidade_sp' ? 'portrait' : 'landscape';
+    // Deixa o código inteligente: se a largura for maior que a altura é paisagem, senão é retrato
+    const orientacao = canvas.width > canvas.height ? 'landscape' : 'portrait';
     
     const imgData = canvas.toDataURL('image/png', 1.0);
+    
+    // Cria o PDF respeitando a orientação exata e as dimensões do canvas
     const pdf = new jsPDF({
         orientation: orientacao,
         unit: 'px',
         format: [canvas.width, canvas.height]
     });
+    
     pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
     
     const nome = document.getElementById('nome').value || "Certificado";
     pdf.save(`Certificado_${nome}.pdf`);
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    filtrarCategoria('todas');
 });
 
 // ==========================================
