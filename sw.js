@@ -1,10 +1,5 @@
-// ==========================================
-// REGRA DE OURO PARA ATUALIZAÇÃO AUTOMÁTICA:
-// Sempre que fizer alterações nos seus arquivos (HTML, JS, Imagens),
-// mude o número da versão abaixo (ex: v5 -> v6 -> v7).
-// Isso fará o celular baixar a nova versão na hora!
-// ==========================================
-const CACHE_NAME = 'certificados-escoteiros-v6';
+// mudar o numero do v a cada atualizacao
+const CACHE_NAME = 'certificados-escoteiros-v7';
 
 // Lista de todos os arquivos que o celular deve guardar na memória
 const ASSETS = [
