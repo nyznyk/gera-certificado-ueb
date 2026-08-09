@@ -617,7 +617,6 @@ function baixarPDF() {
     const nome = document.getElementById('nome').value || "Certificado";
     pdf.save(`Certificado_${nome}.pdf`);
 }
-});
 
 // ==========================================
 // REGISTRO E ATUALIZAÇÃO AUTOMÁTICA DO SERVICE WORKER
