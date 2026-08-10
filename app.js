@@ -1,8 +1,6 @@
-// ==========================================
-// LÓGICA DE FILTROS DOS BOTÕES
-// ==========================================
+
 const listaCertificados = [
-    // PROGRESSÃO
+    // progressao
     { id: 'cert_acolhida', nome: 'Acolhida', cat: 'progressao' },
     { id: 'progressao_l', nome: 'Progressão Lobinho', cat: 'progressao' },
     { id: 'progressao_e', nome: 'Progressão Escoteiro', cat: 'progressao' },
@@ -10,21 +8,21 @@ const listaCertificados = [
     { id: 'progressao_p', nome: 'Progressão Pioneiro', cat: 'progressao' },
     { id: 'progressao_f', nome: 'Progressão Filhotes', cat: 'progressao' },
 
-    // ESPECIALIDADES
+    // especialidades
     { id: 'especialidade_le', nome: 'Especialidade (Lobinho / Escoteiro)', cat: 'especialidade' },
     { id: 'especialidade_sp', nome: 'Especialidade (Sênior / Pioneiro)', cat: 'especialidade' },
 
-    // PROMESSAS
+    // promessas
     { id: 'cert_promessa_l', nome: 'Promessa (Lobinho)', cat: 'promessa' },
     { id: 'cert_promessa', nome: 'Promessa (Geral)', cat: 'promessa' },
     
-    // INSÍGNIAS DE MODALIDADE
+    // ins modalidade
     { id: 'ins_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
     { id: 'ins_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia_modalidade' },
     { id: 'ins_grumete', nome: 'Insígnia do Grumete', cat: 'insignia_modalidade' },
     { id: 'ins_naval', nome: 'Insígnia Naval', cat: 'insignia_modalidade' },
 
-    // INSÍGNIAS DE INTERESSE ESPECIAL E COMUNITÁRIAS
+    // ins especial
     { id: 'ins_acao_comunitaria', nome: 'Ação Comunitária', cat: 'insignia_comunitaria' },
     { id: 'ins_boa_acao', nome: 'Boa Ação', cat: 'insignia_comunitaria' },
     { id: 'ins_desafio_comunitario', nome: 'Desafio Comunitário', cat: 'insignia_comunitaria' },
@@ -34,7 +32,7 @@ const listaCertificados = [
     { id: 'ins_energia_solar', nome: 'Escoteiros pela Energia Solar', cat: 'insignia_especial' },
     { id: 'ins_campeoes_natureza', nome: 'Campeões da Natureza', cat: 'insignia_especial' },
 
-    // LIDERANÇA
+    // monitoria
     { id: 'cert_moni_s', nome: 'Monitor (Sênior)', cat: 'lideranca' },
     { id: 'cert_sub_s', nome: 'Sub-monitor (Sênior)', cat: 'lideranca' },
     { id: 'cert_moni_e', nome: 'Monitor (Escoteiro)', cat: 'lideranca' },
@@ -42,7 +40,7 @@ const listaCertificados = [
     { id: 'cert_primo', nome: 'Primo', cat: 'lideranca' },
     { id: 'cert_segundo', nome: 'Segundo', cat: 'lideranca' },
 
-    // OUTROS
+    // outros
     { id: 'estrelas_atv', nome: 'Estrela de Atividade', cat: 'atividade' },
     { id: 'cert_recrutador', nome: 'Recrutador', cat: 'expansao' },
     { id: 'ins_semeador', nome: 'Semeador', cat: 'expansao' }
@@ -144,13 +142,13 @@ function atualizarFormulario() {
     const itemObj = obterItemCertificado(modelo);
     const cat = itemObj ? itemObj.cat : '';
     
-    // Pegando as referências dos grupos do formulário no HTML
+    // pegando as referências dos grupos do formulário no HTML
     const grupoProg = document.getElementById('grupo-progressao');
     const grupoEsp = document.getElementById('grupo-especialidade');
     const campoNivel = document.getElementById('campo-nivel');
     const campoSpExtra = document.getElementById('campo-sp-extra');
     
-    // Novos campos criados
+    //campos cert novos
     const campoGrupo = document.getElementById('campo-grupo');
     const campoResponsaveis = document.getElementById('campo-responsaveis');
     const campoRamo = document.getElementById('campo-ramo');
@@ -158,7 +156,7 @@ function atualizarFormulario() {
     const campoAnos = document.getElementById('campo-anos');
     const campoQtd = document.getElementById('campo-qtd');
 
-    // 1. Esconde tudo inicialmente (menos Nome, Data e Local que são padrão)
+    // esconde tudo menos padroes
     if (grupoProg) grupoProg.style.display = 'none';
     if (grupoEsp) grupoEsp.style.display = 'none';
     if (campoNivel) campoNivel.style.display = 'none';
@@ -170,13 +168,13 @@ function atualizarFormulario() {
     if (campoAnos) campoAnos.style.display = 'none';
     if (campoQtd) campoQtd.style.display = 'none';
 
-    // 2. Mostra os campos corretos baseado na regra de cada certificado
+    // mostra os certos
     if (modelo === 'cert_acolhida') {
         if (campoResponsaveis) campoResponsaveis.style.display = 'block';
         if (campoGrupo) campoGrupo.style.display = 'block';
     } 
     else if (cat === 'progressao') {
-        // Se for progressão (e não for acolhida), mostra o campo Etapa
+        // se for progressão (e não acolhida), mostra etapa
         if (grupoProg) grupoProg.style.display = 'block';
     }
     else if (modelo === 'cert_promessa_l') {
@@ -247,14 +245,12 @@ function gerarCertificado() {
     const itemObj = obterItemCertificado(modelo);
     const cat = itemObj ? itemObj.cat : '';
 
-    // Valores genéricos (sempre presentes)
     const nome = document.getElementById('nome')?.value || "";
     const cidade = document.getElementById('cidade')?.value || "";
     const dia = document.getElementById('dia')?.value || "";
     const mes = document.getElementById('mes')?.value || "";
     const ano = document.getElementById('ano')?.value || "";
 
-    // Outros valores
     const responsaveis = document.getElementById('responsaveis')?.value || "";
     const grupo = document.getElementById('grupo')?.value || "";
     const ramo = document.getElementById('ramo')?.value || "";
@@ -272,7 +268,7 @@ function gerarCertificado() {
         ctx.drawImage(img, 0, 0);
         ctx.fillStyle = '#111111';
         
-        // Fonte dinâmica calculada proporcionalmente à altura da imagem (~3.2% da altura)
+        // calcula tamanho da fonte
         const tamanhoFonte = Math.round(canvas.height * 0.032); 
         const fontePrincipal = `${tamanhoFonte}px Arial, sans-serif`;
         const fontePequena = `${Math.round(tamanhoFonte * 0.8)}px Arial, sans-serif`;
@@ -434,7 +430,7 @@ function gerarCertificado() {
             wrapText(ctx, compartilhar, canvas.width * 0.615, canvas.height * 0.852, canvas.width * (limiteDireito - 0.615), xInicioGeral, maxWidthGeral, lineHeight);
         }
 
-        // LIDERANÇA / MONITORIA
+        // MONITORIA
         else if (cat === 'lideranca') {
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.56); 
             ctx.fillText(patrulha, canvas.width * 0.42, canvas.height * 0.652); 
@@ -447,7 +443,7 @@ function gerarCertificado() {
             ctx.font = fontePrincipal;
         }
 
-        // INSÍGNIAS ESPECIAIS (Com campo RAMO)
+        // INS ESPECIAIS
         else if (modelo === 'ins_conesul') {
             ctx.fillText(nome, canvas.width * 0.3, canvas.height * 0.52); 
             ctx.fillText(ramo, canvas.width * 0.45, canvas.height * 0.6); 
@@ -517,7 +513,7 @@ function gerarCertificado() {
             ctx.font = fontePrincipal;
         }
 
-        // EXPANSÃO (Recrutador e Semeador)
+        // EXPANSÃO
         else if (cat === 'expansao') {
             ctx.fillText(nome, canvas.width * 0.35, canvas.height * 0.48); 
             ctx.fillText(qtdJovens, canvas.width * 0.515, canvas.height * 0.582); 
@@ -530,7 +526,7 @@ function gerarCertificado() {
             ctx.font = fontePrincipal;
         }
 
-        // INSÍGNIAS DE MODALIDADE, COMUNITÁRIAS E GENÉRICAS (Apenas Nome, Data e Local)
+        // INSÍGNIAS DE MODALIDADE E GENÉRICAS (nome data local)
         else {
             ctx.fillText(nome, canvas.width * 0.37, canvas.height * 0.52); 
             
@@ -542,9 +538,7 @@ function gerarCertificado() {
             ctx.font = fontePrincipal;
         }
 
-        // ==========================================
-        // DESENHAR LOGO DO GRUPO (UEL)
-        // ==========================================
+       // DESENHA LOGO
         if (logoGroup) {
             const logoLargura = canvas.width * 0.10; 
             const proporcao = logoGroup.height / logoGroup.width;
@@ -600,12 +594,12 @@ function baixarPDF() {
     }
     const { jsPDF } = window.jspdf;
     
-    // Deixa o código inteligente: se a largura for maior que a altura é paisagem, senão é retrato
+    // calcula horizontal vertical
     const orientacao = canvas.width > canvas.height ? 'landscape' : 'portrait';
     
     const imgData = canvas.toDataURL('image/png', 1.0);
     
-    // Cria o PDF respeitando a orientação exata e as dimensões do canvas
+    // cria o PDF
     const pdf = new jsPDF({
         orientation: orientacao,
         unit: 'px',
@@ -618,9 +612,7 @@ function baixarPDF() {
     pdf.save(`Certificado_${nome}.pdf`);
 }
 
-// ==========================================
-// REGISTRO E ATUALIZAÇÃO AUTOMÁTICA DO SERVICE WORKER
-// ==========================================
+//att automatica do sw
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').then((reg) => {
