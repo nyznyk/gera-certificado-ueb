@@ -1,7 +1,7 @@
 // mudar o numero do v a cada atualizacao
 const CACHE_NAME = 'certificados-escoteiros-v7';
 
-// Lista de todos os arquivos que o celular deve guardar na memória
+// lista de todos os arquivos p celular guardar na memória
 const ASSETS = [
     './',
     './index.html',
@@ -43,30 +43,30 @@ const ASSETS = [
     'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 
-// Instalação do Service Worker (Baixa os novos arquivos e força atualização imediata)
+// instalação do sw (baixa os novos arquivos e força atualização pro celular)
 self.addEventListener('install', (e) => {
-    self.skipWaiting(); // Ativa o novo Service Worker imediatamente sem esperar fechar a aba
+    self.skipWaiting(); // ativa o novo sw imediatamente sem esperar fechar a aba
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
 });
 
-// Evento Activate (Deleta do celular o cache antigo e assume o controle)
+// deleta do celular o cache antigo e assume o controle
 self.addEventListener('activate', (e) => {
     e.waitUntil(
         caches.keys().then((keys) => {
             return Promise.all(
                 keys.map((key) => {
                     if (key !== CACHE_NAME) {
-                        return caches.delete(key); // Limpa versão antiga (ex: v5)
+                        return caches.delete(key); // limpa versão antiga
                     }
                 })
             );
-        }).then(() => self.clients.claim()) // Assume o controle do app na hora
+        }).then(() => self.clients.claim()) // assume o controle do app
     );
 });
 
-// Intercepta as requisições para buscar do armazenamento local (Permite funcionar offline)
+// pra funcionar offline
 self.addEventListener('fetch', (e) => {
     e.respondWith(
         caches.match(e.request).then((response) => response || fetch(e.request))
