@@ -8,7 +8,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             
-            /* --- CONFIGURAÇÕES DA IMAGEM DE FUNDO --- */
+            /* ---------------- wallpaper -------------- */
             background-image: url('fundo.jpg');
             background-size: cover; 
             background-position: center; 
@@ -28,7 +28,7 @@
             gap: 20px; 
         }
         .box { 
-            /* Transparência e efeito de desfoque estilo vidro (Glassmorphism) */
+            /* caixas meio transparentes */
             background: rgba(30, 30, 30, 0.85); 
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
@@ -57,7 +57,7 @@
         button { background: #3792ff; font-weight: bold; border: none; margin-top: 20px; cursor: pointer; padding: 12px; transition: background 0.2s; }
         button:hover { background: #0066cc; }
         
-        /* --- ESTILOS DOS NOVOS BOTÕES DE FILTRO --- */
+        /* --- aparencia botoes de filtro --- */
         .btn-cat {
             background: rgba(45, 45, 45, 0.9);
             border: 1px solid #444;
@@ -102,11 +102,11 @@
 </head>
 <body>
 
-    <!-- CAIXA 1: GERADOR DE CERTIFICADOS -->
+    <!-- caixa 1 -->
     <div class="box">
         <h2>⚜️ Gerador de Certificados</h2>
 
-        <!-- CAIXAS DE FILTRO -->
+        <!-- filtros -->
         <label>Selecione a categoria e o modelo:</label>
         <div id="filtros-categoria" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 12px; margin-top: 8px;">
             <button class="btn-cat active" onclick="filtrarCategoria('todas')" type="button">Todas</button>
@@ -121,10 +121,9 @@
         </div>
 
         <div id="container-certificados" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
-            <!-- Preenchido via JS -->
+            
         </div>
         
-        <!-- Select escondido (VALORES CORRIGIDOS CONFORME O APP.JS) -->
         <select id="modelo" style="display:none;" onchange="atualizarFormulario()">
             <!-- PROGRESSÃO -->
             <option value="cert_acolhida">Acolhida</option>
@@ -142,13 +141,13 @@
             <option value="cert_promessa_l">Promessa (Lobinho)</option>
             <option value="cert_promessa">Promessa (Geral)</option>
 
-            <!-- INSÍGNIAS DE MODALIDADE -->
+            <!-- INS MODALIDADE -->
             <option value="ins_aviador">Insígnia do Aviador</option>
             <option value="ins_aeronauta">Insígnia do Aeronauta</option>
             <option value="ins_grumete">Insígnia do Grumete</option>
             <option value="ins_naval">Insígnia Naval</option>
 
-            <!-- INSÍGNIAS DE INTERESSE ESPECIAL -->
+            <!-- INS INTERESSE ESPECIAL -->
             <option value="ins_acao_comunitaria">Ação Comunitária</option>
             <option value="ins_boa_acao">Boa Ação</option>
             <option value="ins_desafio_comunitario">Desafio Comunitário</option>
@@ -158,7 +157,7 @@
             <option value="ins_energia_solar">Escoteiros pela Energia Solar</option>
             <option value="ins_campeoes_natureza">Campeões da Natureza</option>
 
-            <!-- LIDERANÇA -->
+            <!-- MONITORIA -->
             <option value="cert_moni_s">Monitor (Sênior)</option>
             <option value="cert_sub_s">Sub-monitor (Sênior)</option>
             <option value="cert_moni_e">Monitor (Escoteiro)</option>
@@ -171,7 +170,7 @@
             <option value="cert_recrutador">Recrutador</option>
             <option value="ins_semeador">Semeador</option>
         </select>
-        <!-- FIM DAS CAIXAS DE FILTRO -->
+        <!-- fim caixas de filtro -->
 
         <div class="grupo-campo">
             <label for="logoInput">Adicionar logo da UEL (opcional):</label>
@@ -187,7 +186,7 @@
     <input type="text" id="etapa" placeholder="Ex: Pata Tenra, Pista, Escalada..." oninput="gerarCertificado()">
 </div>
 
-        <!-- NOVOS CAMPOS PARA ACOLHIDA -->
+        <!-- ACOLHIDA -->
         <div id="campo-responsaveis" class="campo-dinamico">
             <label for="responsaveis">Responsáveis:</label>
             <input type="text" id="responsaveis" placeholder="" oninput="gerarCertificado()">
@@ -197,13 +196,13 @@
             <input type="text" id="grupo" placeholder="" oninput="gerarCertificado()">
         </div>
 
-        <!-- GRUPO: PROGRESSÃO -->
+        <!-- GRUPO PROGRESSÃO -->
         <div id="grupo-progressao" class="campo-dinamico">
             <label for="etapa">Etapa de progressão:</label>
             <input type="text" id="etapa" placeholder="Ex: Pata Tenra / Pista / Escalada" oninput="gerarCertificado()">
         </div>
 
-        <!-- GRUPO: ESPECIALIDADE -->
+        <!-- GRUPO ESPECIALIDADE -->
         <div id="grupo-especialidade" class="campo-dinamico">
             <label for="especialidade">Nome da especialidade:</label>
             <input type="text" id="especialidade" placeholder="Ex: Radioamadorismo" oninput="gerarCertificado()">
@@ -219,7 +218,7 @@
                 <input type="text" id="itens" placeholder="Ex: 1, 3, 5 e 8" oninput="gerarCertificado()">
             </div>
 
-            <!-- NOVOS CAMPOS: EXCLUSIVOS SÊNIOR/PIONEIRO -->
+            <!-- CAMPOS NOVOS SÊNIOR PIO -->
             <div id="campo-sp-extra" class="campo-dinamico">
                 <label for="eixo">Eixo de Progressão Pessoal:</label>
                 <input type="text" id="eixo" placeholder="Ex: Habilidades para a Vida" oninput="gerarCertificado()">
@@ -238,31 +237,31 @@
             </div>
         </div>
 
-        <!-- NOVO CAMPO: RAMO (Insígnias Especiais) -->
+        <!-- CAMPO RAMO -->
         <div id="campo-ramo" class="campo-dinamico">
             <label for="ramo">Ramo:</label>
             <input type="text" id="ramo" placeholder="Ex: Lobinho / Escoteiro" oninput="gerarCertificado()">
         </div>
 
-        <!-- NOVO CAMPO: PATRULHA / MATILHA (Monitoria) -->
+        <!-- CAMPO PATRULHA -->
         <div id="campo-patrulha" class="campo-dinamico">
             <label for="patrulha">Matilha / Patrulha:</label>
             <input type="text" id="patrulha" placeholder="Ex: Preta / Xavante" oninput="gerarCertificado()">
         </div>
 
-        <!-- NOVO CAMPO: ESTRELA DE ATIVIDADE -->
+        <!-- CAMPO ESTRELA DE ATIVIDADE -->
         <div id="campo-anos" class="campo-dinamico">
             <label for="anos">Quantidade de anos:</label>
             <input type="number" id="anos" placeholder="Ex: 1, 2, 3..." oninput="gerarCertificado()">
         </div>
 
-        <!-- NOVO CAMPO: RECRUTADOR / SEMEADOR -->
+        <!-- CAMPO QTD MEMBROS -->
         <div id="campo-qtd" class="campo-dinamico">
             <label for="qtd_jovens">Quantidade de novos membros (ou UELs):</label>
             <input type="number" id="qtd_jovens" placeholder="" oninput="gerarCertificado()">
         </div>
 
-        <!-- DATAS E LOCAL -->
+        <!-- DATA E LOCAL -->
         <label for="cidade">Local (Cidade):</label>
         <input type="text" id="cidade" placeholder="Ex: Foz do Iguaçu" oninput="gerarCertificado()">
 
@@ -286,13 +285,13 @@
         <button onclick="baixarPDF()">Baixar PDF</button>
     </div>
 
-    <!-- CAIXA 2: INSTRUÇÕES PARA INSTALAÇÃO -->
+    <!-- caixa 2 (instrucoes de instalacao) -->
     <div class="box">
         <h3 style="text-align: center; color: #3792ff; margin-top: 0; font-size: 1.2rem;">Como baixar o app</h3>
         <p style="font-size: 0.9rem; color: #bbb; text-align: center; margin-bottom: 15px;">Este sistema, além de funcionar no computador, funciona como um aplicativo no seu celular. Veja como instalar:
          (também funciona offline!)</p>
         
-        <!-- Instruções Android -->
+        <!-- android -->
         <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #444;">
             <strong style="color: #4CAF50;">Android (via Google Chrome)</strong>
             <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
@@ -302,7 +301,7 @@
             </ul>
         </div>
 
-        <!-- Instruções iOS -->
+        <!-- ios -->
         <div style="background: rgba(45, 45, 45, 0.7); padding: 12px; border-radius: 8px; border: 1px solid #444;">
             <strong style="color: #007AFF;">iPhone (via Safari)</strong>
             <ul style="font-size: 0.85rem; color: #ccc; margin: 8px 0 0 0; padding-left: 20px; list-style-type: '- ';">
@@ -313,15 +312,15 @@
         </div>
     </div>
 
-    <!-- CRÉDITOS DISCRETOS NO RODAPÉ -->
+    <!-- creditos no rodape -->
     <footer style="text-align: center; font-size: 0.75rem; color: #777; opacity: 0.6; margin-top: -5px; padding-bottom: 10px;">
         Desenvolvido por <strong style="color: #aaa;">Beatriz Nyznyk GENSM 49/PR</strong>
     </footer>
 
-    <!-- SCRIPT PRINCIPAL DO APP -->
+    <!-- script principal -->
     <script src="app.js?v=5"></script>
 
-    <!-- REGISTRO DO SERVICE WORKER E INICIALIZAÇÃO -->
+    <!-- registro do sw + inicializacao -->
     <script>
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').then((reg) => {
