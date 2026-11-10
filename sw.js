@@ -35,6 +35,8 @@ const ASSETS = [
     './modelo_ins_lusofonia.jpg',
     './modelo_ins_acao_comunitaria.png',
     './modelo_ins_aeronauta.png',
+    './modelo_ins_explorador.png',
+    './modelo_ins_mateiro.png',
     './modelo_ins_aviador.png',
     './modelo_ins_boa_acao.png',
     './modelo_ins_desafio_comunitario.png',

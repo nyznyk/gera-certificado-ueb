@@ -17,6 +17,8 @@ const listaCertificados = [
     { id: 'cert_promessa', nome: 'Promessa (Geral)', cat: 'promessa' },
     
     // ins modalidade
+    { id: 'ins_explorador', nome: 'Insígnia do Explorador', cat: 'insignia_modalidade' },
+    { id: 'ins_mateiro', nome: 'Insígnia do Mateiro', cat: 'insignia_modalidade' },
     { id: 'ins_aviador', nome: 'Insígnia do Aviador', cat: 'insignia_modalidade' },
     { id: 'ins_aeronauta', nome: 'Insígnia do Aeronauta', cat: 'insignia_modalidade' },
     { id: 'ins_grumete', nome: 'Insígnia do Grumete', cat: 'insignia_modalidade' },
